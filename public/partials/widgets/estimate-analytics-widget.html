@@ -1,0 +1,297 @@
+<div class="estimate-analytics-widget-container widget-container">
+    <div class="estimate-analytics-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-chart-pie"></i> Estimate Analytics
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.estimateAnalytics.period">
+                                Last {{ widgetData.estimateAnalytics.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="estimate-analytics-options-button button clear" 
+                            type="button"
+                            data-toggle="estimateAnalyticsOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="estimate-analytics-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="estimateAnalyticsOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="estimate-analytics-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('estimateAnalytics', { period: widgetData.estimateAnalytics.period, includeAllUsers: widgetData.estimateAnalytics.includeAllUsers })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="estimateAnalyticsTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="estimateAnalyticsTimeRange"
+                                        name="estimateAnalyticsTimeRange"
+                                        ng-model="widgetData.estimateAnalytics.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="estimate-analytics-select-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="estimate-analytics-select-button select-button button"
+                                                type="button"
+                                                ng-click="widgetData.estimateAnalytics.includeAllUsers = !widgetData.estimateAnalytics.includeAllUsers"
+                                                ng-class="{'selected': widgetData.estimateAnalytics.includeAllUsers}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widgetData.estimateAnalytics.includeAllUsers"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include all Users?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="analytics-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.estimateAnalytics.summary.totalEstimates }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Estimates
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.estimateAnalytics.summary.totalValue | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Value
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.estimateAnalytics.summary.averageValue | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Average Value
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center" 
+                                 ng-class="{'success-text': widgetData.estimateAnalytics.summary.conversionRate > 50 && widgetData.estimateAnalytics.summary.conversionRate > 0,
+                                            'warning-text': widgetData.estimateAnalytics.summary.conversionRate <= 50 && widgetData.estimateAnalytics.summary.conversionRate > 25 && widgetData.estimateAnalytics.summary.conversionRate > 0,
+                                            'alert-text': widgetData.estimateAnalytics.summary.conversionRate <= 25 && widgetData.estimateAnalytics.summary.conversionRate > 0}">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.estimateAnalytics.summary.conversionRate }}%
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Conversion Rate
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="profit-summary">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-6 large-6">
+                            <div class="golura-block summary-item text-center">
+                                <h5>
+                                    <b>{{ widgetData.estimateAnalytics.summary.averageValue | currency }}</b>
+                                </h5>
+                                <h6 class="text-muted">Average Value</h6>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6" ng-if="widgetData.estimateAnalytics.summary.profitMargin">
+                            <div class="golura-block summary-item text-center">
+                                <h5 ng-class="{'success-text': widgetData.estimateAnalytics.summary.profitMargin > 20 && widgetData.estimateAnalytics.summary.profitMargin > 0,
+                                               'warning-text': widgetData.estimateAnalytics.summary.profitMargin <= 20 && widgetData.estimateAnalytics.summary.profitMargin > 10 && widgetData.estimateAnalytics.summary.profitMargin > 0,
+                                               'alert-text': widgetData.estimateAnalytics.summary.profitMargin <= 10 && widgetData.estimateAnalytics.summary.profitMargin > 0}">
+                                    <b>{{ widgetData.estimateAnalytics.summary.profitMargin }}%</b>
+                                </h5>
+                                <h6 class="text-muted">Profit Margin</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-shrink large-shrink" ng-if="widgetData.estimateAnalytics.breakdown">
+                <div class="breakdown-section">
+                    <h4 class="breakdown-section-title text-center">
+                        <b>
+                            Status Breakdown
+                        </b>
+                    </h4>
+                    <div class="golura-block">
+                        <div class="breakdown-stats">
+                            <div class="grid-x grid-margin-x">
+                                <div class="cell small-12 medium-4 large-4">
+                                    <div class="golura-block breakdown-card text-center" ng-class="{'success-text': widgetData.estimateAnalytics.breakdown.accepted > 0}">
+                                        <div class="breakdown-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.estimateAnalytics.breakdown.accepted }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="breakdown-label">
+                                            <h6>
+                                                <b>
+                                                    Accepted
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <div class="golura-block breakdown-card text-center" ng-class="{'warning-text': widgetData.estimateAnalytics.breakdown.pending > 0}">
+                                        <div class="breakdown-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.estimateAnalytics.breakdown.pending }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="breakdown-label">
+                                            <h6>
+                                                <b>
+                                                    Pending
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <div class="golura-block breakdown-card text-center" ng-class="{'alert-text': widgetData.estimateAnalytics.breakdown.rejected > 0}">
+                                        <div class="breakdown-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.estimateAnalytics.breakdown.rejected }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="breakdown-label">
+                                            <h6>
+                                                <b>
+                                                    Rejected
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto" ng-if="widgetData.estimateAnalytics.trends && widgetData.estimateAnalytics.trends.monthly.length > 0">
+                <div class="trends-section">
+                    <h4 class="trends-section-title text-center">
+                        <b>
+                            Monthly Trend
+                        </b>
+                    </h4>
+                    <div class="golura-block">
+                        <div class="trends-list-container list-container">
+                            <ul class="trends-list list no-bullet">
+                                <li class="trend-list-item list-item" ng-repeat="month in widgetData.estimateAnalytics.trends.monthly | limitTo:3">
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell auto">
+                                            <h6 class="trend-month">
+                                                <b>{{ month.month }}</b>
+                                            </h6>
+                                        </div>
+                                        <div class="cell shrink text-right">
+                                            <span class="trend-count">
+                                                <b>{{ month.count }} estimates</b>
+                                            </span>
+                                            <br>
+                                            <span class="trend-value text-muted">
+                                                <small>({{ month.value | currency }})</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

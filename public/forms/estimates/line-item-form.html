@@ -1,0 +1,439 @@
+<div 
+    class="line-item-create-edit-container create-edit-container" 
+    ng-init="initLineItemForm()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="line-item-create-edit create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newLineItem">Create Line Item</b>
+            <b ng-if="!UI.newLineItem">Edit Line Item</b>
+        </h1>
+        <form 
+            class="line-item-form golura-form" 
+            id="lineItemForm" 
+            name="lineItemForm" 
+            ng-submit="createLineItem($event, lineItem)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Details</b></h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Name
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="name" 
+                            placeholder="Item Name" 
+                            ng-model="lineItem.name" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Rate
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="rate"
+                            placeholder="0.0" 
+                            ng-model="lineItem.rate" 
+                            ui-mask="9?.9" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Unit
+                            <span class="alert-text">*</span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="unitOptions"
+                            options="units"
+                            id="lineItemUnit"
+                            name="lineItemUnit"
+                            ng-model="lineItem.unit"
+                            required 
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Markup
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="markup" 
+                            placeholder="0.00" 
+                            ng-model="lineItem.markup" 
+                            ui-mask="9?999.99" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·" 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="line-item-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="line-item-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="line-item taxable button"
+                                    ng-click="lineItem.taxable = !lineItem.taxable"
+                                    ng-class="{'selected': lineItem.taxable}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="lineItem.taxable"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Taxable?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="lineItem.taxable"
+                >
+                    <div class="input-container">
+                        <label>
+                            Sales Tax Rate
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="salesTaxRate" 
+                            placeholder="0.00" 
+                            ng-model="lineItem.salesTaxRate"
+                            ui-mask="9?999.99" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-padding-x align-middle">
+                        <div class="cell small-shrink medium-shrink large-shrink">
+                            <div class="radio-container">
+                                <label class="radio">
+                                    <input 
+                                      type="radio"
+                                      name="eventClientRadio"
+                                      ng-model="lineItem.pricedBy"
+                                      ng-value="'formula'"
+                                    >
+                                    <span class="radio-mark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="cell small-auto medium-auto large-auto">
+                            <label class="radio-label">
+                                Total by Formula Result?
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-padding-x align-middle">
+                        <div class="cell small-shrink medium-shrink large-shrink">
+                            <div class="radio-container">
+                                <label class="radio">
+                                    <input 
+                                      type="radio"
+                                      name="eventClientRadio"
+                                      ng-model="lineItem.pricedBy"
+                                      ng-value="'question'"
+                                    >
+                                    <span class="radio-mark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="cell small-auto medium-auto large-auto">
+                            <label class="radio-label">
+                                Total by Question?
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-padding-x align-middle">
+                        <div class="cell small-shrink medium-shrink large-shrink">
+                            <div class="radio-container">
+                                <label class="radio">
+                                    <input 
+                                      type="radio"
+                                      name="eventClientRadio"
+                                      ng-model="lineItem.pricedBy"
+                                      ng-value="'custom'"
+                                    >
+                                    <span class="radio-mark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="cell small-auto medium-auto large-auto">
+                            <label class="radio-label">
+                                Custom Total
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="lineItem.pricedBy == 'formula'"
+                >
+                    <h6 class="alert-text">
+                        <b>Warning: </b>
+                        Adding multiple Line Items with the same Formula will result in the same total for each Line Item.
+                    </h6>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="lineItem.pricedBy == 'question'"
+                >
+                    <div class="input-container">
+                        <label>
+                            Question
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="questionOptions"
+                            options="questionContainer.Questions"
+                            id="lineItemQuestion"
+                            name="lineItemQuestion"
+                            ng-model="lineItem.questionId"
+                        ></selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="lineItem.pricedBy == 'custom'"
+                >
+                    <div class="input-container">
+                        <label>
+                            Total
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="total" 
+                            placeholder="Litem Item Total" 
+                            ng-model="lineItem.total"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea 
+                                class="form-textarea" 
+                                name="description" 
+                                placeholder="Item Description" 
+                                ng-model="lineItem.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="line-item-add-item-rule-button submit-button button white-text"
+                        id="lineItemAddItemButton"
+                        type="button"
+                        ng-click="initItems()"
+                        data-open="addItemFormReveal"
+                    >
+                        <i class="fal fa-plus-circle"></i> Add Item
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12 list-container">
+                    <ul class="line-item-items-list list">
+                        <li 
+                            class="line-item-items-list-item list-item position-relative"
+                            ng-repeat="item in lineItem.Items"
+                        >
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b>ID: </b>
+                                        #{{item.id}}
+                                    </h6>
+                                    <h6>
+                                        <b>Name: </b>
+                                        {{item.name}}
+                                    </h6>
+                                    <h6>
+                                        <b>Part Number: </b>
+                                        {{item.partNumber}}
+                                    </h6>
+                                    <h6>
+                                        <b>Manufacturer: </b>
+                                        {{item.manufacturerId}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.lineItemLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.lineItemLoaded"
+                                        ></div>
+                                        <label for="itemQuantity-{{$index}}">
+                                            Quantity
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="text"
+                                            id="itemQuantity-{{$index}}"
+                                            name="itemQuantity-{{$index}}"
+                                            placeholder="Enter a quantity"
+                                            ng-model="item.newQuantity"
+                                            ui-mask="9?999.99" 
+                                            ui-mask-placeholder 
+                                            ui-mask-placeholder-char="·"
+                                            required
+                                        />
+                                    </div> 
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div class="button-group">
+                                        <button 
+                                            class="estimate-progressions-update-step-button submit-button button warning white-text" 
+                                            type="button"
+                                            ng-click="updateLineItemItemQuantity(item)"
+                                            ng-if="item.newQuantity != item.LineItemItem.quantity"
+                                        >
+                                            <i class="fal fa-check-circle"></i> Update
+                                        </button>  
+                                        <button 
+                                            class="remove-rule-action-button button alert white-text"
+                                            type="button" 
+                                            ng-click="item.remove = !item.remove"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="view-estimate-progress-line-items-list-item-delete-container list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="item.remove"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to remove 
+                                                this Item?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="removeItemFromLineItem(item)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="item.remove = !item.remove"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="line-item-form-submit-button submit-button button" 
+                        id="lineItemFormSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="line-item-form-edit-submit-button submit-button button" 
+                        id="lineItemFormEditSubmitButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-click="updateLineItem(lineItem)" 
+                        ng-if="!UI.newLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

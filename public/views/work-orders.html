@@ -1,0 +1,217 @@
+<div 
+    class="work-orders-container"
+    ng-init="initWorkOrders()"
+>
+    <user-onboarding page-name="work-orders" auto-start="true"></user-onboarding>
+    <div class="work-orders">
+        <div 
+            class="callout sticky text-center fade"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length || 
+            UI.modalFormSaved"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            data-sticky 
+            data-options="marginTop:0;"
+        >
+            <button 
+                class="close-button button clear"
+                ng-class="{'success': UI.message,
+                'alert': UI.errMessage}"
+                type="button"
+                ng-click="UI.errMessage = !UI.errMessage;
+                UI.message = !UI.message"
+            >
+                <i class="fal fa-times-circle"></i>
+            </button>
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="work-orders-search-container list-search-container">
+                    <div class="work-orders-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell small-10 medium-auto large-auto align-self-bottom">
+                                    <input
+                                        class="work-orders-search-input search-input"
+                                        id="workOrdersSearchInput" 
+                                        type="text"
+                                        placeholder="Search Work Orders..."
+                                        ng-model="search.workOrders.value"
+                                        ng-change="searchWorkOrderKanbanBoard(search.workOrders.value)"
+                                    />
+                                </div>
+                                <div class="cell small-2 medium-shrink large-shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div 
+                    class="work-order-bord-callout callout warning warning-text"
+                    ng-if="UI.editBoard"
+                >
+                    <p class="text-center">
+                        <b>
+                            Warning 
+                        </b>
+                        You currently have the Work Orders Board unlocked! Dragging the 
+                        work orders will change their status.
+                    </p>
+                </div>
+                <div class="work-orders-options-container">
+                    <div class="grid-x align-middle">
+                        <div class="cell auto">
+                            <div class="button-group">
+                                <button 
+                                    class="back-button button warning white-text" 
+                                    type="button"
+                                    ng-click="$root.goBack()"
+                                >
+                                    <i class="fal fa-circle-arrow-left"></i>
+                                    <span ng-if="!$root.UI.isMobile">
+                                        Back
+                                    </span>
+                                </button>
+                                <button 
+                                    class="work-orders-sync-button submit-button button success white-text" 
+                                    ng-class="{'expanded': $root.UI.isMobile}"
+                                    id="workOrderSyncButton"
+                                    type="button"
+                                    ng-click="updateWorkOrdersPriorities()"
+                                    ng-if="permissions.canEdit && !$root.UI.isMobile"
+                                >
+                                    <i class="fal fa-rotate"></i> Sync
+                                </button>
+                                <button 
+                                    class="work-orders-sync-button submit-button button alert white-text" 
+                                    ng-class="{'expanded': $root.UI.isMobile}"
+                                    id="workOrderSyncButton"
+                                    type="button"
+                                    ng-click="toggleWorkOrderBoardEdit()"
+                                    ng-if="permissions.canEdit && !$root.UI.isMobile"
+                                >
+                                    <span ng-if="!UI.editBoard">
+                                        <i class="fal fa-unlock"></i> Unlock
+                                    </span>
+                                    <span ng-if="UI.editBoard">
+                                        <i class="fal fa-lock"></i> Lock
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div 
+                            class="cell auto"
+                            ng-if="$root.UI.isMobile"
+                        >
+                            <button 
+                                class="work-orders-options-reveal-button options-reveal-button button clear float-right"
+                                type="button"
+                                data-open="workOrdersOptionsMobileReveal"
+                                aria-label="Open Work Orders Options"
+                            >
+                                <i class="fal fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div 
+                    class="work-order-board-container"
+                    id="workOrderBoardContainer"
+                >
+                    <div 
+                        class="work-order-board"
+                        id="workOrderBoard"
+                    >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="work-ordera-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="workOrdersOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeWorkOrdersOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="work-orders-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <button 
+                        class="work-orders-sync-button submit-button button success white-text" 
+                        ng-class="{'expanded': $root.UI.isMobile}"
+                        id="workOrderSyncButton"
+                        type="button"
+                        ng-click="updateWorkOrdersPriorities()"
+                        ng-if="permissions.canEdit"
+                    >
+                        <i class="fal fa-rotate"></i> Sync
+                    </button>
+                    <button 
+                        class="work-orders-sync-button submit-button button alert white-text" 
+                        ng-class="{'expanded': $root.UI.isMobile}"
+                        id="workOrderSyncButton"
+                        type="button"
+                        ng-click="toggleWorkOrderBoardEdit()"
+                        ng-if="permissions.canEdit"
+                    >
+                        <span ng-if="!UI.editBoard">
+                            <i class="fal fa-unlock"></i> Unlock
+                        </span>
+                        <span ng-if="UI.editBoard">
+                            <i class="fal fa-lock"></i> Lock
+                        </span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="work-orders-detail-reveal reveal large"
+    id="workOrdersDetailsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeworkOrdersDetailsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/work-orders/preview.html'"
+    >
+    </div>
+</div>

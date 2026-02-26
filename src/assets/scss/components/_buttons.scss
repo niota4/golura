@@ -1,0 +1,148 @@
+body {
+    // Clear buttons base styling
+    button.clear,
+    a.clear {
+    // Ensure clear buttons retain their appearance in focus and active states
+    &:focus,
+    &:active {
+        outline: none; // Remove the outline
+        box-shadow: none; // Remove box shadow (optional)
+    }
+    // Primary clear buttons
+    &.button {
+        color: var(--primary-color);
+
+        &:focus,
+        &:active {
+        color: var(--primary-color); // Match primary color
+        }
+    }
+
+    // Secondary clear buttons
+    &.secondary {
+        color: var(--secondary-color);
+
+        &:focus,
+        &:active {
+        color: var(--secondary-color);
+        }
+    }
+
+    // Warning clear buttons
+    &.warning {
+        color: $warning-color;
+
+        &:focus,
+        &:active {
+        color: $warning-color;
+        }
+    }
+
+    // Alert clear buttons
+    &.alert {
+        color: $alert-color;
+
+        &:focus,
+        &:active {
+        color: $alert-color;
+        }
+    }
+    // Add more variants as needed (e.g., success, info)
+    }
+
+    .white-hollow-button {
+        border: 1px solid var(--white);
+        color: var(--white);
+        background: $transparent !important;
+    
+        &:hover,
+        &:focus,
+        &:active {
+            background: transparentize($white, 0.8);
+        }
+    }
+    .white-button {
+        background: $white !important;
+        color: var(--primary-color);
+    
+        &:hover,
+        &:focus,
+        &:active {
+            background: darken($white, 5);
+            color: var(--primary-color);
+        }
+    }
+    .light-gray-button {
+        background: var(--light-gray);
+        color: $dark-gray;
+    
+        &:hover,
+        &:focus,
+        &:active {
+            background: darken($light-gray, 10);
+            color: $dark-gray;
+        }
+    }
+    .medium-gray-button {
+        background: $medium-gray;
+        color: $dark-gray;
+    
+        &:hover,
+        &:focus,
+        &:active {
+            background: darken($medium-gray, 10);
+            color: $dark-gray;
+        }
+    }
+    .dark-gray-button {
+        background: $dark-gray;
+        color: var(--white);
+    
+        &:hover,
+        &:focus,
+        &:active {
+            background: darken($dark-gray, 10);
+            color: var(--white);
+        }
+    }
+    .white-color-button {
+        color: var(--white);
+    }
+    .gray-color-button {
+        color: $medium-gray;
+    }
+    .button {
+        font-weight: 600;
+        background: var(--primary-color); 
+
+        &.clear {
+            color: var(--primary-color);
+
+            &:hover {
+                color: var(--primary-color);
+                opacity: 0.7;
+            }
+        }
+        &.teal {
+            background: $teal;
+        
+            &:focus,
+            &:active {
+                background: darken($teal, 10);
+            }
+            &:hover {
+                background: darken($teal, 10);
+            }
+        }
+        // add disabled stat
+        &[disabled],
+        &:hover {
+            background: var(--primary-color);
+        }
+        &:hover,
+        &:focus,
+        &:active {
+            background: var(--primary-color);
+        }
+    }
+}

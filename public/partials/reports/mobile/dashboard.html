@@ -1,0 +1,162 @@
+<div 
+    class="report-dashboard-container report-container mobile"
+>
+    <div class="golura-mobile-block grid-y report">
+        <div class="cell shrink">
+            <div class="report-dashboard-header-container report-header-container">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12">
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i>
+                        </button>  
+                    </div>
+                    <div 
+                        class="cell small-12 medium-shrink large-shrink"
+                        ng-class="{'text-right': $root.UI.isMobile}"
+                    >
+                        <button
+                            class="spreadsheet-button button white-text"
+                            type="button"
+                            ng-class="{'success': UI.type == 'spreadsheet'}"
+                            ng-click="UI.type = 'spreadsheet'"
+                            ng-if="hasOptions('spreadsheet')"
+                        >
+                            <i class="fal fa-table-cells"></i> 
+                            <span ng-if="!$root.UI.isMobile"> 
+                                Table
+                            </span>
+                        </button>
+                        <button
+                            class="spreadsheet-button button white-text"
+                            type="button"
+                            ng-class="{'success': UI.type == 'summary'}"
+                            ng-click="UI.type = 'summary'"
+                            ng-if="hasOptions('summary')"
+                        >
+                            <i class="fal fa-file-chart-pie"></i>
+                            <span ng-if="!$root.UI.isMobile"> 
+                                Summary
+                            </span>
+                        </button>
+                        <button
+                            class="spreadsheet-button button white-text"
+                            type="button"
+                            ng-class="{'success': UI.type == 'dashboard'}"
+                            ng-click="UI.type = 'dashboard'"
+                            ng-if="hasOptions('dashboard')"
+                        >
+                            <i class="fal fa-grid"></i>
+                            <span ng-if="!$root.UI.isMobile"> 
+                                Charts
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell auto">
+            <div class="report-dashboard-content-container">
+                <div class="report-dashboard report-dashboard-content mobile" ng-show="UI.reportLoaded && report.data">
+                    <!-- Summary Cards Row -->
+                    <div class="dashboard-summary-cards" ng-if="report.data.summary">
+                        <div class="dashboard-card" ng-repeat="(key, value) in report.data.summary track by key">
+                            <div class="card-header">
+                                <h5>{{key | formatCamelCase}}</h5>
+                            </div>
+                            <div class="card-content">
+                                <div class="metric-value">{{value}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Widgets Stack (Mobile optimized) -->
+                    <div class="dashboard-widgets-container mobile-stack">
+                        
+                        <!-- Charts stacked vertically for mobile -->
+                        <div class="charts-section" ng-if="shouldShowCharts()">
+                            <div class="chart-container mobile">
+                                <div class="widget-header">
+                                    <h4>{{getPrimaryChartTitle()}}</h4>
+                                </div>
+                                <div id="primaryChart" style="height: 250px;"></div>
+                            </div>
+                            <div class="chart-container mobile">
+                                <div class="widget-header">
+                                    <h4>{{getSecondaryChartTitle()}}</h4>
+                                </div>
+                                <div id="secondaryChart" style="height: 250px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Data sections stacked for mobile -->
+                        <div class="data-section mobile">
+                            <div class="dashboard-widget-container mobile" ng-if="hasGridData()">
+                                <div class="widget-header">
+                                    <h4>Data Table</h4>
+                                    <button class="export-button button small" ng-click="exportSpreadsheet()" ng-if="report.data.spreadsheetData">
+                                        <i class="fal fa-download"></i> Export
+                                    </button>
+                                </div>
+                                <div class="mobile-table-container">
+                                    <div id="dataGrid" style="height: 300px; overflow-x: auto;"></div>
+                                </div>
+                            </div>
+                            <div class="dashboard-widget-container mobile">
+                                <div class="widget-header">
+                                    <h4>Details</h4>
+                                </div>
+                                <div id="detailsList" style="height: 200px; overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="dashboard-loading" ng-if="!UI.reportLoaded">
+                        <div class="text-center">
+                            <div class="loading-spinner">
+                                <i class="fal fa-spinner fa-spin fa-2x"></i>
+                            </div>
+                            <p>Loading dashboard...</p>
+                        </div>
+                    </div>
+
+                    <!-- No Data State -->
+                    <div class="dashboard-no-data text-center" ng-if="UI.reportLoaded && !report.data">
+                        <div class="no-data-icon">
+                            <i class="fal fa-chart-line fa-3x text-muted"></i>
+                        </div>
+                        <h4>No Data Available</h4>
+                        <p>This report doesn't have data to display in dashboard view.</p>
+                    </div>
+
+                    <!-- Note Only State (for unimplemented reports) -->
+                    <div class="dashboard-note-only text-center" ng-if="UI.reportLoaded && report.data && report.data.note && Object.keys(report.data).length === 1">
+                        <div class="note-icon">
+                            <i class="fal fa-exclamation-triangle fa-3x text-warning"></i>
+                        </div>
+                        <h4>Report Not Yet Implemented</h4>
+                        <p>{{report.data.note}}</p>
+                    </div>
+
+                    <!-- Simple Data View (for reports with just metrics, no charts/grids) -->
+                    <div class="dashboard-simple-data" ng-if="UI.reportLoaded && report.data && !shouldShowCharts() && !hasGridData() && !report.data.note">
+                        <div class="simple-data-container">
+                            <div class="dashboard-card" ng-repeat="(key, value) in report.data track by key" ng-if="key !== 'note'">
+                                <div class="card-header">
+                                    <h5>{{key | formatCamelCase}}</h5>
+                                </div>
+                                <div class="card-content">
+                                    <div class="metric-value">{{value}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

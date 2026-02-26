@@ -1,0 +1,84 @@
+<div class="email-form-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="email create-edit">
+        <h1>
+            <b>
+                Send Email
+            </b>
+        </h1>
+        <form
+            class="email-form golura-form"
+            name="emailForm"
+            ng-submit="sendEmail()"
+            novalidate
+        >
+            <div class="golura-block grid-y">
+                <div class="cell shrink">
+                    <div class="input-container">
+                        <label>
+                            To
+                        </label>
+                        <selectize
+                            class="form-input"
+                            id="clientEmail"
+                            name="clientEmail"
+                            config="emailOptions"
+                            options="client.ClientEmails"
+                            ng-model="email.emailId"
+                            ng-disabled="!client.ClientEmails.length"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell shrink">
+                    <div class="input-container">
+                        <label>
+                            Subject
+                        </label>
+                        <input 
+                            class="form-input"
+                            type="text"
+                            name="followUpSubject"
+                            ng-model="email.subject"
+                            placeholder="Type your subject here..."
+                        />
+                    </div>
+                </div>
+                <div class="cell shrink">
+                    <div class="email-editor-container">
+                        <div 
+                            class="email-editor golura-rich-text-editor"
+                            id="emailEditor"
+                            rich-text-editor 
+                            ng-model="email.message"
+                        ></div>
+                    </div>
+                </div>
+                <div class="cell shrink text-right">
+                    <button 
+                        class="submit-button button success white-text"
+                        id="sendEmailButton"
+                        type="submit"
+                        ng-disabled="!email.emailId || !email.subject || !email.message"
+                    >
+                        <i class="fal fa-check-circle"></i> 
+                        Send Email
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

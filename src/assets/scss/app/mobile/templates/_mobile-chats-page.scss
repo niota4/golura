@@ -1,0 +1,46 @@
+@include breakpoint(small only) {
+
+    .chats-container {
+
+        .chats {
+
+            .chats-room-container {
+                height: 100% !important;
+
+                .chats-room-chat-header-container {
+                    padding: 1rem;
+                    background: var(--white);
+                    border-top: 1px solid var(--light-gray);
+                    border-bottom: 1px solid var(--light-gray);
+                    position: absolute;
+                    top: -1px;
+                    z-index: 9;
+                    width: 100%;
+
+                    .chats-room-chat-header {
+                        position: relative;
+
+                        h3 {
+                            margin: 0px auto;
+                            text-align: center;
+                            font-weight: bolder;
+                            max-width: calc(100% - 10rem);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            color: var(--primary-color);
+                        }
+                        .chat-room-back-button {
+                            position: absolute;
+                            left: 0px;
+                            top: 50%;
+                            margin: 0px;
+                            padding: .75rem 1.5rem;
+                            transform: translateY(-50%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

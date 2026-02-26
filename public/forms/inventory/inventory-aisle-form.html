@@ -1,0 +1,159 @@
+<div class="inventory-aisle-container inventory-form-container create-edit-container">
+    <div class="inventory-aisle inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventoryAisle">
+                Create Inventory Aisle
+            </b>
+            <b ng-if="!UI.newInventoryAisle">
+                Edit Inventory Aisle
+            </b>
+        </h1>
+        <form 
+            class="inventory-aisle-form inventory-form golura-form"
+            id="inventoryAisleForm"
+            name="inventoryAisleForm"
+            ng-submit="createInventoryAisle($event, inventoryAisle)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryAisleLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryAisleLoaded"
+                        ></div>
+                        <label for="aisleName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="aisleName"
+                            name="aisleName"
+                            placeholder="Aisle name"
+                            ng-model="inventoryAisle.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryAisleLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryAisleLoaded"
+                        ></div>
+                        <label>
+                            Area
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="inventoryOptions"
+                            options="inventoryAreas"
+                            id="inventoryArea"
+                            name="inventoryArea"
+                            type="text"
+                            ng-model="inventoryAisle.inventoryAreaId"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="!UI.newInventoryAisle"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryAisleLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryAisleLoaded"
+                        ></div>
+                        <label for="aisleStep">   
+                            Step
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="aisleStep"
+                            name="aisleStep"
+                            placeholder="Aisle step"
+                            ng-model="inventoryAisle.step"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="aisleDescription"
+                                name="aisleDescriptionTextarea"
+                                ng-model="inventoryAisle.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-aisle-form-submit-button submit-button button" 
+                        id="inventoryAisleFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventoryAisleLoaded && UI.newInventoryAisle"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-aisle-form-edit-submit-button submit-button button" 
+                        id="inventoryAisleFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventoryAisle(inventoryAisle)"
+                        ng-if="UI.inventoryAisleLoaded && !UI.newInventoryAisle"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="view-event-top-bar-container top-bar-container">
+    <div class="grid-x grid-margin-x align-middle">
+        <div class="cell small-12 medium-12 large-12">
+            <div class="view-events-options-container view-options-container">
+                <a 
+                    class="view-events-options-button back-button button warning white-text"
+                    ng-click="$root.goBack()"
+                    ng-if="!$root.UI.isMobile"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> Back
+                </a>
+                <a 
+                    class="view-events-options-button button white-text"
+                    ng-href="events/event/{{event.id}}/edit"
+                    ng-if="permissions.canEdit && !$root.UI.isMobile"
+                    ng-cloak
+                >
+                    <i class="fal fa-edit"></i> Edit
+                </a>
+                <div 
+                    class="grid-x"
+                    ng-if="$root.UI.isMobile"
+                >
+                    <div class="cell auto">
+                        <a 
+                            class="view-event-options-button back-button button warning white-text"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i>
+                        </a>
+                    </div>
+                    <div class="cell auto text-center">
+                        <h3
+                            class="sub-page"
+                            ng-if="$root.UI.isMobile"
+                        >
+                            <b>
+                                {{UI.subPage}}
+                            </b>
+                        </h3>
+                    </div>
+                    <div class="cell auto text-right">
+                        <button 
+                            class="view-event-options-reveal-button view-options-reveal-button button clear"
+                            type="button"
+                            data-open="viewEventOptionsMobileReveal"
+                            aria-label="Open Event Options"
+                        >
+                            <i class="fal fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div 
+            class="cell small-12 medium-12 large-12"
+            ng-class="{'text-center': $root.UI.isMobile}"
+        >
+            <h1 
+                class="text-capitalize"
+                ng-click="copyToClipBoard(UI.url)"
+                ng-if="event.title"
+                title="{{event.title}}"
+            >
+                <div class="grid-x">
+                    <div class="cell small-12 medium-auto large-auto">
+                        <a ng-href="events/event/{{event.id}}">
+                            {{event.title}}
+                        </a> 
+                    </div>
+                    <div class="cell small-12 medium-shrink large-shrink">
+                        <span 
+                            class="sub-page"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            / {{UI.subPage}}
+                        </span>
+                    </div>
+                </div>
+            </h1>
+        </div>
+    </div>
+</div>
+<div 
+    ng-include="'dist/partials/events/deletion-screen.html'"
+    ng-if="UI.eventDeleteConfirmation"
+>
+</div>
+<div 
+    class="view-event-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewEventOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewEventOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-event-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <button 
+                        class="event-preview-check-out-button warning button white-text"
+                        ng-if="event.checkInDate"
+                        ng-cloak
+                        ng-click="checkOutEvent(event)"
+                        data-close
+                    >
+                        <i class="fal fa-check-double"></i> Check Out
+                    </button>
+                    <a 
+                        class="view-event-options-options-button button white-text"
+                        ng-href="events/event/{{event.id}}/edit"
+                        ng-if="permissions.canEdit"
+                        data-close
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="delete-button button alert white-text" 
+                        type="button"
+                        ng-click="UI.eventDeleteConfirmation = !UI.eventDeleteConfirmation; closeViewEventOptionsMobileReveal()"
+                        ng-if="permissions.canArchive"
+                        data-close
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div ng-include="'/dist/navigations/event-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,528 @@
+<div class="estimator-run-form-container form-container create-edit-container">
+    <!-- Foundation Callout for Messages -->
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+
+    <button 
+        class="delete-button button alert white-text" 
+        type="button"
+        ng-click="$root.goBack()"
+    >
+        <i class="fal fa-archive"></i> Abandon &amp; Close
+    </button>
+    <div class="create-edit grid-container">
+        <h1>
+            <b>
+                {{estimator.title}}
+            </b>
+        </h1>
+        
+        <!-- Debug Section (only show in development) -->
+        <div class="debug-section callout primary" style="margin-bottom: 20px;">
+            <h6>Debug Tools</h6>
+            <button 
+                class="button secondary small" 
+                type="button"
+                ng-click="loadTestData()"
+                title="Load test data to pre-fill the form"
+            >
+                <i class="fal fa-flask"></i> Load Test Data
+            </button>
+            <button 
+                class="button warning small" 
+                type="button"
+                ng-click="clearFormData()"
+                title="Clear all form data"
+            >
+                <i class="fal fa-archive"></i> Clear Form
+            </button>
+            <small style="display: block; margin-top: 10px; color: #666;">
+                Debug tools for testing. Click "Load Test Data" to pre-fill the form with test answers.
+            </small>
+        </div>
+        
+        <div class="progress-container" ng-if="estimator.QuestionContainers.length > 1">
+            <div class="grid-x grid-margin-x align-center">
+                <div class="cell small-12">
+                    <h6 class="text-center">Step {{currentContainerIndex + 1}} of {{estimator.QuestionContainers.length}}: {{currentContainer.name}}</h6>
+                    <div class="progress-bar progress">
+                        <div class="progress-meter" ng-style="{'width': getProgressPercentage() + '%'}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form 
+            class="estimator-run-form estimate-form golura-form form"
+            id="estimatorRunForm"
+            name="estimatorRunForm"
+            ng-submit="handleFormSubmit($event, estimator)"
+        >
+            <div class="form-list">
+                <div class="list-container grid-x grid-padding-x align-middle">
+                    <!-- Current Container Questions -->
+                    <div 
+                        class="cell small-12 medium-12 large-12"
+                        ng-repeat="question in currentContainer.Questions track by $index"
+                    >
+                        <div ng-switch="question.inputType">
+                            <div class="input-container" ng-switch-when="text">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="text"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    ng-minlength="question.validationRules.minLength"
+                                    ng-maxlength="question.validationRules.maxLength"
+                                    ng-pattern="question.validationRules.pattern"
+                                    placeholder="{{question.helpText || 'Enter text'}}"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="number">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="number"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    min="{{question.validationRules.min}}"
+                                    max="{{question.validationRules.max}}"
+                                    step="{{question.validationRules.step || 'any'}}"
+                                    placeholder="{{question.helpText || 'Enter number'}}"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="textarea">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <div class="form-textarea-container">
+                                    <textarea 
+                                        class="form-textarea"
+                                        ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                        ng-required="question.isRequired"
+                                        ng-minlength="question.validationRules.minLength"
+                                        ng-maxlength="question.validationRules.maxLength"
+                                        placeholder="{{question.helpText || 'Enter details'}}"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="input-container" ng-switch-when="select">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                
+                                <select
+                                    selectize
+                                    config="answerOptions"
+                                    options="question.answerOptions"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    class="form-input"
+                                ></select>
+                            </div>
+                            <div class="grid-x grid-margin-x align-middle align-center" ng-switch-when="radio">
+                                <div class="cell small-12 medium-12 large-12 text-center">
+                                    <h6 title="{{question.helpText}}">
+                                        {{question.questionText}}
+                                        <span 
+                                            class="golura-tooltip"
+                                            ng-if="question.helpText"
+                                        >
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                        <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12"
+                                    ng-class="{'medium-3 large-3': question.selectOptions.length > 4, 
+                                    'medium-shrink large-shrink': question.selectOptions.length <= 4}"
+                                    ng-repeat="option in question.selectOptions track by $index"
+                                >
+                                    <div class="select-container">
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell shrink text-right">
+                                                <div class="radio-container">
+                                                    <label class="radio">                                        
+                                                        <input 
+                                                            type="radio"
+                                                            name="question_{{question.id}}"
+                                                            ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                                            ng-value="option.value"
+                                                            ng-required="question.isRequired"
+                                                        />
+                                                        <span class="radio-mark"></span>
+                                                      </label>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">
+                                                <h6>
+                                                    {{option.label || option.value}}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container" ng-switch-when="multi-select">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <select
+                                    selectize
+                                    config="answerMultiOptions"
+                                    options="question.answerOptions"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    class="form-input"
+                                ></select>
+                            </div>
+                            <div class="grid-x grid-margin-x align-middle align-center" ng-switch-when="checkbox">
+                                <div class="cell small-12 medium-12 large-12 text-center">
+                                    <h6 title="{{question.helpText}}">
+                                        {{question.questionText}}
+                                        <span 
+                                            class="golura-tooltip"
+                                            ng-if="question.helpText"
+                                        >
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                        <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12"
+                                    ng-class="{'medium-3 large-3': question.selectOptions.length > 4, 
+                                    'medium-shrink large-shrink': question.selectOptions.length <= 4}"
+                                    ng-repeat="option in question.selectOptions track by $index"
+                                >
+                                    <div class="select-container">
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell shrink text-right">
+                                                <button 
+                                                    class="estimator-select-button select-button button"
+                                                    type="button"
+                                                    ng-click="toggleEstimatorCheckbox(question, $index)"
+                                                    ng-class="{'selected': option.selected}"
+                                                >
+                                                    <div 
+                                                        class="check-icon"
+                                                        ng-if="option.selected"
+                                                    >
+                                                        <i class="fal fa-check"></i>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                            <div class="cell auto">
+                                                <span>
+                                                    {{option.label || option.value}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container slider-container" ng-switch-when="slider">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}: {{questionAnswers[getQuestionModelKey(question)] !== undefined ? questionAnswers[getQuestionModelKey(question)] : (question.validationRules.min || 0)}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell small-12 medium-shrink large-shrink text-center">
+                                        <span class="slider-label">
+                                            {{question.validationRules.min || 0}}
+                                        </span>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <div class="slider" 
+                                            data-slider 
+                                            data-initial-start="{{questionAnswers[getQuestionModelKey(question)] !== undefined ? questionAnswers[getQuestionModelKey(question)] : (question.validationRules.min || 0)}}" 
+                                            data-start="{{question.validationRules.min || 0}}" 
+                                            data-end="{{question.validationRules.max || 100}}" 
+                                            data-step="{{question.validationRules.step || 1}}">
+                                            <span class="slider-handle" 
+                                                data-slider-handle 
+                                                role="slider" 
+                                                tabindex="1" 
+                                                ng-attr-aria-controls="{{'sliderOutput' + $index}}"></span>
+                                            <span class="slider-fill" data-slider-fill></span>
+                                            <input type="hidden" 
+                                                ng-model="questionAnswers[getQuestionModelKey(question)]" 
+                                                ng-required="question.isRequired"
+                                                ng-attr-id="{{'sliderOutput' + $index}}">
+                                        </div>
+                                    </div>
+                                    <div class="cell small-12 medium-shrink large-shrink text-center">
+                                        <span class="slider-label">
+                                            {{question.validationRules.max || 100}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container" ng-switch-when="date">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="date"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    min="{{question.validationRules.min}}"
+                                    max="{{question.validationRules.max}}"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="time">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="time"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="email">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="email"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    placeholder="{{question.helpText || 'Enter email address'}}"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="tel">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="tel"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    placeholder="{{question.helpText || 'Enter phone number'}}"
+                                />
+                            </div>
+                            <div class="input-container" ng-switch-when="url">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="url"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    placeholder="{{question.helpText || 'Enter URL'}}"
+                                />
+                            </div>
+                            <div class="input-container slider-container" ng-switch-when="range">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}: {{questionAnswers[getQuestionModelKey(question)] !== undefined ? questionAnswers[getQuestionModelKey(question)] : (question.validationRules.min || 0)}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell small-12 medium-shrink large-shrink text-center">
+                                        <span class="slider-label">
+                                            {{question.validationRules.min || 0}}
+                                        </span>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <input 
+                                            class="form-input"
+                                            type="range"
+                                            ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                            ng-required="question.isRequired"
+                                            min="{{question.validationRules.min || 0}}"
+                                            max="{{question.validationRules.max || 100}}"
+                                            step="{{question.validationRules.step || 1}}"
+                                        />
+                                    </div>
+                                    <div class="cell small-12 medium-shrink large-shrink text-center">
+                                        <span class="slider-label">
+                                            {{question.validationRules.max || 100}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container" ng-switch-when="file">
+                                <label title="{{question.helpText}}">
+                                    {{question.questionText}}
+                                    <span 
+                                        class="golura-tooltip"
+                                        ng-if="question.helpText"
+                                    >
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    <span class="required-indicator" ng-if="question.isRequired">*</span>
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="file"
+                                    ng-model="questionAnswers[getQuestionModelKey(question)]"
+                                    ng-required="question.isRequired"
+                                    accept="{{question.validationRules.accept}}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="cell small-12 medium-12 large-12" ng-if="!UI.estimatorClose">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <!-- Previous Button -->
+                            <div class="cell auto">
+                                <button 
+                                    class="button warning white-text"
+                                    type="button"
+                                    ng-click="previousContainer()"
+                                    ng-disabled="currentContainerIndex === 0"
+                                    ng-if="estimator.QuestionContainers.length > 1 && currentContainerIndex > 0"
+                                >
+                                    <i class="fal fa-circle-arrow-left"></i> Previous
+                                </button>
+                            </div>
+
+                            <!-- Next/Submit Button -->
+                            <div class="cell auto text-right">
+                                <button 
+                                    class="estimator-run-form-submit-button submit-button button"
+                                    id="estimatorRunFormSubmitButton"
+                                    type="submit"
+                                    ng-disabled="UI.formSaving || !isCurrentContainerValid()"
+                                    ng-class="{'form-saving': UI.formSaving}"
+                                >
+                                    <span ng-if="!UI.formSaving && !isLastContainer()">
+                                        Next 
+                                        <i class="fal fa-circle-arrow-right"></i>
+                                    </span>
+                                    <span ng-if="!UI.formSaving && isLastContainer()">
+                                        Generate Estimate
+                                        <i class="fal fa-calculator"></i>
+                                    </span>
+                                    <span ng-if="UI.formSaving">
+                                        <i class="fal fa-spinner fa-spin"></i> Processing...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

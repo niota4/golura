@@ -1,0 +1,268 @@
+<div class="comment-container">
+    <div 
+        format-comments 
+        comment="comment"
+    ></div>
+    <div class="comment">
+        <div class="grid-x">
+            <div class="cell small-12 medium-6 large-6">
+                <div format-users user="comment.User"></div>
+                <div class="grid-x align-middle">
+                    <div class="cell shrink">
+                        <div class="comment-user-container">
+                            <user-icon user="comment.User"></user-icon>
+                        </div>
+                    </div>
+                    <div class="cell auto">
+                        <span>
+                            {{comment.User.fullName}}
+                        </span>
+                        <i 
+                            class="comment-edited"
+                            ng-if="comment.edited"
+                        >
+                            (comment edited)
+                        </i>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-6 large-6 text-right">
+                <span>
+                    <i>
+                        {{comment.createdAt | TimeAgoFormat}}
+                    </i>
+                </span>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-show="!comment.edit && !comment.delete"
+            >
+                <div class="comment-images-container">
+                    <div 
+                        class="grid-x grid-margin-x"
+                        ng-if="comment.imageUrls.length"
+                    >
+                        <div 
+                            class="cell small-12 medium-4 large-3"
+                            ng-repeat="image in comment.imageUrls track by $index"
+                        >
+                        
+                            <div 
+                                class="comment-image-container"
+                                ng-click="initImage(image)"
+                                data-open="commentImageViewReveal"
+                            >
+                                <div class="comment-image">
+                                    <div 
+                                        class="comment-image-background"
+                                        style="background-image: url('{{image.url}}');"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="!comment.edit"
+            >
+                <p ng-bind-html="comment.formattedComment">
+                </p>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="comment.delete"
+            >
+                <div class="comment-delete-callout callout alert alert-text">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-shrink large-shrink">
+                            <span class="delete-icon">
+                                <i class="fal fa-circle-exclamation"></i>
+                            </span>
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <p>
+                                Are you sure you want to delete this comment? Deleting it will also delete the any replies.
+                            </p>
+                        </div>
+                        <div class="cell small-12 medium-12 large-shrink">
+                            <button 
+                                class="delete-button button alert white-text"
+                                type="button"
+                                ng-disabled="UI.formSaving"
+                                ng-class="{'form-alert': UI.formSaving}"
+                                ng-click="deleteEventComment(comment)"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-check-circle"></i> Confirm
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                            <button 
+                                class="list-item-options-button button warning white-text"
+                                type="button"
+                                ng-click="comment.delete = !comment.delete"
+                            >
+                                <i class="fal fa-times-circle"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="comment.likeUserIds.length && !comment.delete"
+            >
+                <p class="comment-like-users">
+                    <i>
+                        {{comment.likesText}}
+                    </i>
+                </p>
+            </div>
+            <div 
+                class="cell small-12 medium-6 large-6"
+                ng-show="!comment.edit && !comment.delete"
+            >
+                <div class="comment-options-container">
+                    <button
+                        class="like-button comment-button button clear"
+                        type="button"
+                        ng-click="toggleEventCommentLike(comment)"
+                        ng-disabled="comment.likeLoading"
+                    >
+                        <i 
+                            class="fa-thumbs-up"
+                            ng-class="{'far': !comment.liked,
+                            'fas': comment.liked}"
+                        ></i>
+                    </button>
+                    <button
+                        class="reply-button comment-button button clear"
+                        type="button"
+                        ng-click="comment.reply = !comment.reply; comment.edit = false;"
+                    >
+                        <i class="fal fa-comment"></i> Reply
+                    </button>
+                    <button
+                        class="more-button comment-button button clear"
+                        type="button"
+                        data-toggle="moreButton-{{comment.id}}"
+                    >
+                        <i class="fas fa-ellipsis"></i>
+                    </button>
+                    <div 
+                        class="more-dropdown-pane dropdown-pane"
+                        data-position="right"
+                        id="moreButton-{{comment.id}}" 
+                        data-dropdown 
+                        data-close-on-click="true"
+                    >
+                        <button
+                            class="edit-button more-dropdown-pane-button button clear expanded"
+                            type="button"
+                            ng-if="$root.user.id == comment.userId ||
+                            subPermissions.adminSettings.canEdit"
+                            ng-click="comment.edit = !comment.edit; comment.reply = false;"
+                        >
+                            <i class="fal fa-edit"></i> Edit
+                        </button>
+                        <button
+                            class="edit-button more-dropdown-pane-button button clear expanded warning"
+                            type="button"
+                        >
+                            <i class="fal fa-flag"></i> Report
+                        </button>
+                        <button
+                            class="delete-button more-dropdown-pane-button button clear expanded alert"
+                            type="button"
+                            ng-if="subPermissions.adminSettings.canEdit"
+                            ng-click="comment.delete = !comment.delete"
+                        >
+                            <i class="fal fa-archive"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell text-right"
+                ng-class="{'small-12 medium-6 large-6': !comment.edit,
+                'small-12 medium-12 large-12': comment.edit}"
+            >
+                <button
+                    class="reply-button comment-button button warning white-text"
+                    type="button"
+                    ng-click="comment.reply = false; comment.edit = false;"
+                    ng-if="comment.reply ||
+                    comment.edit"
+                >
+                    <i class="fal fa-times-circle"></i> Close
+                </button>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="comment.edit"
+            >
+                <div class="edit-comment-container">
+                    <h6>
+                        <b>
+                            Editting Comment
+                        </b>
+                    </h6>
+                    <full-text-area 
+                        placeholder="Write a comment..."
+                        ng-model="comment.comment" 
+                        event-id="{{event.id || ''}}" 
+                        client-id="{{event.clientId || ''}}"
+                        estimate-id="{{estimate.id || ''}}" 
+                        work-order-id="{{workOrder.id || ''}}" 
+                        invoice-id="{{invoice.id || ''}}" 
+                        events="events || []" 
+                        estimates="estimates || []" 
+                        work-orders="workOrders || []" 
+                        invoices="invoices || []" 
+                        comment="{{comment.id || ''}}" 
+                        user="{{user.id || ''}}"
+                        users="users"
+                        eventImages="photos"
+                    >
+                    </full-text-area>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="comment.reply"
+            >
+                <div class="reply-comment-container">
+                    <h6>
+                        <b>
+                            Reply
+                        </b>
+                    </h6>
+                    <full-text-area 
+                        ng-model="comment.replyComment" 
+                        placeholder="Write a comment..."
+                        event-id="{{event.id}}"
+                        users="users"
+                        parent-comment-id="{{comment.id}}"
+                    >
+                    </full-text-area>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul 
+        class="nested-comments comments" 
+        ng-class="{'parent-comment': comment.replies.length}"
+        ng-if="comment.replies.length"
+    >
+        <li 
+            class="nested-comment-item comment-item"
+            ng-class="{'parent-comment': comment.replies.length}"
+            ng-repeat="comment in comment.replies track by $index"
+            ng-include="'dist/partials/general/comment.html'"
+        ></li>
+    </ul>
+</div>

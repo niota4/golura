@@ -1,0 +1,58 @@
+.home-container {
+    height: 100%;
+
+    .home {
+        background: url('/dist/assets/img/backgrounds/suburban-city.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+        padding: 2rem;
+
+        .home-page-login-container {
+            background: var(--white);
+            min-height: 40rem;
+            padding: 4rem 3rem;
+            position: relative;
+            top: 50%;
+            left: 0px;
+            right: 0px;
+            margin: auto;
+            -webkit-transform: translateY(-50%);  
+            transform: translateY(-50%); 
+            border-radius: $global-radius;
+
+            @include borderboxshadow();
+
+            .home-page-login-logo {
+                text-align: center;
+                padding: 0px 2rem;
+    
+                img {
+                    display: block;
+                    padding-bottom: .25rem;
+                }
+                h1 {
+                    color: $alert-color;
+                    border-bottom:  1px solid $medium-gray;
+                    margin: 0px;
+                    padding-bottom: .5rem;
+                    margin-bottom: 2rem;
+                }
+            }
+            hr {
+                border-bottom: 1px solid var(--light-gray);
+                margin: 2rem 0px 3rem;
+            }
+            .home-page-links-container {
+
+                .home-page-link {
+                    font-size: 1.5rem;
+                    color: $medium-gray;
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+}

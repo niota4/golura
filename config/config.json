@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "your_db_user",
+    "password": "your_db_password",
+    "database": "your_database_name",
+    "host": "127.0.0.1",
+    "port": "3306",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "your_db_user",
+    "password": "your_db_password",
+    "database": "your_database_name",
+    "port": "3306",
+    "host": "your-db-host.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}

@@ -1,0 +1,81 @@
+/* DHTMLX/Webix Icons CSS */
+@font-face {
+    font-family: 'dhx-icons';
+    src: url('../dhx-icons/dhxicons.woff2') format('woff2'),
+         url('../dhx-icons/dhxicons.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'dhtmlx-icons';
+    src: url('../dhtmlx-icons.woff2') format('woff2'),
+         url('../dhtmlx-icons.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Icon base class */
+.dhx_icon,
+.wxi-icon,
+.wx-icon {
+    font-family: 'dhtmlx-icons', 'dhx-icons', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Common icon styles */
+.dhx_icon:before,
+.wxi-icon:before,
+.wx-icon:before {
+    font-family: 'dhtmlx-icons', 'dhx-icons', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Basic icon definitions - common DHTMLX icons */
+.wxi-plus:before { content: "\e900"; }
+.wxi-minus:before { content: "\e901"; }
+.wxi-close:before { content: "\e902"; }
+.wxi-check:before { content: "\e903"; }
+.wxi-calendar:before { content: "\e904"; }
+.wxi-clock:before { content: "\e905"; }
+.wxi-arrow-left:before { content: "\e906"; }
+.wxi-arrow-right:before { content: "\e907"; }
+.wxi-arrow-up:before { content: "\e908"; }
+.wxi-arrow-down:before { content: "\e909"; }
+.wxi-menu:before { content: "\e90a"; }
+.wxi-dots:before { content: "\e90b"; }
+.wxi-search:before { content: "\e90c"; }
+.wxi-edit:before { content: "\e90d"; }
+.wxi-delete:before { content: "\e90e"; }
+.wxi-settings:before { content: "\e90f"; }
+.wxi-user:before { content: "\e910"; }
+.wxi-folder:before { content: "\e911"; }
+.wxi-file:before { content: "\e912"; }
+.wxi-home:before { content: "\e913"; }
+.wxi-download:before { content: "\e914"; }
+.wxi-upload:before { content: "\e915"; }
+.wxi-eye:before { content: "\e916"; }
+.wxi-eye-off:before { content: "\e917"; }
+.wxi-filter:before { content: "\e918"; }
+.wxi-sort:before { content: "\e919"; }
+.wxi-refresh:before { content: "\e91a"; }
+.wxi-save:before { content: "\e91b"; }
+.wxi-copy:before { content: "\e91c"; }
+.wxi-paste:before { content: "\e91d"; }
+.wxi-cut:before { content: "\e91e"; }
+.wxi-undo:before { content: "\e91f"; }
+.wxi-redo:before { content: "\e920"; }

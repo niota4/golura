@@ -1,0 +1,101 @@
+<div class="inventory-area-type-container inventory-form-container create-edit-container">
+    <div class="inventory-area-type inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventoryAreaType">
+                Create Inventory Area Type
+            </b>
+            <b ng-if="!UI.newInventoryAreaType">
+                Edit Inventory Area Type
+            </b>
+        </h1>
+        <form 
+            class="inventory-area-type-form inventory-form golura-form"
+            id="inventoryAreaTypeForm"
+            name="inventoryAreaTypeForm"
+            ng-submit="createInventoryAreaType($event, inventoryAreaType)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryAreaTypeLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryAreaTypeLoaded"
+                        ></div>
+                        <label for="areaTypeName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="areaTypeName"
+                            name="areaTypeName"
+                            placeholder="Area Type name"
+                            ng-model="inventoryAreaType.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="areaTypeDescription"
+                                name="areaTypeDescriptionTextarea"
+                                ng-model="inventoryAreaType.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-area-type-form-submit-button submit-button button" 
+                        id="inventoryAreaTypeFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventoryAreaTypeLoaded && UI.newInventoryAreaType"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-area-type-form-edit-submit-button submit-button button" 
+                        id="inventoryAreaTypeFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventoryAreaType(inventoryAreaType)"
+                        ng-if="UI.inventoryAreaTypeLoaded && !UI.newInventoryAreaType"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

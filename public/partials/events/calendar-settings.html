@@ -1,0 +1,163 @@
+
+<div class="calendar-settings-container">
+    <h2>
+        <b>
+            Settings
+        </b>
+    </h2>
+    <h6>
+        <b>
+            Filter by Category
+        </b>
+    </h6>
+    <selectize
+        class="event-input sort-input"
+        config="categoryOptions"
+        options="eventSortCategories"
+        id="eventCategories"
+        name="eventCategories"
+        ng-model="UI.categoryType"
+        ng-change="updateCategory(UI.categoryType)"
+    >
+    </selectize>
+    <div 
+        class="calendar-settings-toggles-container"
+        ng-if="eventScheduler"
+    >
+        <hr/>
+        <h6>
+            <b>
+                Toggles
+            </b>
+        </h6>
+        <selectize
+            class="event-input sort-input"
+            config="eventSchedulerModeOptions"
+            options="eventSchedulerModes"
+            id="eventMode"
+            name="eventMode"
+            ng-model="$root.preferences.eventMap"
+            ng-change="toggleMapSchedulerView($root.preferences.eventMap)"
+        >
+        </selectize>
+    </div>
+    <ul class="calendar-settings-list">
+        <li class="calendar-settings-list-item">
+            <button 
+                class="event-button button expanded clear"
+                type="button"
+                ng-click="UI.eventMapCalender = !UI.eventMapCalender"
+                ng-if="eventScheduler"
+                
+            >
+                <span ng-if="!UI.eventMapCalender">
+                    <i class="fa-solid fa-square-minus"></i> Collapse 
+                </span>
+                <span ng-if="UI.eventMapCalender">
+                    <i class="fa-solid fa-square-plus"></i> Open 
+                </span>
+                Map
+            </button>
+        </li>
+        <li class="calendar-settings-list-item">
+            <button 
+                class="event-button button expanded clear"
+                type="button"
+                ng-click="UI.showAllDayEvents = !UI.showAllDayEvents"
+            >
+                <i class="fal fa-clock"></i> 
+                <span ng-if="UI.showAllDayEvents">
+                    Hide 
+                </span>
+                <span ng-if="!UI.showAllDayEvents">
+                    Show 
+                </span>
+                All Day
+            </button>
+        </li>
+        <li 
+            class="calendar-settings-list-item"
+            ng-if="eventScheduler"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>
+                            Groups
+                        </b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="calendar-button-container select-container"
+                        ng-repeat="group in userGroups track by $index"
+                        ng-if="eventScheduler"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="calendar-select-button select-button button"
+                                    type="button"
+                                    ng-click="toggleEventMapGroup(group)"
+                                    ng-class="{'selected': group.active, 'warning-button': group.id === 'reminders'}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="group.active"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    {{group.name}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="calendar-settings-list-item">
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b >
+                            Event Types
+                        </b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">  
+                    <div 
+                        class="calendar-button-container select-container"
+                        ng-repeat="eventType in eventTypes track by $index"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="calendar-select-button select-button button"
+                                    type="button"
+                                    ng-click="toggleEventType(eventType)"
+                                    ng-class="{'selected': eventType.active, 'warning-button': eventType.id === 'reminders'}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="eventType.active"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    {{eventType.name}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

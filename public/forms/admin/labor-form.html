@@ -1,0 +1,197 @@
+<div class="admin-labor-container admin-form-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="admin-labor admin-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newLabor">
+                Create Labor Role
+            </b>
+            <b ng-if="!UI.newLabor">
+                Edit Labor Role
+            </b>
+        </h1>
+        <form 
+            class="labor-form admin-form golura-form"
+            id="laborForm"
+            name="laborForm"
+            ng-submit="createLabor($event, labor)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.laborLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.laborLoaded"
+                        ></div>
+                        <label for="laborRole">
+                            Role/Position
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="laborRole"
+                            name="laborRole"
+                            placeholder="e.g., Plumber, Electrician, Project Manager"
+                            ng-model="labor.role"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.laborLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.laborLoaded"
+                        ></div>
+                        <label for="laborRate">
+                            Hourly Rate ($)
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            step="0.01"
+                            min="0"
+                            id="laborRate"
+                            name="laborRate"
+                            placeholder="25.00"
+                            ng-model="labor.rate"
+                            autocomplete="off"
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.laborLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.laborLoaded"
+                        ></div>
+                        <label for="laborOvertimeRate">
+                            Overtime Rate ($)
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            step="0.01"
+                            min="0"
+                            id="laborOvertimeRate"
+                            name="laborOvertimeRate"
+                            placeholder="37.50"
+                            ng-model="labor.overtimeRate"
+                            autocomplete="off"
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.laborLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.laborLoaded"
+                        ></div>
+                        <label for="laborStandardHours">
+                            Standard Hours Per Day
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            min="1"
+                            max="24"
+                            id="laborStandardHours"
+                            name="laborStandardHours"
+                            placeholder="8"
+                            ng-model="labor.standardHoursPerDay"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="labor-form-submit-button submit-button button success white-text" 
+                        id="laborFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.laborLoaded && UI.newLabor"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="labor-form-edit-submit-button submit-button button success white-text" 
+                        id="laborFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateLabor(labor)"
+                        ng-if="UI.laborLoaded && !UI.newLabor"
+                    >
+                        <span ng-if="!UI.formSaving">
+                           <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

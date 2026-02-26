@@ -1,0 +1,220 @@
+
+<div class="associate-media-container">
+    <button 
+        class="media-close-button button warning white-text"
+        type="button"
+        ng-click="media.associationType = !media.associationType"
+        ng-if="media.associationType.length"
+    >
+        <b>
+            <i class="fal fa-times-circle"></i> Back
+        </b>
+    </button>
+    <form
+        class="associate-media-form golura-form"
+        id="associateImageForm"
+        ng-submit="associateMedia()"
+    >
+
+        <div 
+            class="media-associate-list-container"
+            ng-if="!media.associationType.length"
+        >
+            <h2>
+                <b>
+                    What Type is this Association for?
+                </b>
+            </h2>
+            <ul class="media-associate-list grid-x grid-margin-x align-center">
+                <li 
+                    class="media-associate-list-item cell small-12 medium-2 large-2"
+                    ng-repeat="associate in mediaTypes track by $index"
+                    ng-click="media.associationType = associate.value"
+                >
+                    <div class="media-list-item-content">
+                        <i 
+                            class="fal "
+                            ng-class="{
+                                'fa-calendar-alt': associate.value === 'event',
+                                'fa-memo-circle-info': associate.value === 'estimate',
+                                'fa-megaphone': associate.value === 'marketing'
+                            }"
+                        ></i>
+                        <span class="text-capitalize">
+                            <b>
+                                {{associate.value}}
+                            </b>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div 
+            class="media-associate-container"
+            ng-if="media.associationType.length"
+        >
+            <h2>
+                <b>
+                    Associate this Media to 
+                    <span ng-if="media.associationType == 'event'">
+                        Events
+                    </span>
+                    <span ng-if="media.associationType == 'estimate'">
+                        Estimates
+                    </span>
+                    <span ng-if="media.associationType == 'marketing'">
+                        Marketing Campaign
+                    </span>
+                </b>
+            </h2>
+            <ul 
+                class="media-associate-list"
+                ng-if="media.associationType == 'event'"
+            >
+                <li 
+                    class="text-center"
+                    ng-if="!events.length"
+                >
+                    <h4>
+                        <b>
+                            No Events!
+                        </b>
+                    </h4>
+                </li>
+                <li 
+                    class="media-associate-list-item"
+                    ng-repeat="e in events track by $index"
+                >
+                    <div class="media-associate-media-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="media-associate-media-select-button select-button button"
+                                    type="button"
+                                    ng-click="e.selected = !e.selected"
+                                    ng-class="{'selected': e.selected}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="e.selected"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <b>#{{e.id}}</b> - {{e.title}}</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul 
+                class="media-associate-list"
+                ng-if="media.associationType == 'estimate'"
+            >
+                <li 
+                    class="text-center"
+                    ng-if="!estimates.length"
+                >
+                    <h4>
+                        <b>
+                            No Estimates!
+                        </b>
+                    </h4>
+                </li>
+                <li 
+                    class="media-associate-list-item"
+                    ng-repeat="e in estimates track by $index"
+                >
+                    <div class="media-associate-media-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="media-associate-media-select-button select-button button"
+                                    type="button"
+                                    ng-click="e.selected = !e.selected"
+                                    ng-class="{'selected': e.selected}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="e.selected"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <b>#{{e.id}}</b> - {{e.title}}</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul 
+                class="media-associate-list"
+                ng-if="media.associationType == 'marketing'"
+            >
+                <li 
+                    class="text-center"
+                    ng-if="!marketings.length"
+                >
+                    <h4>
+                        <b>
+                            No Marketing Campaigns!
+                        </b>
+                    </h4>
+                </li>
+                <li 
+                    class="media-associate-list-item"
+                    ng-repeat="e in marketings track by $index"
+                >
+                    <div class="media-associate-media-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="media-associate-media-select-button select-button button"
+                                    type="button"
+                                    ng-click="e.selected = !e.selected"
+                                    ng-class="{'selected': e.selected}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="e.selected"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <b>#{{e.id}}</b> - {{e.title}}</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="associate-media-form-submit-container text-right">
+                <button 
+                    class="associate-media-form-submit-button submit-button success button white-text" 
+                    id="associateImageFormButton"
+                    type="submit"
+                    ng-disabled="associateImageForm.$invalid || UI.formSaving"
+                    ng-class="{'form-success-saving': UI.formSaving}"
+                >
+                    <span ng-if="!UI.formSaving">
+                        <i class="fal fa-save"></i> Save
+                    </span>
+                    <span ng-if="UI.formSaving">
+                        Please Wait...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

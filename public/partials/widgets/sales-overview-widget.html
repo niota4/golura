@@ -1,0 +1,221 @@
+<div class="sales-overview-widget-container widget-container">
+    <div class="sales-overview-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <div class="cell small-12 medium-auto large-auto">
+                            <h3 class="sales-overview-title">
+                                <b>
+                                    <i class="fal fa-chart-bar"></i> Sales Overview
+                                </b>
+                            </h3>
+                            <span class="widget-period">
+                                <i ng-if="widgetData.salesOverview.period">
+                                    Last {{ widgetData.salesOverview.period.replace('d', ' days') }}
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="sales-overview-options-button button clear" 
+                            type="button"
+                            data-toggle="salesOverviewOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="sales-overview-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="salesOverviewOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="sales-overview-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('salesOverview', { period: widgetData.salesOverview.period, limit: widgetData.salesOverview.limit })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="salesOverviewTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="salesOverviewTimeRange"
+                                        name="salesOverviewTimeRange"
+                                        ng-model="widgetData.salesOverview.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="salesOverviewLimit">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="salesOverviewLimit"
+                                        name="salesOverviewLimit"
+                                        ng-model="widgetData.salesOverview.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="sales-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.salesOverview.data.totalRevenue | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Revenue
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.salesOverview.data.estimatesCount }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Estimates
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.salesOverview.data.invoicesCount }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Invoices
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.salesOverview.data.breakdown.length > 0"
+            >
+                <div class="sales-overview-search-container list-search-container">
+                    <div class="sales-overview-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="sales-overview-search-input search-input"
+                                        id="salesOverviewSearchInput" 
+                                        type="text"
+                                        placeholder="Search sales breakdown..."
+                                        autocomplete="off"
+                                        ng-model="search.salesOverview"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto overflow-scroll" 
+                ng-if="widgetData.salesOverview.data.breakdown.length > 0"
+            >
+                <div class="breakdown-section">
+                    <h5>
+                        <b>
+                            Revenue Breakdown
+                        </b>
+                    </h5>
+                    <div class="golura-block">
+                        <div class="breakdown-list-container list-container">
+                            <ul class="breakdown-list list no-bullet">
+                                <li 
+                                    class="breakdown-list-item list-item" 
+                                    ng-repeat="item in filteredBreakdown = (widgetData.salesOverview.data.breakdown | 
+                                    filter:search.salesOverview |
+                                    limitTo: widgetData.salesOverview.limit) track by $index"
+                                >
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell small-4 medium-3 large-3">
+                                            <h6 class="breakdown-label">
+                                                <b>{{ item.category }}</b>
+                                            </h6>
+                                        </div>
+                                        <div class="cell small-8 medium-9 large-9">
+                                            <div class="progress">
+                                                <div class="progress-meter" 
+                                                     ng-style="{'width': (item.amount / widgetData.salesOverview.data.totalRevenue * 100) + '%'}"
+                                                ></div>
+                                            </div>
+                                            <div class="breakdown-amount text-right">
+                                                <b>{{ item.amount | currency }}</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto text-center" 
+                ng-if="widgetData.salesOverview.data.breakdown.length === 0"
+            >
+                <div class="empty-state">
+                    <i class="fal fa-chart-bar fa-3x text-muted"></i>
+                    <p class="text-muted">No sales data available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

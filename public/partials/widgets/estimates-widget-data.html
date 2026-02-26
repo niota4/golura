@@ -1,0 +1,137 @@
+<div class="estimates-widget-data-container widget-container">
+    <div class="estimates-widget-data widget">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <h3>
+                    <b>
+                        <i class="fal fa-file-invoice-dollar"></i> Estimate Data
+                    </b>
+                </h3>
+            </div>
+            <div class="cell shrink">
+                <div class="estimates-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="stat-card text-center"
+                                ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+                            >
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetEstimateData.totalAmount | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Amount
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="stat-card text-center"
+                                ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+                            >
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetEstimateData.totalProfit | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Profit
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto" ng-if="widgetEstimateData.estimates && widgetEstimateData.estimates.length > 0">
+                <div class="estimates-list-section">
+                    <h5>
+                        <b>
+                            Recent Estimates
+                        </b>
+                    </h5>
+                    <div 
+                        class="estimates-list-container list-container"
+                        ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+                    >
+                            <div class="estimates-list-header-container list-header-container">
+                                <div class="estimates-list-header list-header">
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <h6><b>Estimate #</b></h6>
+                                        </div>
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <h6><b>Amount</b></h6>
+                                        </div>
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <h6><b>Profit</b></h6>
+                                        </div>
+                                        <div class="cell small-3 medium-3 large-3">
+                                            <h6><b>Status</b></h6>
+                                        </div>
+                                        <div class="cell small-12 medium-3 large-3">
+                                            <h6><b>Date</b></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="estimates-list list no-bullet">
+                                <li class="estimate-list-item list-item" ng-repeat="estimate in widgetEstimateData.estimates | limitTo:10">
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <a ng-href="estimates/estimate/{{estimate.id}}" class="estimate-number">
+                                                <b>#{{ estimate.estimateNumber }}</b>
+                                            </a>
+                                        </div>
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <span class="estimate-amount">
+                                                <b>{{ estimate.total | currency }}</b>
+                                            </span>
+                                        </div>
+                                        <div class="cell small-3 medium-2 large-2">
+                                            <span class="estimate-profit">
+                                                <b>{{ estimate.profit | currency }}</b>
+                                            </span>
+                                        </div>
+                                        <div class="cell small-3 medium-3 large-3">
+                                            <span class="label" ng-class="{'success': estimate.EstimateStatus.name === 'Approved', 'warning': estimate.EstimateStatus.name === 'Pending', 'alert': estimate.EstimateStatus.name === 'Declined'}">
+                                                {{ estimate.EstimateStatus.name }}
+                                            </span>
+                                        </div>
+                                        <div class="cell small-12 medium-3 large-3">
+                                            <small class="text-muted">
+                                                {{ estimate.createdAt | date:'MMM d, y' }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto text-center" ng-if="!widgetEstimateData.estimates || widgetEstimateData.estimates.length === 0">
+                <div class="empty-state">
+                    <i class="fal fa-file-invoice-dollar fa-3x text-muted"></i>
+                    <p class="text-muted">No estimates available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

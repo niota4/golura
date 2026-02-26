@@ -1,0 +1,269 @@
+<div 
+    class="view-vendor-container inventory-container view-container"
+    ng-init="initVendor()"
+>
+    <div 
+        class="callout sticky success success-text text-center fade"
+        ng-hide="!UI.formSaved"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button success button clear"
+            type="button"
+            ng-click="UI.formSaved = !UI.formSaved"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="view-vendor inventory view overflow-scroll">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell shrink">
+                        <button 
+                            class="view-vendor-options-button back-button button warning white-text"
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="cell auto">
+                        <div ng-include="'dist/partials/inventory/vendor-top-bar.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="golura-block grid-x grid-margin-x">
+                    <div class="cell small-12 medium-3 large-3">
+                        <div class="view-vendor-details-container view-details-container">
+                            <div class="view-vendor-details inventory-list-container view-details">
+                                <h3>
+                                    <b>Vendor Details</b>
+                                </h3>
+                                <ul class="view-vendor-details-list inventory-list">
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.vendorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.vendorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.vendorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>ID: </b> #{{vendor.id}}
+                                        </h6>
+                                    </li>
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.vendorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.vendorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.vendorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Name: </b> {{vendor.name}}
+                                        </h6>
+                                    </li>
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.vendorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.vendorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.vendorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Phone Number: </b> 
+                                            <button
+                                                class="phone-number-button"
+                                                ng-model="vendor.contactPhone"
+                                                ng-cloak
+                                                phone-number
+                                            >
+                                                {{vendor.contactPhone}}
+                                            </button>
+                                        </h6>
+                                    </li>
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.vendorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.vendorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.vendorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Email: </b> 
+                                            {{vendor.contactEmail}}
+                                        </h6>
+                                    </li>
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.vendorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.vendorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.vendorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Address: </b> 
+                                            {{vendor.address}}<br/>
+                                            {{vendor.city}}, {{vendor.state}}
+                                            {{vendor.zipCode}}
+                                        </h6>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="golura-block view-vendor-details-container list-item-details-container list-container">
+                            <div class="golura-block view-vendor list-item-details">
+                                <div class="golura-block grid-y">
+                                    <div class="cell shrink">
+                                        <div class="grid-x">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Vendor Items</b>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="list-search-container list-container">
+                                            <div class="list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="view-vendor-item-search-input search-input"
+                                                                id="viewVendorSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search vendor items..."
+                                                                ng-model="search.vendorItem.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <div class="vendor-items-list-header-container list-header-container">
+                                            <div class="vendor-items-list-header list-header">
+                                                <div class="grid-x grid-padding-x align-middle align-left">
+                                                    <div class="cell small-12 medium-2 large-2">
+                                                        <h3>
+                                                            <b>
+                                                                ID
+                                                            </b>
+                                                        </h3>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h3>
+                                                            <b>Name</b>
+                                                        </h3>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h3>
+                                                            <b>Price</b>
+                                                        </h3>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h3>
+                                                            <b>Unit</b>
+                                                        </h3>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h3>
+                                                            <b>Created</b>
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto overflow-scroll">
+                                        <ul 
+                                            class="vendor-items-list list"
+                                            id="inventoryItemsList"
+                                        >
+                                            <li ng-if="!UI.vendorItemsLoaded">
+                                                <div class="ssc vendor-items-ssc">
+                                                    <div 
+                                                        class="ssc-square"
+                                                        ng-repeat="x in [].constructor(40) track by $index"
+                                                    ></div>
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="vendor-items-list-item list-item position-relative"
+                                                ng-repeat="item in filteredVendorItems = 
+                                                (vendorItems | filter:search.vendorItem.value) |
+                                                orderBy: sort.vendorItems.value |
+                                                limitTo: UI.inventoryItemsDisplayed track by $index"
+                                                ng-class="{'selected': item.selected}"
+                                            >
+                                                <div class="grid-x grid-padding-x align-middle">
+                                                    <div class="cell small-12 medium-2 large-2">
+                                                        <h6>
+                                                            #{{item.id}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h6 class="vendor-items-list-item-role text-capitalize">
+                                                            {{item.Item.name}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h6>
+                                                            ${{item.price}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h6>
+                                                            {{item.Item.unitOfMeasure}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h6>
+                                                            {{item.createdAt | DateTimeFormat}}
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

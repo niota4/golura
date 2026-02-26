@@ -1,0 +1,828 @@
+.events-container {
+    height: 100%;
+
+    .events {
+        height: 100%;
+    }
+}
+.events-calendar-container,
+.event-map-calendar-container {
+    height: 100%;
+
+    .event-sort-input {
+
+        .selectize-input {
+            padding: .75rem 2rem .5px;
+            width: 10rem;
+        }
+    }
+    .event-calendar-ssc {
+        height: 100%;
+        padding: 1rem 1rem 0px;
+
+        .event-calendar-ssc-top {
+            height: 6rem;
+        }
+        .event-calendar-ssc-middle {
+            height: 4rem;
+        }
+
+        .event-calendar-ssc-body {
+            height: 100%;
+        }
+    }
+    .event-map-ssc {
+        height: 100%;
+        padding: 1rem 1rem 0px;
+
+        .event-map-ssc-top {
+            height: 20rem;
+        }
+        .event-map-ssc-middle {
+            height: 4rem;
+        }
+
+        .event-map-ssc-body {
+            height: 100%;
+        }
+    }
+
+    .events-calendar,
+    .event-map-calendar {
+        height: 100%;
+        background: var(--white);
+
+        .event-map-callout {
+            position: relative;
+        }
+        .dhx_month_head {
+            
+            a {
+                color: var(--font-color);
+            }
+        }
+        .dhx_now {
+            background: var(--light-gray);
+        }
+        .dhx_before,
+        .dhx_after {
+            opacity: .5;
+            background: var(--white);
+
+            .dhx_month_head {
+                
+                a {
+                    color: var(--font-color);
+                }
+            }
+        }
+        button {
+            &.selected {
+
+                .label {
+                    background: var(--secondary-color);
+                    color: $white;
+                }
+            }
+            .label {
+                background: var(--primary-color);
+                color: $white;
+            }
+        }
+        .event-map-container {
+            height: 100%;
+            position: relative;
+
+            .event-map {
+                height: 100%;
+                min-height: 25rem;
+            }
+            .event-map-draft-callout {
+                top: auto;
+                bottom: 0px;
+                border-top: 1px solid $alert-color;
+                z-index: 2;
+
+                span {
+                    font-size: 2rem;
+                }
+                p,
+                button {
+                    margin: 0px;
+
+                    span {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+        .event-map-calendar-groups {
+            height: 100%;
+
+            .event-map-calendar-groups-header {
+                position: relative;
+                width: 100%;
+
+                .event-button {
+    
+                    &.is-active {
+                        background: var(--secondary-color);
+                        color: var(--white);
+                    }
+                }
+            }
+            .event-map-calendar-groups-data-container {
+                height: 100%;
+
+                &.hide-all-day {
+
+                    .dhx_multi_day {
+                        display: none !important;
+                    }
+                }
+            }
+        }
+        .event-map-calendar-options-container {
+            display: inline-block;
+            padding: 0px 0px 0px 2rem;
+        }
+        .event-button {
+            margin: 0px 0px 0px .25rem;
+            padding: .75rem 1rem;
+            display: inline-block; 
+        }
+    }
+}
+
+.view-event-container {
+    height: 100%;
+
+    .view-event {
+        height: 100%;
+        position: relative;
+        overflow: auto;
+
+        .view-event-details-container {
+
+            .view-event-details {
+                padding-top: 1rem;
+                
+                .view-event-details-list {
+                    list-style: none;
+                    margin: 0px;
+
+                    .ssc-line {
+                        margin: 0px 0px .25rem 0px;
+                    }
+
+                    p {
+                        margin: 0px 0px .25rem 0px;
+                        font-size: .75rem;
+                        text-transform: capitalize;
+                    }
+                    .event-creator-container {
+                        display: inline-block;
+                        padding: 0px .25rem; 
+                    }
+                    .golura-user-icon {
+                        width: 2.25rem;
+                        height: 2.25rem;
+                        cursor: pointer;
+
+                        h2 {
+                            font-size: 1rem;
+                        }
+                    }
+                }
+                .view-event-address-image-container {
+                    margin-top: 1rem;
+                }
+                .view-participants-button {
+                    margin-top: 1rem;
+                }
+            }
+        }
+        .view-event-estimates-ssc {
+
+            .ssc-square {
+                height: 15rem;
+            }
+        }
+        .view-event-estimates-list-container  {
+            border-right: 1px solid var(--light-gray);
+        }
+        .view-event-activity-top-bar-container {
+            padding: 1rem;
+            background: var(--white);
+        }
+        .view-event-recent-activities-container {
+            p {
+                text-transform: capitalize;
+            }
+        }
+        .view-event-work-order-details-container {
+            height: 100%;
+        }
+    }
+    .view-event-activity {
+        background: var(--off-white);
+        padding: 0px;
+
+        .view-event-activity-search-container {
+            border-top: 1px solid var(--light-gray);
+        }
+    }
+    .view-event-details-option-container {
+        height: 100%;
+
+        .view-event-details-comment-container {
+            margin-bottom: 1rem;
+        }
+        .view-event-details-comments-container {
+            border: 1px solid var(--light-gray);
+            border-radius: $container-radius;
+            background: var(--white);
+            padding: 1rem;
+        }
+    }
+}
+.event-preview-container {
+    height: 100%;
+    overflow: auto;
+
+    .callout {
+        border-top-right-radius: $global-radius;
+        border-top-left-radius: $global-radius;
+    }
+
+    .event-preview {
+        height: 100%;
+        padding: 0px;
+
+        .event-preview-tabs-container {
+
+            .event-preview-tabs {
+                padding: 2rem 1rem 1rem;
+
+                .event-preview-date-container {
+                    border-radius: $container-radius;
+                    background: var(--off-white);
+                    border: 1px solid var(--light-gray);
+                    padding: 2rem 1rem;
+                    margin-bottom: 1rem;
+        
+                    .event-preview-date {
+        
+                        span {
+                            display: block;
+                            padding: 1rem 0px;
+        
+                            &::before,
+                            &::after {
+                                content: '';
+                                width: .55rem;
+                                margin-bottom: .25rem;
+                                display: inline-block;
+                                border-bottom: 1px solid var(--font-color);
+                                position: relative;
+                            }
+                            &::before {
+                                left: -.25rem;
+                            }
+                            &::after {
+                                right: -.25rem;
+                            }
+                        }
+                    }
+                }
+                .event-preview-tabs-list {
+
+                    .event-preview-tabs-title {
+
+                        &.is-active {
+                            opacity: $button-opacity-disabled;
+                            pointer-events: none;
+                        }
+                        a {
+                            width: 100%;
+    
+                            @extend .button;
+                        }
+                    }
+                }
+            }
+        }
+        .event-preview-tabs-content {
+            background: $transparent;
+            height: 100%;
+            overflow: auto;
+
+
+            .event-preview-tabs-panel {
+                padding: 2rem;
+
+                &.event-preview-admin-tabs-panel  {
+                    height: 100%;
+                    padding: 0px;
+                    border-top-right-radius: $global-radius;
+                    border-bottom-right-radius: $global-radius;
+                    overflow: hidden;
+
+                    .event-admin-settings-container {
+                        height: 100%;
+
+                        .event-admin-settings {
+                            height: 100%;
+
+                            .event-admin-settings-list {
+                                border-top-right-radius: $global-radius;
+                                border: none;
+
+                                &.is-active {
+
+                                    .event-admin-settings-tabs-title {
+                                        border-bottom: 1px solid var(--secondary-color);
+                                    }
+                                }
+                                .event-admin-settings-tabs-title {
+                                    border-bottom: 1px solid var(--light-gray);
+                                }
+                            }
+                            .event-admin-settings-tabs-content {
+                                height: 100%;
+
+
+                                .event-admin-settings-tabs-panel {
+                                    height: 100%;
+
+                                    .event-admin-settings-tabs-panel-options-container {
+                                        padding: 1rem;
+                                        background: var(--white); 
+
+                                        .event-admin-settings-checklist-submissions-options-button {
+                                            margin: 0px;
+                                        }
+                                    }
+                                    .event-admin-settings-checklist-submissions-search-container {
+                                        background: var(--white); 
+                                    }
+                                    .event-admin-settings-checklist-submissions-container {
+                                        height: 100%;
+
+                                        .event-admin-settings-checklist-submissions-list-container {
+                                            height: 100%;
+
+                                            .event-admin-settings-checklist-submissions-list {
+                                                padding: 1rem;
+                                                background: $transparent;
+    
+                                                .event-admin-settings-checklist-submissions-list-item {                                                 
+                                                    margin-bottom: 1rem;
+                                                    border: 1px solid var(--light-gray);
+                                                    border-radius: $container-radius;
+                                                    background: var(--white);
+    
+                                                    &.is-active {
+                                                        background: var(--light-gray);
+    
+                                                        .event-admin-settings-checklist-submissions-list-item-title {
+                                                            border-bottom: 1px solid var(--light-gray);
+                                                            color: var(--primary-color);
+                                                        }
+                                                    }
+                                                    .event-admin-settings-checklist-submissions-list-item-title {
+                                                        color: var(--alt-font-color-2);
+                                                        font-size: 1rem;
+                                                        border: none;
+                                                        border-radius: 0px;
+                                                        padding: 2rem 1rem;
+                                                        background: $transparent;
+    
+                                                        .event-admin-settings-checklist-submissions-list-item-date {
+                                                            padding-right: 1rem;
+                                                        }
+                                                    }
+                                                    .event-admin-settings-checklist-submissions-list-item-content {
+                                                        border: none;
+                                                        border-bottom-right-radius: $container-radius;
+                                                        border-bottom-left-radius: $container-radius;
+    
+                                                        .form-submission-container {
+    
+                                                            .form-submission-list {
+                                                                list-style-type: none;
+                                                                margin: 0px;
+                                                                padding: 0px;
+    
+                                                                .form-submission-list-item {
+                                                                    padding: 1rem;
+                                                                    border-bottom: 1px solid var(--light-gray);
+    
+                                                                    &:last-child {
+                                                                        border: none;
+                                                                    }
+                                                                    h5 {
+                                                                        margin-bottom: 0px
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .event-admin-settings-todo-lists-container {
+                                        height: 100%;
+
+                                        .event-admin-settings-todo-lists-form-container {
+
+                                            .event-admin-settings-todo-lists-form {
+                                              padding: 1rem;  
+                                              
+                                              .todo-create-edit-container {
+                                                max-height: initial;
+                                              }
+                                            }
+                                        }
+                                    }
+                                    .event-admin-settings-checklist-timesheet-container {
+                                        height: 100%;
+
+                                        .timesheet-list-container {
+
+                                            .timesheet-list {
+
+                                                .timesheet-list-item {
+                                                    padding: 1rem;
+
+                                                    .timesheet-input-container {
+                                                        margin-bottom: 1rem !important;
+                                                    }
+                                                    .timesheet-list-item-times-container {
+
+                                                        .timesheet-list-item-times {
+                                                            height: 2.75rem;
+                                                            margin-bottom: 1rem;
+
+                                                            h6 {
+                                                                position: relative;
+                                                                top: 50% !important;
+                                                                -webkit-transform: translateY(-50%);  
+                                                                transform: translateY(-50%); 
+                                                            }
+                                                        }
+                                                    }
+                                                    .timesheet-add-checkin-container {
+                                                        border: 1px solid var(--light-gray);
+                                                        border-radius: $container-radius;
+                                                        padding: 1rem;
+                                                        margin-bottom: 1rem;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .event-preview-details-container {
+                    padding: 1rem;
+
+                    h3 {
+                        text-transform: capitalize;
+                    }
+                    h6 {
+                        font-size: .75rem;
+                        text-transform: capitalize;
+                    }
+                    p {
+                        font-size: .75rem;
+                    }
+                    .golura-user-icon-container {
+
+                        .golura-user-icon {
+                            width: 2.25rem;
+                            height: 2.25rem;
+                            cursor: pointer;
+
+                            h2 {
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                    .event-preview-event-participants-container {
+                        font-size: .75rem;
+                        font-style: italic;
+                    }
+                    .event-preview-event-details-container {
+                        padding-top: 1rem;
+
+                    }
+                    .event-preview-event-map-container {
+                        padding-top: 1rem;
+
+                        .view-map-container {
+                            padding: 4rem;
+                        }
+                    }
+                    .event-preview-event-details-option-container {
+                        padding-top: 1rem;
+
+                        .event-preview-event-details-comment-container {
+                            margin-bottom: 1rem;
+                        }
+                        .event-preview-event-details-comments-container {
+                            border: 1px solid var(--light-gray);
+                            border-radius: $container-radius;
+                            background: var(--white);
+                            padding: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.event-checklist-container {
+
+    .event-checklist-list-container {
+
+        .event-checklist-list {
+            margin: 0px;
+            list-style-type: none;
+
+            .event-checklist-list-item {
+                cursor: pointer;
+
+                h4 {
+                    margin: 0px;
+                    padding: .75rem 1rem;
+                }
+            }
+        }
+    }
+    .event-checklist-form-view-container {
+        padding: 1rem;
+    }
+}
+.todo-list-container {
+
+    .todo-list {
+        
+        .todo-list-item {
+            padding: 0px;
+
+            .todo-list-item-title {
+                border: none;
+                color: var(--font-color);
+
+                &:hover,
+                &:focus {
+                    background: $transparent;
+                }
+            }
+        }
+    }
+}
+.event-edit-form-container {
+    height: 100%;
+
+    .event-edit {
+        height: 100%;
+
+        .event-form {
+            height: 100%;
+
+            .event-form-tabs-container {
+                background: var(--white);
+                height: 100%;
+                overflow: hidden;
+
+                .event-form-sidebar {
+                    height: 100%;
+                    overflow: auto;
+    
+                    .event-form-sidebar-list {
+                        background: $transparent;
+                    }
+                }
+                .event-form-tabs-content {
+                    height: 100%;
+                    overflow: auto;
+
+                    .event-form-tabs-content-options-container {
+                        padding: 1rem;
+                    }
+                }
+                .event-form-tabs-panel {
+                    padding: 1rem;
+
+                    .event-form-participants-list-container  {
+
+                        .event-form-participants-list {
+
+                            .event-participants-ssc {
+
+                                .ssc-square {
+                                    height: 10rem;
+                                }
+                            }
+
+                            .event-form-participants-list-item {
+                                padding: 1rem;
+                                text-transform: capitalize;
+                                position: relative;
+                                
+                                h6 {
+                                    margin-bottom: 1rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.event-detail-reveal {
+    max-height: 70vh;
+    height: 100%;
+    padding: 0px !important;
+    
+    .event-completion-screen-container  {
+        border-radius: $global-radius;
+    }
+}
+
+.event-checklist-reveal {
+    max-height: 70vh;
+    height: 100%;
+
+    .event-checklist-container {
+        height: 100%;
+        overflow: auto;
+    }
+}
+.events-create-event-reveal {
+    
+    .callout {
+        left: 0px;
+        border-top-left-radius: $global-radius;
+        border-top-right-radius: $global-radius;
+    }
+
+    &.events-create-event-expanded {
+
+        .event-create-edit-container {
+    
+            .event-create-edit {
+                min-height: 25rem;
+            }
+        }
+    }
+
+    .event-create-edit-container {
+
+        .event-create-edit {
+            border: none;
+
+            .event-form-event-content {
+                width: 100%;
+                padding: 0px;
+                background: var(--white);
+                top: 2.5rem !important;
+                left: 0px !important;
+            }
+            .event-category-list-container {
+        
+                h2 {
+                    text-align: center;
+                }
+                .event-category-list {
+                    list-style-type: none;
+
+                    .event-category-list-item {
+
+                        .event-category-list-item-content {
+                            padding: 2rem;
+                            background: var(--light-gray);
+                            color: $medium-gray;
+                            border-radius: $container-radius;
+                            margin-bottom: 1rem;
+                            text-align: center;
+                            font-size: 2rem;
+                
+                            cursor: pointer;
+                
+                            &:hover {
+                                background: darken($light-gray, 5);
+                            }
+                
+                            span {
+                                display: block;
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
+            .event-form-selection-content {
+                margin-top: 2.5rem;
+                background: var(--white);
+                border: 1px solid var(--light-gray);
+                width: 100%;
+                max-width: 45rem;
+                max-height: 45rem;
+                overflow: scroll;
+                border-radius: $container-radius;
+    
+                h2 {
+                    font-size: 1rem;
+                    color: $medium-gray;
+                    text-transform: capitalize;
+                }
+            }
+            .event-form-selection-container {
+                border: 1px solid var(--light-gray);
+                border-radius: $container-radius;
+                margin-bottom: 1rem;
+                padding: 1rem;
+
+                .event-form-event {
+
+                    .golura-selection-icon-container {
+
+                        .golura-user-icon {
+                            height: 4rem;
+                            width: 4rem;
+
+                            h2 {
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                    .event-form-delete-event-button {
+                        margin: 0px;
+                    }
+                }
+            }
+        }
+    }
+}
+.event-reminder-reveal {
+
+    h2 {
+        margin-bottom: 2rem;
+    }
+}
+.event-calendar-settings-off-canvas,
+.event-map-settings-off-canvas {
+    padding: 4.5rem 0px 1rem 1rem;
+    z-index: 100013 !important;
+
+    &.is-open {
+        width: 20vw;
+        height: 100vh;
+        right: 1rem;
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        background: transparent;
+    }
+    &:not(.is-open) {
+        width: 0px;
+    }
+    .calendar-settings-container {
+        height: 100%;
+        background: var(--white);
+        border: 1px solid var(--light-gray);
+        border-radius: $container-radius;
+        overflow: auto;
+        padding: 1rem 1rem 0px 1rem;
+
+        .calendar-settings-list {
+            padding: 0px 0px 1rem 0px;
+            margin: 0px;
+            list-style-type: none;
+    
+            .calendar-settings-list-item {
+                border-bottom: 1px solid var(--light-gray);
+                margin-bottom: 1rem;
+
+                &:last-child {
+                    border: none;
+                    margin-bottom: 0px;
+                }
+                button {
+                    margin: 0px;
+                }
+                .calendar-button-container {
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+}

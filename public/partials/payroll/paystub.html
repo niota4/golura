@@ -1,0 +1,292 @@
+<div 
+    class="payroll-paystub-view-container view-container"
+    ng-init="initPayStub()"
+>
+    <div class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-if="UI.message.length || UI.errMessage.length"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="payroll-paystub-view view">
+        <div format-users user="payStub.Employee"></div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x">
+                    <div class="small-12 medium-shrink large-shrink">
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="small-12 medium-auto large-auto text-right">
+                        <button 
+                            class="view-paystub-print-button button success white-text"
+                            type="button"
+                            ng-click="printPayStub(payStub)"
+                        >
+                            <i class="fal fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto grid-container">
+                <div class="payroll-paystub-container">
+                    <div class="view-paystub-header-container">
+                        <div class="view-paystub-header">
+                            <div class="view-paystub-title view-title">
+                                <div class="grid-x align-top">
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <h1 class="separator-left">
+                                            <b>{{payStub.Payroll.payrollNumber}}</b>
+                                        </h1>
+                                    </div>
+                                    <div class="cell small-12 medium-shrink large-shrink">
+                                        <h6>
+                                            <i>Created: {{payStub.Payroll.approvedAt | DateTimeFormat}}</i>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="view-paystub-summary view-summary">
+                                <div class="grid-x grid-margin-x">
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <div class="view-paystub-summary-card view-summary-card">
+                                            <div class="card-value">
+                                                <h3>
+                                                    <b>${{payStub.PayrollItem.grossPay}}</b>
+                                                </h3>
+                                            </div>
+                                            <div class="card-header">
+                                                <b>Gross Pay</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <div class="view-paystub-summary-card view-summary-card">
+                                            <div class="card-value">
+                                                <h3>
+                                                    <b>-${{payStub.PayrollItem.deductions || '0.00'}}</b>
+                                                </h3>
+                                            </div>
+                                            <div class="card-header">
+                                                <b>Deductions</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <div class="view-paystub-summary-card view-summary-card">
+                                            <div class="card-value">
+                                                <h3>
+                                                    <b>${{payStub.PayrollItem.netPay}}</b>
+                                                </h3>
+                                            </div>
+                                            <div class="card-header">
+                                                <b>Net Pay</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <div class="view-paystub-summary-card view-summary-card">
+                                            <div class="card-value">
+                                                <h3>
+                                                    <b>{{payStub.PayrollItem.totalHours}}</b>
+                                                </h3>
+                                            </div>
+                                            <div class="card-header">
+                                                <b>Total Hours</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="golura-block grid-x grid-margin-x align-top" 
+                        ng-if="payStub.PayrollDeductions && payStub.PayrollDeductions.length > 0"
+                    >
+                        <div class="cell small-12 medium-12 large-12">
+                            <h2>
+                                <b>
+                                    Deductions
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="payroll-paystub-deduction-employee-deductions-list-container list-container">
+                                <ul class="payroll-paystub-deduction-employee-deductions-list list">
+                                    <li 
+                                        class="payroll-paystub-deduction-employee-deduction"
+                                        ng-if="!payStub.PayrollDeductions || payStub.PayrollDeductions.length === 0"
+                                    >
+                                        <h5 class="text-center">
+                                            <b>
+                                                No existing deductions found for this employee.
+                                            </b>
+                                        </h5>
+                                    </li>
+                                    <li 
+                                        class="payroll-paystub-deduction-employee-deduction-list-item list-item position-relative"
+                                        ng-repeat="deduction in payStub.PayrollDeductions track by $index"
+                                    >
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h5 
+                                                    class="text-capitalize"
+                                                    title="{{deduction.notes}}"
+                                                >
+                                                    <span 
+                                                        class="label alert white-text"
+                                                        ng-if="deduction.appliesTo === 'employer'"
+                                                    >
+                                                        Employer
+                                                    </span>
+                                                    <span 
+                                                        class="label warning white-text"
+                                                        ng-if="deduction.appliesTo === 'both'"
+                                                    >
+                                                        Both
+                                                    </span>
+                                                    <b>
+                                                        {{deduction.name || 'N/A'}} 
+                                                    </b>
+                                                </h5>
+                                                <h6 class="text-capitalize">
+                                                    <b>
+                                                        Type: 
+                                                    </b>
+                                                    {{deduction.type}}
+                                                </h6>
+                                                <h6>
+                                                    <b>
+                                                        Amount: 
+                                                    </b>
+                                                    <span ng-if="deduction.type === 'percentage'">
+                                                        {{deduction.value}}%
+                                                    </span>
+                                                    <span ng-if="deduction.type === 'fixed'">
+                                                        {{deduction.value | currency}}
+                                                    </span>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block grid-x grid-margin-x align-top">
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="view-paystub-details view-details">
+                                <div class="view-paystub-details-header view-details-header">
+                                    <h2>
+                                        <b>Employee Information</b>
+                                    </h2>
+                                </div>
+                                <div class="view-paystub-details-content view-details-content">
+                                    <div class="view-paystub-details-item view-details-item">
+                                        <h6>
+                                            <b>Employee Name: </b>
+                                            <a 
+                                                class="text-capitalize"
+                                                href="/users/user/{{payStub.Employee.id}}"
+                                                ng-if="payStub.Employee.id"
+                                            >
+                                                {{payStub.Employee.fullName}}
+                                            </a>
+                                        </h6>
+                                        <h6>
+                                            <b>Email: </b>
+                                            {{payStub.Employee.email}}
+                                        </h6>
+                                        <h6>
+                                            <b>Phone: </b>
+                                            <button
+                                                class="phone-number-button"
+                                                ng-model="payStub.Employee.phoneNumber"
+                                                ng-cloak
+                                                phone-number
+                                                ng-if="payStub.Employee.phoneNumber"
+                                            >
+                                                {{payStub.Employee.phoneNumber}}
+                                            </button>
+                                            <span ng-if="!payStub.Employee.phoneNumber">
+                                                N/A
+                                            </span>
+                                        </h6>
+                                        <h6>
+                                            <b>Payment Method: </b>
+                                            {{payStub.PaymentMethod.name}}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="view-paystub-details view-details">
+                                <div class="view-paystub-details-header view-details-header">
+                                    <h2>
+                                        <b>Hours & Rates</b>
+                                    </h2>
+                                </div>
+                                <div class="view-paystub-hours-content view-details-content">
+                                    <div class="view-paystub-hours-item view-details-item">
+                                        <h6 class="view-details-item-label">
+                                            <b>Regular Hours: </b>
+                                            <span ng-if="payStub.PayrollItem.regularHours">
+                                                {{payStub.PayrollItem.regularHours}}/hrs @ ${{payStub.PayrollItem.rate}}
+                                            </span>
+                                            <span ng-if="!payStub.PayrollItem.regularHours">
+                                                N/A
+                                            </span>
+                                        </h6>
+                                        <h6>
+                                            <b>Overtime Hours: </b>
+                                            <span ng-if="payStub.PayrollItem.overtimeHours">
+                                                {{payStub.PayrollItem.overtimeHours}}/hrs @ ${{payStub.PayrollItem.overtimeRate}}
+                                            </span>
+                                            <span ng-if="!payStub.PayrollItem.overtimeHours">
+                                                N/A
+                                            </span>
+                                        </h6>
+                                        <h6>
+                                            <b>
+                                                Total Hours: 
+                                            </b>
+                                            {{payStub.PayrollItem.totalHours || 0}}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

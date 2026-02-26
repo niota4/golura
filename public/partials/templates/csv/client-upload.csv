@@ -1,0 +1,11 @@
+id,firstName,lastName,email,phoneNumber,address
+1,John,Doe,john.doe@example.com,123-456-7890,123 Main St
+2,Jane,Smith,jane.smith@example.com,234-567-8901,456 Elm St
+3,Jim,Brown,jim.brown@example.com,345-678-9012,789 Oak St
+4,Jack,White,jack.white@example.com,456-789-0123,101 Pine St
+5,Jill,Green,jill.green@example.com,567-890-1234,202 Maple St
+6,Joe,Black,joe.black@example.com,678-901-2345,303 Cedar St
+7,Jessica,Blue,jessica.blue@example.com,789-012-3456,404 Birch St
+8,Jeremy,Red,jeremy.red@example.com,890-123-4567,505 Walnut St
+9,Janet,Yellow,janet.yellow@example.com,901-234-5678,606 Chestnut St
+10,Jason,Purple,jason.purple@example.com,012-345-6789,707 Ash St

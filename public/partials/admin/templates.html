@@ -1,0 +1,202 @@
+<div class="admin-templates-container admin-form-container">
+    <div class="admin-templates admin-form-details">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="admin-templates-options-container">
+                    <h1 ng-if="!root.UI.isMobile">
+                        <b>
+                            Templates
+                        </b>
+                    </h1>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="admin-templates-details-container">
+                    <div class="golura-block grid-x">
+                        <div class="golura-block cell small-12 medium-2 large-2">
+                            <div class="admin-templates-list-container">
+                                <button
+                                    class="admin-create-templates-button admin-button button success white-text expanded"
+                                    id="adminCreateTemplatesButton"
+                                    type="button"
+                                    data-open="templateFormReveal"
+                                    ng-click="initTemplateForm()"
+                                >
+                                    <i class="fal fa-layer-plus"></i> Create
+                                </button>
+                                <ul class="admin-templates-list">
+                                    <li 
+                                        class="text-center"
+                                        ng-if="UI.templatesLoaded && !templates.length"
+                                    >
+                                        <h4>
+                                            <b>
+                                                No Templates Found!
+                                            </b>
+                                        </h4>
+                                    </li>
+                                    <li 
+                                        class="admin-templates-list-item"
+                                        ng-repeat="t in templates track by $index"
+                                    >
+                                        <button
+                                            class="admin-templates-button medium-gray-button button expanded white-text"
+                                            ng-class="template.id === t.id ? 'is-active' : 'medium-gray-button white-text'"
+                                            type="button"
+                                            ng-click="initTemplate(t)"
+                                        >
+                                            <i
+                                                class="far"
+                                                ng-class="{'fa-envelope': t.type == 'EMAIL', 
+                                                'fa-file-pdf': t.type != 'PDF',
+                                                'fa-comment-scs': t.type != 'SMS'}"
+                                            ></i> 
+                                            - {{t.name}}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <div class="golura-block grid-y overflow-scroll">
+                                <div class="cell shrink">
+                                    <div 
+                                        class="admin-template-options-container"
+                                        ng-show="template.id"
+                                    >
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell auto">
+                                                <h3>
+                                                    <b>
+                                                        {{template.name}}
+                                                    </b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell shrink">
+                                                <div class="button-group align-right">
+                                                    <button
+                                                        class="admin-update-templates-button admin-button success button white-text"
+                                                        id="adminEmailtemplatePreviewButon"
+                                                        type="button"
+                                                        ng-click="initEmailTemplatePreview(template)"
+                                                        data-open="emailTemplatePreviewReveal"
+                                                        ng-if="permissions.canView"
+                                                    >
+                                                        <i class="fal fa-file-magnifying-glass"></i> Preview
+                                                    </button>
+                                                    <button
+                                                        class="admin-update-templates-button admin-button button white-text"
+                                                        id="adminEditTemplatesButton"
+                                                        type="button"
+                                                        ng-click="initTemplateForm(template)"
+                                                        data-open="templateFormReveal"
+                                                        ng-if="permissions.canEdit"
+                                                    >
+                                                        <i class="fal fa-edit"></i> Edit
+                                                    </button>
+                                                    <button
+                                                        class="admin-update-templates-button admin-button button alert white-text"
+                                                        id="adminUpdateTemplatesButton"
+                                                        type="button"
+                                                        data-open="templateDeleteConfirmReveal"
+                                                        ng-if="permissions.canArchive"
+                                                    >
+                                                        <i class="fal fa-archive"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell auto off-canvas-wrapper">
+                                    <div 
+                                        class="golura-rich-text-editor admin-email-template-builder-container"
+                                        id="emailTemplateBuilder"
+                                        rich-text-editor 
+                                        on-submit="updateTemplate($event, template)"
+                                        add-short-codes="true"
+                                        ng-model="template.data"
+                                        ng-if="template.type == 'EMAIL'"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="template-form-reveal reveal"
+    id="templateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeTemplateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/template-form.html'"></div>
+</div>
+<div
+    class="template-delete-confirm-reveal reveal"
+    id="templateDeleteConfirmReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeTemplateDeleteConfirmReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="grid-x grid-padding-x align-middle text-center">
+        <div class="cell small-12 medium-shrink large-shrink">
+            <span class="delete-icon">
+                <i class="fal fa-circle-exclamation"></i>
+            </span>
+        </div>
+        <div class="cell small-12 medium-auro large-auto">
+            <h4>
+                <b class="alert-text">Warning: </b>
+                <span class="white-text">Are you sure you want to Delete 
+                    this Template?
+                </span>
+            </h4>
+        </div>
+        <div class="cell small-12 medium-12 large-12">
+            <button 
+                class="delete-template-button button alert white-text"
+                type="button"
+                ng-disabled="UI.formSaving"
+                ng-class="{'form-alert': UI.formSaving}"
+                ng-click="deleteTemplate(template)"
+            >
+                <span ng-if="!UI.formSaving">
+                    <i class="fal fa-check-circle"></i> Confirm
+                </span>
+                <span ng-if="UI.formSaving">
+                    Please Wait...
+                </span>
+            </button>
+            <button 
+                class="cancel-button button warning white-text"
+                type="button"
+                data-close
+            >
+                <i class="fal fa-times-circle"></i> Cancel
+            </button>
+        </div>
+    </div>
+</div>

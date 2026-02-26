@@ -1,0 +1,125 @@
+<div class="sub-navigation-container">
+    <ul 
+        class="sub-navigation-list grid-x grid-margin-x text-center"
+        ng-class="{'align-middle': !$root.UI.isMobile, 'align-center-middle': $root.UI.isMobile}"
+    >
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': !UI.subPage}"
+            ng-if="$root.UI.isMobile"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-search"></i>
+                </span>
+                View
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'photos'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/photos"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-images"></i>
+                </span>
+                Photos
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'videos'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/videos"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-video"></i>
+                </span>
+                Videos
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'documents'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/documents"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file"></i>
+                </span>
+                Documents
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'estimates'}"
+            ng-if="!UI.eventLoaded ||
+            event.clientId && subPermissions.estimates.canView &&
+            $root.isSubscribed('estimates')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/estimates"
+                ng-class="{'disabled': !UI.eventLoaded}" 
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-money-bill-alt"></i>
+                </span>
+                Estimates
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'work-order'}"
+            ng-if="!UI.eventLoaded ||
+            event.clientId && subPermissions.workOrders.canView &&
+            $root.isSubscribed('work orders')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/work-order"
+                ng-class="{'disabled': !UI.eventLoaded}" 
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file-word"></i>
+                </span>
+                Work Order
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'invoice'}"
+            ng-if="!UI.eventLoaded ||
+            event.clientId && subPermissions.invoices.canView &&
+            $root.isSubscribed('invoices')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="events/event/{{event.id}}/invoice"
+                ng-class="{'disabled': !UI.eventLoaded}" 
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file-invoice-dollar"></i>
+                </span>
+                Invoice
+            </a>
+        </li>
+    </ul>
+</div>

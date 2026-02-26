@@ -1,0 +1,185 @@
+<div class="user-roles-create-edit-container create-edit-container">
+    <div class="user-roles-create-edit create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newRole">
+                Create Role
+            </b>
+            <b ng-if="!UI.newRole">
+                Edit Role
+            </b>
+        </h1>
+        <form 
+            class="user-roles-form golura-form"
+            id="roleForm"
+            name="roleForm"
+            ng-submit="createUserRole($event, role)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.roleLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.roleLoaded"
+                        ></div>
+                        <label for="roleName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="roleName"
+                            name="roleName"
+                            placeholder="Role name"
+                            ng-model="role.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Widgets</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="user-roles-widgets-container list-container">
+                        <ul class="user-roles-widgets-list list">
+                            <li 
+                                class="user-roles-widgets-list-item list-item"
+                                ng-repeat="widget in widgets track by $index"
+                            >
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell auto">
+                                        <h3>
+                                            <b>
+                                                {{widget.name}}
+                                            </b>
+                                        </h3>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <div class="user-roles-form-select-button-container select-container">
+                                            <button 
+                                                class="user-roles-form-select-button select-button button"
+                                                type="button"
+                                                ng-click="widget.selected = !widget.selected"
+                                                ng-class="{'selected': widget.selected}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widget.selected"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Permissions</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="user-roles-permissions-container list-container">
+                        <ul class="user-roles-permissions-list list">
+                            <li 
+                                class="user-roles-permissions-list-item list-item"
+                                ng-repeat="page in pages track by $index"
+                            >
+                                <h3>
+                                    <b>
+                                        {{page.name}}
+                                    </b>
+                                </h3>
+                                <div class="user-roles-permission-categories-container">
+                                    <ul 
+                                        class="user-roles-permission-categories"
+                                        ng-repeat="permission in page.permissions track by $index"
+                                    >
+                                        <div class="grid-x grid-margin-x">
+                                            <div class="cell small-12 medium-7 large-7 text-capitalize">
+                                                <p ng-if="!permission.subAction">
+                                                    {{permission.action}}
+                                                </p>
+                                                <p ng-if="permission.subAction">
+                                                    {{permission.subAction}}
+                                                </p>
+                                            </div>
+                                            <div class="cell auto">
+                                                <div class="user-roles-form-select-button-container select-container">
+                                                    <button 
+                                                        class="group-form-select-button select-button button"
+                                                        type="button"
+                                                        ng-click="permission.selected = !permission.selected"
+                                                        ng-class="{'selected': permission.selected}"
+                                                    >
+                                                        <div 
+                                                            class="check-icon"
+                                                            ng-if="permission.selected"
+                                                        >
+                                                            <i class="fal fa-check"></i>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="user-roles-form-submit-button submit-button button" 
+                        id="userRolesFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newRole"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-roles-form-edit-submit-button submit-button button" 
+                        id="userRolesFormEditSubmitButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateUserRole(role, pages)"
+                        ng-if="!UI.newRole"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

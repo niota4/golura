@@ -1,0 +1,37 @@
+// Mobile Payments Page Styles
+@include breakpoint(small only) {
+    .payments-container {
+        .payments {
+            .golura-block {
+                height: auto !important;
+            }
+            
+            .payments-search-container {
+                padding: 0 1rem;
+            }
+            
+            .payments-table-container {
+                overflow-x: auto;
+                
+                .payments-table {
+                    min-width: 700px;
+                }
+            }
+            
+            .payment-form-container {
+                padding: 1rem;
+                
+                .payment-form {
+                    .form-group {
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .payment-amount-input {
+                        font-size: 1.2rem;
+                        padding: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}

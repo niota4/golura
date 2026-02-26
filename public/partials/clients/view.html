@@ -1,0 +1,862 @@
+<div 
+    class="view-client-container view-container"
+    ng-init="initClient()"
+>
+    <user-onboarding page-name="client-view" auto-start="true"></user-onboarding>
+    <div class="view-client view">
+        <div format-clients client="client"></div>
+        <div format-phone-numbers phone-numbers="client.ClientPhoneNumbers"></div>
+        <div format-phone-numbers phone-number="selectedPhoneNumber"></div>
+        <div class="golura-block grid-y">
+            <div 
+                class="cell shrink"
+                ng-hide="!UI.copiedToClipboard"
+            >
+                <div class="callout success success-text text-center fade">
+                    Copied to clipboard.
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div 
+                        class="cell auto"
+                        ng-if="!$root.UI.isMobile"
+                    >
+                        <div class="view-client-options-container view-options-container">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <a 
+                                        class="view-client-options-button back-button button warning white-text"
+                                        ng-click="$root.goBack()"
+                                    >
+                                        <i class="fal fa-circle-arrow-left"></i> Back
+                                    </a>
+                                </div>
+                                <div class="cell auto">
+                                    <div class="button-group align-right">
+                                        <button
+                                            class="view-client-events-create-event-button submit-button create-button button success white-text" 
+                                            id="viewClientEventsCreateEstimateButton"
+                                            type="button"
+                                            ng-if="subPermissions.events.canCreate"
+                                            ng-click="initEventForm()"
+                                            data-open="eventsCreateEventReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Schedule Event
+                                        </button>
+                                        <button
+                                            class="view-client-estimates-create-estimate-button submit-button create-button button success white-text" 
+                                            id="viewClientEstimatesCreateEstimateButton"
+                                            type="button"
+                                            data-open="estimateCreationReveal"
+                                            ng-click="initEstimators()"
+                                            ng-if="subPermissions.estimates.canCreate"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create Estimate
+                                        </button>
+                                        <button
+                                            class="view-client-invoices-create-invoice-button submit-button create-button button success white-text" 
+                                            id="viewClientInvoicesCreateInvoiceButton"
+                                            type="button"
+                                            data-open="invoiceCreationReveal"
+                                            ng-if="subPermissions.invoices.canCreate"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create Invoice
+                                        </button>
+                                        <a 
+                                            class="view-client-options-button button white-text"
+                                            ng-href="clients/client/{{client.id}}/edit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="view-client-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="worker.delete = !worker.delete"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-auto large-auto"
+                        ng-if="$root.UI.isMobile"
+                    >
+                        <div class="view-options-container grid-x">
+                            <div class="cell auto">
+                                <a 
+                                    class="view-client-options-button back-button button warning white-text"
+                                    ng-click="$root.goBack()"
+                                >
+                                    <i class="fal fa-circle-arrow-left"></i>
+                                </a>
+                            </div>
+                            <div class="cell auto text-right">
+                                <button 
+                                    class="view-client-options-reveal-button view-options-reveal-button button clear"
+                                    type="button"
+                                    data-open="viewClientOptionsMobileReveal"
+                                    aria-label="Open Client Options"
+                                >
+                                    <i class="fal fa-bars"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="golura-block grid-x grid-margin-x">
+                    <div class="golura-block cell small-12 medium-3 large-3">
+                        <div class="view-client-primary-details-container">
+                            <div class="view-details-container">
+                                <div class="view-client-primary-details view-details grid-y">
+                                    <div class="cell shrink">
+                                        <div class="golura-user-icon-container frame-container">
+                                            <div class="golura-user-icon-background-container"></div>
+                                            <div class="golura-user-icon text-center">
+                                                <h2 class="flex-child-auto align-middle">
+                                                    {{client.shortName}}
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <h1 ng-click="copyToClipBoard(UI.url)">
+                                            <b>
+                                                {{client.fullName}}
+                                            </b>
+                                            <span>
+                                                <i class="fal fa-copy"></i>
+                                            </span>
+                                        </h1>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <h3>
+                                            <b>
+                                                Primary Information
+                                            </b>
+                                        </h3>
+                                        <ul class="view-client-primary-details-list">
+                                            <li 
+                                                class="view-client-primary-details-list-item"
+                                                ng-class="{'ssc': !UI.clientLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-line"
+                                                    ng-if="!UI.clientLoaded"
+                                                ></div>
+                                                <p
+                                                    ng-if="UI.clientLoaded"
+                                                    ng-cloak
+                                                >
+                                                    <b>Phone: </b> 
+                                                    <button
+                                                        class="phone-number-button"
+                                                        ng-model="client.primaryPhoneNumber.number"
+                                                        ng-cloak
+                                                        phone-number
+                                                        ng-if="client.primaryPhoneNumber.number"
+                                                        client-id="{{client.id}}"
+                                                        phone-number-id="{{client.primaryPhoneNumber.id}}"
+                                                    >
+                                                        {{client.primaryPhoneNumber.formattedNumber}}
+                                                    </button>
+                                                    <span ng-if="!client.primaryPhoneNumber.number">
+                                                        N/A
+                                                    </span>
+                                                </p>
+                                            </li>
+                                            <li 
+                                                class="view-client-primary-details-list-item"
+                                                ng-class="{'ssc': !UI.clientLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-line"
+                                                    ng-if="!UI.clientLoaded"
+                                                ></div>
+                                                <p
+                                                    ng-if="UI.clientLoaded"
+                                                    ng-cloak
+                                                >
+                                                    <b>Email: </b> 
+                                                    {{client.primaryEmail.email}}
+                                                </p>
+                                            </li>
+                                            <li 
+                                                class="view-client-primary-details-list-item"
+                                                ng-class="{'ssc': !UI.clientLoaded}"
+                                            >
+                                                <div class="button-groups">
+                                                    <button
+                                                        class="users-list-item-options-button button white-text"
+                                                        type="button"
+                                                        ng-if="client.primaryEmail.email"
+                                                        ng-click="initEmails()"
+                                                        data-open="emailFormReveal"
+                                                    >
+                                                        <i class="fal fa-envelope"></i> Email
+                                                    </button>
+                                                    <button
+                                                        class="users-list-item-options-button button white-text"
+                                                        type="button"
+                                                        ng-if="client.primaryPhoneNumber.number"
+                                                        ng-click="initTextMessages()"
+                                                        data-open="textMessagesReveal"
+                                                    >
+                                                        <i class="fal fa-comment-dots"></i> Text
+                                                    </button>
+                                                    <button
+                                                        class="users-list-item-options-button button success white-text"
+                                                        type="button"
+                                                        ng-if="client.primaryPhoneNumber.number"
+                                                        phone-number
+                                                        client-id="{{client.id}}"
+                                                        phone-number-id="{{client.primaryPhoneNumber.id}}"
+                                                        ng-model="client.primaryPhoneNumber.number"
+                                                        button="true"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-phone"></i> Call
+                                                    </button>
+                                                </div>
+                                                <hr/>
+                                            </li>
+                                            <li 
+                                                class="view-client-primary-details-list-item"
+                                                ng-class="{'ssc': !UI.clientLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-line"
+                                                    ng-if="!UI.clientLoaded"
+                                                ></div>
+                                                <p
+                                                    ng-if="UI.clientLoaded"
+                                                    ng-cloak
+                                                >
+                                                    <b>Address: </b> 
+                                                    {{client.primaryAddress.street1}} {{client.primaryAddress.street2}} <br/>
+                                                    {{client.primaryAddress.city}}, {{client.primaryAddress.State.abbreviation}}
+                                                    {{client.primaryAddress.zipCode}}
+                                                </p>
+                                            </li>
+                                            <li 
+                                                class="view-client-primary-details-list-item"
+                                                ng-class="{'ssc': !UI.clientLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-line"
+                                                    ng-if="!UI.clientLoaded"
+                                                ></div>
+                                                <address-map 
+                                                    latitude="client.primaryAddress.latitude" 
+                                                    longitude="event.primaryAddress.longitude"
+                                                ></address-map>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="view-client-details-option-container">
+                            <div class="golura-block grid-y">
+                                <div 
+                                    class="cell shrink"
+                                    ng-repeat="note in client.notes track by $index"
+                                    ng-if="note.isActive &&
+                                    note.primary_id &&
+                                    UI.clientLoaded"
+                                >
+                                    <div class="note-callout callout alert alert-text">
+                                        <div class="grid-x">
+                                            <div class="cell auto">
+                                                <h6>
+                                                    <b>
+                                                        <i class="fa far-question-circle"></i> 
+                                                        {{note.title}}
+                                                    </b>
+                                                </h6>
+                                            </div>
+                                            <div class="cell shrink">
+                                                <span class="text-right">
+                                                    {{note.created | DateTimeFormat}}
+                                                </span>
+                                            </div>
+                                            <div class="cell small-12 medium-12 large-12">
+                                                <p 
+                                                    class="view-client-details-tab-item-note"
+                                                    ng-bind-html="note.note"
+                                                >
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell shrink">
+                                    <div 
+                                        ng-include="'/dist/navigations/client-navigation.html'"
+                                        ng-if="!$root.UI.isMobile"
+                                    ></div>
+                                </div>
+                                <div class="cell small-auto medium-auto large-auto">
+                                    <div class="view-client-details-options">
+                                        <div class="golura-block grid-x">
+                                            <div class="golura-block cell small-12 medium-shrink large-shrink">
+                                                <ul 
+                                                    class="view-client-details-tabs-list tabs vertical" 
+                                                    id="viewClientDetailsTabs"
+                                                    data-responsive-accordion-tabs="tabs small-accordion medium-tabs large-tabs"
+                                                    data-deep-link="false"
+                                                >
+                                                    <li class="view-client-details-tabs-title tabs-title is-active">
+                                                        <a  
+                                                            class="view-client-details-tabs-title-link"
+                                                            data-tabs-target="numbers"
+                                                            href="numbers"
+                                                        >
+                                                            <i class="fal fa-phone-office"></i> Phone Numbers
+                                                        </a>
+                                                    </li>
+                                                    <li class="view-client-details-tabs-title tabs-title">
+                                                        <a  
+                                                            class="view-client-details-tabs-title-link"
+                                                            data-tabs-target="emails"
+                                                            href="emails"
+                                                        >
+                                                            <i class="fal fa-envelope"></i> Email Addresses
+                                                        </a>
+                                                    </li>
+                                                    <li class="view-client-details-tabs-title tabs-title">
+                                                        <a  
+                                                            class="view-client-details-tabs-title-link"
+                                                            data-tabs-target="addresses"
+                                                            href="addresses"
+                                                        >
+                                                            <i class="fal fa-address-book"></i> Addresses
+                                                        </a>
+                                                    </li>
+                                                    <li class="view-client-details-tabs-title tabs-title">
+                                                        <a  
+                                                            class="view-client-details-tabs-title-link"
+                                                            data-tabs-target="notes"
+                                                            href="notes"
+                                                        >
+                                                            <i class="fal fa-notes"></i> Notes
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="golura-block cell small-12 medium-auto large-auto position-relative">
+                                                <div 
+                                                    class="view-client-details-tabs-content tabs-content" 
+                                                    data-tabs-content="viewClientDetailsTabs"
+                                                >
+                                                    <div 
+                                                        class="view-client-details-tabs-panel tabs-panel is-active" 
+                                                        id="numbers"
+                                                    >
+                                                        <div class="view-client-details-tab list-container">
+                                                            <div 
+                                                                class="grid-y"
+                                                                ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                                                            >
+                                                                <div class="cell shrink">
+                                                                    <div class="clients-list-item-details-search-container list-search-container">
+                                                                        <div class="list-search search-input-container">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell auto align-self-bottom">
+                                                                                    <input
+                                                                                        class="clients-search-input search-input"
+                                                                                        type="text"
+                                                                                        placeholder="Search phone numbers..."
+                                                                                        ng-model="search.phoneNumbers.value"
+                                                                                    />
+                                                                                </div>
+                                                                                <div class="cell shrink align-self-bottom">
+                                                                                    <span class="search-icon">
+                                                                                        <i class="fal fa-search"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell"
+                                                                    ng-class="{'auto': !$root.UI.isMobile, 'small-12 medium-12 large-12': $root.UI.isMobile}"
+                                                                >
+                                                                    <ul class="view-client-details-tab list">
+                                                                        <li 
+                                                                            class="view-client-details-tab-item list-item"
+                                                                            ng-repeat="phoneNumber in filteredPhoneNumbers = 
+                                                                            (client.ClientPhoneNumbers | filter: search.phoneNumbers.value) |
+                                                                            orderBy: createdAt track by $index"
+                                                                            ng-class="{'ssc': !UI.clientLoaded}"
+                                                                            ng-if="phoneNumber.isActive"
+                                                                        >
+                                                                            <div 
+                                                                                class="ssc-line"
+                                                                                ng-if="!UI.clientLoaded"
+                                                                            ></div>
+                                                                            <h5 ng-if="UI.clientLoaded">
+                                                                                <span 
+                                                                                    class="label success white-text"
+                                                                                    ng-if="phoneNumber.isPrimary"
+                                                                                >
+                                                                                    Primary
+                                                                                </span>
+                                                                                <b>
+                                                                                    Phone Number #{{$index + 1}}
+                                                                                </b>
+                                                                            </h5>
+                                                                            <ul 
+                                                                                class="view-client-details-list"
+                                                                                ng-if="UI.clientLoaded"
+                                                                            >
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Title: </b> 
+                                                                                        {{phoneNumber.title}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Phone Number: </b> 
+                                                                                        <button
+                                                                                            class="phone-number-button"
+                                                                                            ng-model="phoneNumber.number"
+                                                                                            ng-if="UI.clientLoaded"
+                                                                                            ng-cloak
+                                                                                            client-id="{{client.id}}"
+                                                                                            phone-number
+                                                                                            format-phone-number
+                                                                                            phone-number-id="{{phoneNumber.id}}"
+                                                                                        >
+                                                                                            {{phoneNumber.formattedNumber}}
+                                                                                        </button>
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Type: </b> 
+                                                                                        {{phoneNumber.type}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Created: </b> 
+                                                                                        {{phoneNumber.createdAt | DateTimeFormat}}
+                                                                                    </p>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li 
+                                                                            class="text-center" 
+                                                                            ng-if="filteredPhoneNumbers.length === 0 && UI.clientLoaded"
+                                                                        >
+                                                                            <span>No phone numbers found.</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        class="view-client-details-tabs-panel tabs-panel" 
+                                                        id="emails"
+                                                    >
+                                                        <div class="view-client-details-tab list-container">
+                                                            <div 
+                                                                class="grid-y"
+                                                                ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                                                            >
+                                                                <div class="cell shrink">
+                                                                    <div class="clients-list-item-details-search-container list-search-container">
+                                                                        <div class="list-search search-input-container">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell auto align-self-bottom">
+                                                                                    <input
+                                                                                        class="clients-search-input search-input"
+                                                                                        type="text"
+                                                                                        placeholder="Search emails..."
+                                                                                        ng-model="search.emails.value"
+                                                                                    />
+                                                                                </div>
+                                                                                <div class="cell shrink align-self-bottom">
+                                                                                    <span class="search-icon">
+                                                                                        <i class="fal fa-search"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell"
+                                                                    ng-class="{'auto': !$root.UI.isMobile, 'small-12 medium-12 large-12': $root.UI.isMobile}"
+                                                                >
+                                                                    <ul class="view-client-details-tab list">
+                                                                        <li 
+                                                                            class="view-client-details-tab-item list-item"
+                                                                            ng-repeat="email in filteredEmails = 
+                                                                            (client.ClientEmails | filter: search.emails.value) |
+                                                                            orderBy: createdAt track by $index"
+                                                                            ng-class="{'ssc': !UI.clientLoaded}"
+                                                                            ng-if="email.isActive"
+                                                                        >
+                                                                            <div 
+                                                                                class="ssc-line"
+                                                                                ng-if="!UI.clientLoaded"
+                                                                            ></div>
+                                                                            <h5 ng-if="UI.clientLoaded">
+                                                                                <span 
+                                                                                    class="label success white-text"
+                                                                                    ng-if="phoneNumber.isPrimary"
+                                                                                >
+                                                                                    Primary
+                                                                                </span>
+                                                                                <b>
+                                                                                    Email #{{$index + 1}}
+                                                                                </b>
+                                                                            </h5>
+                                                                            <ul 
+                                                                                class="view-client-details-list"
+                                                                                ng-if="UI.clientLoaded"
+                                                                            >
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Title: </b> 
+                                                                                        {{email.title}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Email: </b> 
+                                                                                        {{email.email}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Created: </b> 
+                                                                                        {{email.createdAt | DateTimeFormat}}
+                                                                                    </p>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li 
+                                                                            class="text-center"
+                                                                            ng-if="filteredEmails.length === 0 && UI.clientLoaded"
+                                                                        >
+                                                                            <span>No emails found.</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        class="view-client-details-tabs-panel tabs-panel" 
+                                                        id="addresses"
+                                                    >
+                                                        <div class="view-client-details-tab list-container">
+                                                            <div 
+                                                                class="grid-y"
+                                                                ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                                                            >
+                                                                <div class="cell shrink">
+                                                                    <div class="clients-list-item-details-search-container list-search-container">
+                                                                        <div class="list-search search-input-container">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell auto align-self-bottom">
+                                                                                    <input
+                                                                                        class="clients-search-input search-input"
+                                                                                        type="text"
+                                                                                        placeholder="Search addresses..."
+                                                                                        ng-model="search.addresses.value"
+                                                                                    />
+                                                                                </div>
+                                                                                <div class="cell shrink align-self-bottom">
+                                                                                    <span class="search-icon">
+                                                                                        <i class="fal fa-search"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell"
+                                                                    ng-class="{'auto': !$root.UI.isMobile, 'small-12 medium-12 large-12': $root.UI.isMobile}"
+                                                                >
+                                                                    <ul class="view-client-details-tab list">
+                                                                        <li 
+                                                                            class="view-client-details-tab-item list-item"
+                                                                            ng-repeat="address in filteredAddresses = 
+                                                                            (client.ClientAddresses | filter: search.addresses.value) |
+                                                                            orderBy: createdAt track by $index"
+                                                                            ng-class="{'ssc': !UI.clientLoaded}"
+                                                                            ng-if="address.isActive"
+                                                                        >
+                                                                            <div 
+                                                                                class="ssc-line"
+                                                                                ng-if="!UI.clientLoaded"
+                                                                            ></div>
+                                                                            <h5 ng-if="UI.clientLoaded">
+                                                                                <span 
+                                                                                    class="label success white-text"
+                                                                                    ng-if="phoneNumber.isPrimary"
+                                                                                >
+                                                                                    Primary
+                                                                                </span>
+                                                                                <b>
+                                                                                    Address #{{$index + 1}}
+                                                                                </b>
+                                                                            </h5>
+                                                                            <ul 
+                                                                                class="view-client-details-list"
+                                                                                ng-if="UI.clientLoaded"
+                                                                            >
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Title: </b> 
+                                                                                        {{address.title}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Street 1: </b> 
+                                                                                        {{address.street1}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li 
+                                                                                    class="view-client-details-list-item"
+                                                                                    ng-if="address.street2"
+                                                                                >
+                                                                                    <p>
+                                                                                        <b>Street 2: </b> 
+                                                                                        {{address.street2}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>City: </b> 
+                                                                                        {{address.city}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>State: </b> 
+                                                                                        {{address.State.name}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Zip Code: </b> 
+                                                                                        {{address.zipCode}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <p>
+                                                                                        <b>Created: </b> 
+                                                                                        {{address.createdAt | DateTimeFormat}}
+                                                                                    </p>
+                                                                                </li>
+                                                                                <li class="view-client-details-list-item">
+                                                                                    <address-map 
+                                                                                        latitude="address.latitude" 
+                                                                                        longitude="address.longitude"
+                                                                                    ></address-map>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li 
+                                                                            class="text-center"
+                                                                            ng-if="filteredAddresses.length === 0 && UI.clientLoaded"
+                                                                        >
+                                                                            <span>No addresses found.</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        class="view-client-details-tabs-panel tabs-panel" 
+                                                        id="notes"
+                                                    >
+                                                        <div class="view-client-details-tab list-container">
+                                                            <div 
+                                                                class="grid-y"
+                                                                ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                                                            >
+                                                                <div class="cell shrink">
+                                                                    <div class="clients-list-item-details-search-container list-search-container">
+                                                                        <div class="list-search search-input-container">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell auto align-self-bottom">
+                                                                                    <input
+                                                                                        class="clients-search-input search-input"
+                                                                                        type="text"
+                                                                                        placeholder="Search notes..."
+                                                                                        ng-model="search.notes.value"
+                                                                                    />
+                                                                                </div>
+                                                                                <div class="cell shrink align-self-bottom">
+                                                                                    <span class="search-icon">
+                                                                                        <i class="fal fa-search"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell"
+                                                                    ng-class="{'auto': !$root.UI.isMobile, 'small-12 medium-12 large-12': $root.UI.isMobile}"
+                                                                >
+                                                                    <ul class="view-client-details-tab list">
+                                                                        <li 
+                                                                            class="view-client-details-tab-item list-item"
+                                                                            ng-repeat="note in filteredNotes = 
+                                                                            (client.ClientNotes | filter: search.notes.value) |
+                                                                            orderBy: createdAt track by $index"
+                                                                            ng-class="{'ssc': !UI.clientLoaded}"
+                                                                            ng-if="note.isActive &&
+                                                                            !note.primary_id"
+                                                                        >
+                                                                            <div 
+                                                                                class="ssc-line"
+                                                                                ng-if="!UI.clientLoaded"
+                                                                            ></div>
+                                                                            <h5 ng-if="UI.clientLoaded">
+                                                                                <b>
+                                                                                    Note #{{$index + 1}}
+                                                                                </b>
+                                                                            </h5>
+                                                                            <div class="grid-x">
+                                                                                <div class="cell small-12 medium-12 large-12">
+                                                                                    <p 
+                                                                                        class="view-client-details-tab-item-note"
+                                                                                        ng-bind-html="note.content"
+                                                                                    >
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="small-12 medium-12 large-12">
+                                                                                    <p class="text-right">
+                                                                                        {{note.createdAt | DateTimeFormat}}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li 
+                                                                            class="text-center"
+                                                                            ng-if="filteredNotes.length === 0 && UI.clientLoaded"
+                                                                        >
+                                                                            <span>No notes found.</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="email-form-reveal reveal large"
+    id="emailFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEmailFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/general/email-form.html'"></div>
+</div>
+<div 
+    class="text-messages-reveal reveal large"
+    id="textMessagesReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeTextMessagesReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="golura-block grid-y">
+        <div class="cell auto">
+            <div 
+                class="golura-block"
+                ng-include="'dist/partials/general/text-messages.html'"
+            >
+            </div>
+        </div>
+        <div class="cell shrink">
+            <div class="text-message-phone-number-container golura-form">
+                <div 
+                    class="input-container"
+                    ng-class="{'disabled': !client.ClientPhoneNumbers.length}"
+                >
+                    <label>
+                        Selected Phone Number
+                    </label>
+                    <selectize
+                        class="client-input form-input"
+                        id="clientPhoneNumber"
+                        name="clientPhoneNumber"
+                        config="phoneNumberOptions"
+                        options="client.ClientPhoneNumbers"
+                        ng-model="selectedPhoneNumber.id"
+                        ng-disabled="!client.ClientPhoneNumbers.length"
+                    >
+                    </selectize>
+                </div>
+            </div>
+        </div>
+        <div class="cell shrink">
+            <full-text-area 
+                placeholder="Write a message..."
+                ng-model="textMessage.message" 
+                client-id="{{client.id}}"
+                phone-number-id="{{selectedPhoneNumber.id}}"
+                event-id="{{event.id || ''}}" 
+                estimate-id="{{estimate.id || ''}}"
+                work-order-id="{{workOrder.id || ''}}" 
+                invoice-id="{{invoice.id || ''}}" 
+                text-message="{{textMessage.id || ''}}"
+                user="{{user.id}}"
+                users="users"
+            >
+            </full-text-area>
+        </div>
+    </div>
+</div>

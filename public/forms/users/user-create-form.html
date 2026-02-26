@@ -1,0 +1,241 @@
+<div
+    class="user-create-container create-edit-container"
+    ng-init="initUserForm()"
+> 
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="golura-block grid-y">
+        <div class="cell shrink">
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <button 
+                        class="back-button button warning white-text" 
+                        type="button"
+                        ng-click="$root.goBack()"
+                    >
+                        <i class="fal fa-circle-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="cell auto grid-container">
+            <form 
+                class="user-form golura-form create-edit"
+                id="userForm"
+                name="userForm"
+                ng-submit="createUser($event, worker)"
+            >
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-12 large-12">
+                        <h1>
+                            <b>
+                                Create User
+                            </b>
+                        </h1>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6">
+                        <div class="input-container">
+                            <label>   
+                                First Name
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                name="firstName"
+                                placeholder="Johnny"
+                                ng-model="worker.firstName"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-6">
+                        <div class="input-container">
+                            <label>   
+                                Last Name
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                name="lastName"
+                                placeholder="Appleseed"
+                                ng-model="worker.lastName"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <span 
+                            class="alert-text"
+                            ng-show="UI.emailTaken"
+                        >
+                            Sorry, looks like this email is taken, try another.
+                        </span>
+                        <div class="input-container">
+                            <label>   
+                                Primary Email Address
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                class="form-input"
+                                type="email"
+                                name="email"
+                                placeholder="johnnyappleseed@carecenter.com"
+                                ng-model="worker.email"
+                                ng-keyup="UI.emailTaken = false"
+                                autocomplete="off"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>   
+                                Primary Phone Number
+                            </label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                name="phone"
+                                placeholder="(123) 456-7890"
+                                ng-model="worker.phoneNumber"
+                                ui-mask="(999) 999-9999"
+                                ui-mask="99.99.9999"  
+                                ui-mask-placeholder 
+                                ui-mask-placeholder-char="_"
+                            />
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-shrink large-shrink"
+                        ng-if="!UI.newUser"
+                    >
+                        <div class="input-container color-picker-input-container">
+                            <label>   
+                                Color
+                            </label>
+                            <div
+                                class="color-picker-sample"
+                                ng-style="{'background': worker.Preferences.backgroundColor}"
+                                ng-model="worker.Preference.profileColor"
+                                color-picker 
+                                color-picker-model="worker.Preferences.backgroundColor"
+                                color-picker-output-format="'hex'"
+                            >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto" >
+                        <div class="input-container">
+                            <legend>   
+                                Role
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </legend>
+                            <selectize
+                                class="user-form-roles-input form-input"
+                                id="userFormRoleInput"
+                                config="rolesOptions"
+                                options="roles"
+                                ng-model="worker.roleId"
+                                ng-change="updateUserRolePermissions(worker.roleId)"
+                                ng-cloak
+                                required
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <button 
+                            class="user-form-button submit-button button" 
+                            id="userFormButton"
+                            type="button"
+                            data-open="userPermissionsReveal"
+                        >
+                            <span ng-if="!UI.formSaving">
+                                <i class="fal fa-search"></i> View Permissions
+                            </span>
+                            <span ng-if="UI.formSaving">
+                                Please Wait...
+                            </span>
+                        </button>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="user-form-submit-button submit-button button" 
+                            id="userFormSubmitButton"
+                            type="submit"
+                            ng-disabled="UI.formSaving"
+                            ng-class="{'form-saving': UI.formSaving}"
+                            ng-if="UI.newUser"
+                        >
+                            <span ng-if="!UI.formSaving">
+                                <i class="fal fa-save"></i> Save
+                            </span>
+                            <span ng-if="UI.formSaving">
+                                Please Wait...
+                            </span>
+                        </button>
+                        <button 
+                            class="user-form-edit-submit-button submit-button button" 
+                            id="userFormEditSubmitButton"
+                            type="button"
+                            ng-disabled="UI.formSaving"
+                            ng-class="{'form-saving': UI.formSaving}"
+                            ng-click="updateUser(worker)"
+                            ng-if="!UI.newUser"
+                        >
+                            <span ng-if="!UI.formSaving">
+                                <i class="fal fa-check-circle"></i> Update
+                            </span>
+                            <span ng-if="UI.formSaving">
+                                Please Wait...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div
+    class="user-permissions-reveal reveal"
+    id="userPermissionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserPermissionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/users/user-permissions-form.html'"
+    ></div>
+</div>

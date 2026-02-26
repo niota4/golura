@@ -1,0 +1,432 @@
+<div 
+    class="view-event-work-order-container view-event-container view-container"
+    ng-init="initEvent()"
+>
+    <div format-events event="event"></div>
+    <div format-clients client="workOrder.Client"></div>
+    <div format-users user="workOrder.Creator"></div>
+    <div format-users user="workOrder.Completer"></div>
+    <div class="view-event-work-order view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-4 large-4">
+                        <div ng-include="'dist/partials/events/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/event-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="button-group align-right">
+                    <a 
+                        class="view-event-work-order-create-purchase-order-button button"
+                        ng-href="work-orders/work-order/{{workOrder.id}}"
+                    >
+                        <i class="fal fa-expand"></i> Fullscreen
+                    </a>
+                    <button
+                        class="view-event-work-order-create-purchase-order-button submit-button create-button button success white-text" 
+                        id="viewClientWorkOrderCreatePurchasOrderButton"
+                        type="button"
+                        ng-click="initPurchaseOrderForm()"
+                        ng-if="subPermissions.workOrders.canCreate"
+                        data-open="createPurchaseOrderReveal"
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Purchase Order
+                    </button>
+                    <a 
+                        class="edit-work-order-button button"
+                        ng-href="/work-orders/work-order/{{workOrder.id}}/edit"
+                        ng-if="subPermissions.workOrders.canEdit"
+                    >
+                        <i class="fal fa-edit"></i> 
+                        Edit
+                    </a>
+                    <button 
+                        class="button alert white-text"
+                        ng-click="UI.workOrderDeleteConfirmation = !UI.workOrderDeleteConfirmation"
+                        ng-if="subPermissions.workOrders.canArchive"
+                    >
+                        <i class="fal fa-archive"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <div class="cell auto">
+                <h1 
+                    class="text-center"
+                    ng-if="UI.workOrderLoaded &&
+                    !workOrder"
+                >
+                    <b>
+                        No Work Order Found
+                    </b>
+                </h1>
+                <div 
+                    class="view-event-work-order-details-container"
+                    ng-if="!UI.workOrderLoaded ||
+                    workOrder"
+                >
+                    <div class="golura-block grid-x grid-padding-x">
+                        <div class="cell small-12 medium-12 large-4">
+                            <div class="view-event-work-order-detail-container view-details-container">
+                                <div class="view-event-work-order-summary view-details">
+                                    <h2>
+                                        <b>
+                                            Work Order
+                                        </b>
+                                    </h2>
+                                    <h3 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Cost: ${{workOrder.cost | number}}
+                                        </b>
+                                    </h3>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Title: 
+                                        </b> 
+                                        {{workOrder.title}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Work Order Number: 
+                                        </b> 
+                                        <a 
+                                            ng-href="/work-orders/work-order/{{workOrder.id}}"
+                                            ng-cloak
+                                        >
+                                            {{workOrder.workOrderNumber}}
+                                        </a>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Priority: 
+                                        </b> 
+                                        <span ng-class="{'alert-text': workOrder.Priority.level == 'high'}">
+                                            {{workOrder.Priority.level}}
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Due Date: 
+                                        </b> 
+                                        <span ng-if="workOrder.dueDate">
+                                            {{workOrder.dueDate | DateTimeFormat}}
+                                        </span>
+                                        <span ng-if="!workOrder.dueDate">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Scheduled Date: 
+                                        </b> 
+                                        <span ng-if="workOrder.scheduledDate">
+                                            {{workOrder.scheduledDate | DateTimeFormat}}
+                                        </span>
+                                        <span ng-if="!workOrder.scheduledDate">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Status: 
+                                        </b> 
+                                        {{workOrder.WorkOrderStatus.name}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Approval Status: 
+                                        </b> 
+                                        <span 
+                                            class="success-text"
+                                            ng-if="workOrder.WorkOrderStatus.name == 'approved'"
+                                        >
+                                            approved
+                                        </span>
+                                        <span 
+                                            class="alert-text"
+                                            ng-if="workOrder.WorkOrderStatus.name == 'not approved'"
+                                        >
+                                            not approved
+                                        </span>
+                                        <span ng-if="!workOrder.scheduledDate">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Estimate: 
+                                        </b> 
+                                        <a 
+                                            class="text-capitalize"
+                                            ng-href="/estimates/estimate/{{workOrder.Estimate.id}}"
+                                            ng-if="workOrder.estimateId"
+                                            ng-cloak
+                                        >
+                                            #{{workOrder.Estimate.id}}
+                                        </a>
+                                        <span ng-if="!workOrder.estimateId">
+                                            Not connected to an Estimate
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Client: 
+                                        </b> 
+                                        <a 
+                                            class="text-capitalize"
+                                            ng-href="/clients/client/{{workOrder.Client.id}}"
+                                            ng-if="workOrder.clientId"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-user"></i> 
+                                            {{workOrder.Client.fullName}}
+                                        </a>
+                                        <span ng-if="!workOrder.clientId">
+                                            Not connected to an Client
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Completed By: 
+                                        </b> 
+                                        <a 
+                                            class="text-capitalize"
+                                            ng-href="/users/user/{{workOrder.Creator.id}}"
+                                            ng-if="workOrder.completedBy"
+                                            ng-cloak
+                                        >
+                                            {{workOrder.Completer.fullName}}
+                                        </a>
+                                        <span ng-if="!workOrder.completedBy">
+                                            Not completed
+                                        </span>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Created By: 
+                                        </b> 
+                                        <a 
+                                            class="text-capitalize"
+                                            ng-href="/users/user/{{workOrder.Creator.id}}"
+                                            ng-cloak
+                                        >
+                                            {{workOrder.Creator.fullName}}
+                                        </a>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.workOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.workOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Description: 
+                                        </b> 
+                                        <p 
+                                            ng-if="workOrder.details"
+                                            ng-bind-html="workOrder.details"
+                                        >
+                                        </p>
+                                        <p ng-if="!workOrder.details">
+                                            <i>
+                                                No details available
+                                            </i>
+                                        </p>
+                                    </h6>
+                                    <button 
+                                        class="view-purchase-orders-button expanded button"
+                                        ng-if="subPermissions.workOrders.canView &&
+                                        workOrder.PurchaseOrders.length"
+                                        ng-click="initPurchaseOrders()"
+                                        data-open="viewPurchaseOrdersReveal"
+                                    >
+                                        <i class="fal fa-clipboard-list"></i>
+                                        Purchase Orders
+                                    </button>
+                                </div>
+                            </div>
+                            <div 
+                                class="view-event--work-order-recent-activities-container view-details-container"
+                                ng-if="!$root.UI.isMobile"
+                            >
+                                <div class="view-event-work-order-recent-activities-list-container view-details list-container">
+                                    <h3>
+                                        <b>
+                                            Recent Activity
+                                        </b>
+                                    </h3>
+                                    <ul 
+                                        class="view-event-work-order-recent-activities-list list"
+                                        id="eventRecentActivitiesList"
+                                    >
+                                        <li ng-show="!UI.workOrderActivitiesLoaded">
+                                            <div class="ssc view-event-recent-activities-ssc">
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-repeat="x in [].constructor(3) track by $index"
+                                                ></div>
+                                            </div>
+                                        </li>
+                                        <li
+                                            class="view-event-work-order-recent-activities-list-item list-item position-relative"
+                                            ng-repeat="activity in activities |
+                                            limitTo: 3 track by $index"
+                                        >
+                                            <div class="grid-x grid-padding-x align-middle">
+                                                <div class="cell small-6 medium-6 large-6">
+                                                    <p>
+                                                        <b>
+                                                            Type: 
+                                                        </b>
+                                                        {{activity.formattedName}}
+                                                    </p>
+                                                </div>
+                                                <div class="cell small-6 medium-6 large-6 text-right">
+                                                    <p>
+                                                        <i>
+                                                            {{activity.timestamp | DateTimeFormat}}
+                                                        </i>
+                                                    </p>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12">
+                                                    <p>
+                                                        <b>
+                                                            changed by: 
+                                                        </b>
+                                                        {{activity.changedBy.firstName}} {{activity.changedBy.lastName}}
+                                                    </p>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12">
+                                                    <p>
+                                                        <b>
+                                                            description:
+                                                        </b>
+                                                    </p>
+                                                    <p ng-bind-html="activity.description">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="view-recent-activities-button button expanded"
+                                                ng-href="work-orders/work-order/{{workOrder.id}}/activity"
+                                            >
+                                                <i class="fal fa-wave-pulse"></i>
+                                                View All Activity
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="golura-block cell small-12 medium-12 large-8">
+                            <div 
+                                class="golura-block"
+                                ng-include="'dist/partials/work-orders/line-items.html'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="create-purchase-order-reveal reveal"
+    id="createPurchaseOrderReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeCreatePurchaseOrderReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/purchase-order-create-form.html'"
+    >
+    </div>
+</div>
+<div 
+    class="view-purchase-order-reveal reveal large"
+    id="viewPurchaseOrdersReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeviewPurchaseOrdersReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/work-orders/purchase-orders.html'"
+    >
+    </div>
+</div>

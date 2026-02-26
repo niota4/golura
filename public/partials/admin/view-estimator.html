@@ -1,0 +1,364 @@
+<div 
+    class="view-estimator-container admin-container view-container"
+    ng-init="initEstimator()"
+>
+    <div format-users user="estimator.Creator"></div>
+    <div 
+        class="callout sticky success success-text text-center fade"
+        ng-hide="!UI.formSaved"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button success button clear"
+            type="button"
+            ng-click="UI.formSaved = !UI.formSaved"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="view-estimator admin view overflow-scroll">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-top">
+                    <div class="cell auto">
+                        <button 
+                            class="view-estimator-options-button back-button button warning white-text"
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> 
+                            <span ng-if="!$root.UI.isMobile">
+                                Back
+                            </span>
+                        </button>
+                    </div>
+                    <div class="cell shrink">
+                        <div class="button-group align-right">
+                            <button 
+                                class="view-estimator-options-button button white-text"
+                                type="button"
+                                data-open="estimatorFormReveal"
+                                ng-click="initEstimatorForm(estimator)"
+                                ng-cloak
+                            >
+                                <i class="fal fa-edit"></i> 
+                                <span ng-if="!$root.UI.isMobile">
+                                    Edit
+                                </span>
+                            </button>
+                            <button 
+                                class="view-client-options-button button alert white-text"
+                                type="button"
+                                ng-click="UI.estimatorDeleteConfirmation = !UI.estimatorDeleteConfirmation"
+                                ng-if="permissions.canArchive"
+                            >
+                                <i class="fal fa-archive"></i> 
+                                <span ng-if="!$root.UI.isMobile">
+                                    Archive
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="golura-block grid-x grid-margin-x">
+                    <div class="cell small-12 medium-3 large-3">
+                        <div class="view-estimator-details-container view-details-container">
+                            <div class="view-estimator-details admin-list-container view-details">
+                                <h3>
+                                    <b>Estimator Details</b>
+                                </h3>
+                                <ul class="view-estimator-details-list admin-list">
+                                    <li 
+                                        class="view-estimate-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.estimatorLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.estimatorLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.estimatorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Name: </b> {{estimator.title}}
+                                        </h6>
+                                        <h6
+                                            ng-if="UI.estimatorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Event Type: </b> {{estimator.EventType.name || 'N/A'}}
+                                        </h6>
+                                        <h6
+                                            ng-if="UI.estimatorLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Created By: </b> 
+                                            <a ng-href="users/user/{{estimator.creatorId}}">
+                                                {{estimator.Creator.fullName}}
+                                            </a>
+                                        </h6>
+                                        <h6
+                                            ng-if="UI.estimatorLoaded"
+                                            ng-class="{'success-text': estimator.status == 'published'}"
+                                            ng-cloak
+                                        >
+                                            <b>Status: </b>         
+                                            <span 
+                                                class="label white-text"
+                                                ng-class="{
+                                                    'success': estimator.status == 'Published',
+                                                    'warning': estimator.status == 'Draft' 
+                                                }"
+
+                                            >
+                                                {{estimator.status}}
+                                            </span>
+                                        </h6>
+                                        <h6
+                                            ng-if="UI.estimatorLoaded && estimator.description"
+                                            ng-cloak
+                                        >
+                                            <b>Description: </b>
+                                            <span ng-if="!estimator.description">
+                                                N/A
+                                            </span>
+                                        </h6>
+                                        <p
+                                            ng-if="UI.estimatorLoaded && estimator.description"
+                                            ng-bind-html="estimator.description"
+                                            ng-cloak
+                                        ></p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="golura-block list-item-details-container">
+                            <div class="golura-block view-question-containers-container list-item-details">
+                                <div class="golura-block grid-y">
+                                    <div class="cell shrink">
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Question Groups</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <div class="button-group">
+                                                    <button 
+                                                        class="add-question-container-button add-button submit-button button" 
+                                                        id="createQuestionContainerButton"
+                                                        type="button"
+                                                        ng-click="initQuestionContainerForm()"
+                                                        data-open="questionContainerFormReveal"
+                                                    >
+                                                        <i class="fal fa-layer-plus"></i> Create Question Group
+                                                    </button>
+                                                    <button 
+                                                        class="add-question-container-button add-button submit-button success button white-text" 
+                                                        id="addQuestionContainerButton"
+                                                        type="button"
+                                                        ng-click="initQuestionContainers()"
+                                                        data-open="addQuestionContainerFormReveal"
+                                                    >
+                                                        <i class="fal fa-plus-circle"></i> Add Question Group
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-search-container list-container">
+                                            <div class="list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="view-question-container-search-input search-input"
+                                                                id="viewEstimateProgressSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search question groups..."
+                                                                ng-model="search.questionContainers.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+                                    >
+                                        <div class="list-container golura-form">
+                                            <ul class="view-question-container-list-item-details-list list-item-details-list list">
+                                                <li 
+                                                    class="question-container-list-item-details-list-item list-item-details-list-item list-item position-relative"
+                                                    ng-repeat="container in filteredContainers = 
+                                                    (estimator.QuestionContainers | 
+                                                    filter: search.questionContainers.value | 
+                                                    orderBy: 'displayOrder') track by $index"
+                                                >   
+                                                    <div class="grid-x grid-margin-x align-middle">
+                                                        <div class="cell small-12 medoum-auto large-auto">
+                                                            <h6>
+                                                                <b>{{container.name}}</b>
+                                                            </h6>
+                                                        </div>
+                                                        <div class="cell small-12 medium-shrink large-shrink">
+                                                            <div 
+                                                                class="button-group"
+                                                                ng-class="{'align-right': $root.UI.isMobile}"
+                                                            >
+                                                                <button
+                                                                    class="list-item-options-button button success white-text"
+                                                                    type="button"
+                                                                    ng-click="moveQuestionContainer(container, 'up')"
+                                                                    ng-disabled="container.displayOrder == 1"
+                                                                    ng-if="estimator.QuestionContainers.length > 1 && !$root.UI.isMobile"
+                                                                >
+                                                                    <i class="fal fa-up"></i>
+                                                                </button>   
+                                                                <button
+                                                                    class="list-item-options-button button success white-text"
+                                                                    type="button"
+                                                                    ng-click="moveQuestionContainer(container, 'down')"
+                                                                    ng-disabled="container.displayOrder == estimator.QuestionContainers.length || 
+                                                                    estimator.QuestionContainers.length <= container.displayOrder"
+                                                                    ng-if="estimator.QuestionContainers.length > 1 && !$root.UI.isMobile"
+                                                                >
+                                                                    <i class="fal fa-down"></i>
+                                                                </button> 
+                                                                <a 
+                                                                    class="list-item-options-button button warning white-text"
+                                                                    ng-href="/admin-settings/estimator/containers/container/{{container.id}}"
+                                                                >
+                                                                    <i class="fal fa-wrench"></i> 
+                                                                    <span ng-if="!$root.UI.isMobile">
+                                                                        Manage Questions
+                                                                    </span>
+                                                                </a>
+                                                                <button
+                                                                    class="list-item-options-button button"
+                                                                    type="button"
+                                                                    ng-click="initQuestionContainerForm(container)"
+                                                                    data-open="questionContainerFormReveal"
+                                                                >
+                                                                    <i class="fal fa-edit"></i> 
+                                                                    <span ng-if="!$root.UI.isMobile">
+                                                                        Edit
+                                                                    </span>
+                                                                </button>
+                                                                <button 
+                                                                    class="list-item-options-button button alert white-text"
+                                                                    type="button"
+                                                                    ng-click="container.remove = !container.remove"
+                                                                >
+                                                                    <i class="fal fa-times-circle"></i> 
+                                                                    <span ng-if="!$root.UI.isMobile">
+                                                                        Remove
+                                                                    </span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        class="group-list-item-delete-container list-item-delete-container list-item-delete-container black-overlay"
+                                                        ng-if="container.remove"
+                                                    >
+                                                        <div class="grid-x grid-padding-x align-middle">
+                                                            <div class="cell small-12 medium-auto large-auto text-center">
+                                                                <h4>
+                                                                    <b class="alert-text">Warning: </b>
+                                                                    <span class="white-text">Are you sure you want to remove 
+                                                                        this Group? This can affect the outcome of the estimate.
+                                                                    </span>
+                                                                </h4>
+                                                            </div>
+                                                            <div 
+                                                                class="cell small-12 medium-auto large-auto"
+                                                                ng-class="{'text-center': $root.UI.isMobile}"
+                                                            >
+                                                                <button 
+                                                                    class="list-item-options-button button alert white-text"
+                                                                    type="button"
+                                                                    ng-disabled="UI.formSaving"
+                                                                    ng-class="{'form-alert': UI.formSaving}"
+                                                                    ng-click="deleteQuestionContainer(container)"
+                                                                >
+                                                                    <span ng-if="!UI.formSaving">
+                                                                        <i class="fal fa-check-circle"></i> Confirm
+                                                                    </span>
+                                                                    <span ng-if="UI.formSaving">
+                                                                        Please Wait...
+                                                                    </span>
+                                                                </button>
+                                                                <button 
+                                                                    class="list-item-options-button button warning white-text"
+                                                                    type="button"
+                                                                    ng-click="container.remove = !container.remove"
+                                                                >
+                                                                    <i class="fal fa-times-circle"></i> Cancel
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="estimator-form-reveal reveal"
+    id="estimatorFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimatorFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/estimator-form.html'"></div>
+</div>
+<div
+    class="question-container-form-reveal reveal"
+    id="questionContainerFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeQuestionFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/question-container-form.html'"></div>
+</div>

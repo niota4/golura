@@ -1,0 +1,42 @@
+// Mobile Reports Page Styles
+@include breakpoint(small only) {
+    .reports-container {
+        .reports {
+            
+            .reports-navigation {
+                padding: 0 1rem;
+                
+                .report-type-buttons {
+                    .button {
+                        width: 100%;
+                        margin-bottom: 0.5rem;
+                    }
+                }
+            }
+            
+            .reports-content {
+                padding: 1rem;
+                
+                .report-viewer {
+                    overflow-x: auto;
+                }
+                
+                .report-charts {
+                    .chart-container {
+                        margin-bottom: 1rem;
+                    }
+                }
+            }
+        }
+    }
+    .report-view-container  {
+
+        .report-view {
+
+            .mobile-navigation-breadcrumbs {
+                background: var(--white);
+                padding: 1rem 1rem 0px;
+            }
+        }
+    }
+}

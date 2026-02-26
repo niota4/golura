@@ -1,0 +1,217 @@
+<div 
+    class="user-pay-rate-form-container create-edit-container"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errorMessage}"
+        ng-hide="!UI.message &&
+        !UI.errorMessage"
+    >
+        <p ng-if="UI.message">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errorMessage">
+            {{UI.errorMessage}}
+        </p>
+    </div>  
+    <div class="user-pay-rate-form create-edit">
+        <form 
+            class="user-pay-rate-form golura-form"
+            id="userPayRateForm"
+            name="userPayRateForm"
+            ng-submit="addUserPayRate($event, payRate)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b ng-if="UI.newPayRate">
+                            Add Pay Rate
+                        </b>
+                        <b ng-if="!UI.newPayRate">
+                            Edit Pay Rate
+                        </b>
+                    </h1>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="rate">
+                            Rate
+                            <span class="required">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input" 
+                            type="text"
+                            id="rate"
+                            name="rate"
+                            placeholder="0.00" 
+                            ng-model="payRate.rate" 
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-8 large-8">
+                    <div class="input-container">
+                        <label for="rateType">
+                            Rate Type
+                            <span class="required">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="user-pay-rate-type-input form-input"
+                            id="userPayRateType"
+                            config="payRateOptions"
+                            options="payRateTypes"
+                            ng-model="payRate.rateType"
+                            ng-cloak
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-4 large-4">
+                    <div class="input-container">
+                        <label for="overtimeRate">
+                            Overtime Rate
+                        </label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="overtimeRate"
+                            name="overtimeRate"
+                            ng-model="payRate.overtimeRate"
+                            placeholder="0.00"
+                            format-number
+                            allow-decimal="true"
+                            decimal-places="2"
+                            ui-mask-placeholder
+                            ui-mask-placeholder-char="·"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="effectiveDate">
+                            Effective Date
+                            <span class="required">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="effectiveDate"
+                            name="effectiveDate"
+                            ng-model="payRate.effectiveDate"
+                            flatpickr
+                            date-only="true"
+                            allow-past="true"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="endDate">
+                            End Date
+                        </label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="endDate"
+                            name="endDate"
+                            ng-model="payRate.endDate"
+                            flatpickr
+                            date-only="true"
+                            allow-past="true"
+                            min-date-model="payRate.effectiveDate"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="pay-rate-primary-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="pay-rate-primary-select-button select-button button"
+                                    type="button"
+                                    ng-click="payRate.isPrimary = !payRate.isPrimary"
+                                    ng-class="{'selected': payRate.isPrimary}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="payRate.isPrimary"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Primary?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <div class="form-textarea-container">
+                            <label for="notes">
+                                Notes
+                            </label>
+                            <textarea
+                                class="form-textarea"
+                                id="notes"
+                                name="notes"
+                                ng-model="payRate.notes"
+                                placeholder="Add any notes about this pay rate..."
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="user-pay-rate-form-submit-button submit-button button success white-text" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving || userPayRateForm.$invalid"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newPayRate"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> 
+                            Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-pay-rate-form-update-button submit-button button" 
+                        id="userPayRateFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateUserPayRate(payRate)"
+                        ng-if="UI.userPayRateLoaded && !UI.newPayRate"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

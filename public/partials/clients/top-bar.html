@@ -1,0 +1,262 @@
+<div class="view-client-top-bar-container top-bar-container">
+    <div class="grid-x grid-margin-x align-middle">
+        <div class="cell small-12 medium-12 large-12">
+            <div class="view-client-options-container view-options-container">
+                <a 
+                    class="view-client-options-button back-button button warning white-text"
+                    ng-click="$root.goBack()"
+                    ng-if="!$root.UI.isMobile"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> Back
+                </a>
+                <div 
+                    class="grid-x"
+                    ng-if="$root.UI.isMobile"
+                >
+                    <div class="cell auto">
+                        <a 
+                            class="view-event-options-button back-button button warning white-text"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i>
+                        </a>
+                    </div>
+                    <div class="cell auto text-center">
+                        <h3
+                            class="sub-page"
+                            ng-if="$root.UI.isMobile"
+                        >
+                            <b>
+                                {{UI.subPage}}
+                            </b>
+                        </h3>
+                    </div>
+                    <div 
+                        class="cell auto text-right"
+                        ng-if="$root.UI.isMobile"
+                    >
+                        <button 
+                            class="view-client-options-reveal-button view-options-reveal-button button clear"
+                            type="button"
+                            data-open="viewClientOptionsMobileReveal"
+                            aria-label="Open Client Options"
+                        >
+                            <i class="fal fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-client-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewClientOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewClientOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-client-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <button
+                        class="view-client-events-create-event-button submit-button create-button button success white-text" 
+                        id="viewClientEventsCreateEstimateButton"
+                        type="button"
+                        ng-if="subPermissions.events.canCreate"
+                        ng-click="initEventForm()"
+                        data-open="eventsCreateEventReveal"
+                    >
+                        <i class="fal fa-layer-plus"></i> Schedule Event
+                    </button>
+                    <button
+                        class="view-client-estimates-create-estimate-button submit-button create-button button success white-text" 
+                        id="viewClientEstimatesCreateEstimateButton"
+                        type="button"
+                        data-open="estimateCreationReveal"
+                        ng-click="initEstimators()"
+                        ng-if="subPermissions.estimates.canCreate"
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Estimate
+                    </button>
+                    <button
+                        class="view-client-invoices-create-invoice-button submit-button create-button button success white-text" 
+                        id="viewClientInvoicesCreateInvoiceButton"
+                        type="button"
+                        data-open="invoiceCreationReveal"
+                        ng-if="subPermissions.invoices.canCreate"
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Invoice
+                    </button>
+                    <a 
+                        class="view-client-options-button button white-text"
+                        ng-href="clients/client/{{client.id}}/edit"
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="view-client-options-button button alert white-text"
+                        type="button"
+                        ng-click="worker.delete = !worker.delete"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div ng-include="'/dist/navigations/client-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="estimate-creation-reveal reveal"
+    ng-class="{'no-padding': UI.createEstimate == 'estimators'}"
+    id="estimateCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="estimate-creation-options-container">
+        <h2 class="text-center">
+            <b>
+                Create Estimate
+            </b>
+        </h2>
+        <button 
+            class="estimate-creation-options-back-button back-button button warning white-text"
+            type="button"
+            ng-click="UI.createEstimate = !UI.createEstimate"
+            ng-if="UI.createEstimate == 'adHoc' ||
+            UI.createEstimate == 'estimators' || 
+            UI.createEstimate == 'ai'"
+        >
+            <i class="fal fa-circle-arrow-left"></i> Back
+        </button>
+        <div 
+            class="grid-x grid-margin-x align-middle text-center"
+            ng-if="UI.createEstimate !== 'adHoc' &&
+            UI.createEstimate !== 'estimators' &&
+            UI.createEstimate !== 'ai'"
+        >
+            <div class="cell small-12 medium-auto large-auto">
+                <div
+                    class="estimate-creation-option"
+                    ng-click="UI.createEstimate = 'adHoc'"
+                >
+                    <span>
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </span>
+                    Ad-Hoc Estimate
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div
+                    class="estimate-creation-option"
+                    ng-click="UI.createEstimate = 'estimators'"
+                >
+                    <span>
+                        <i class="fal fa-wand-magic-sparkles"></i>
+                    </span>
+                    Run Estimator
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div
+                    class="estimate-creation-option"
+                    ng-click="UI.createEstimate = 'ai'"
+                    ng-if="$root.company.goEsti"
+                >
+                    <span>
+                        <i class="fal fa-sparkles"></i>
+                    </span>
+                    Go Esti
+                </div>
+            </div>
+        </div>
+        <div 
+            ng-include="'/dist/forms/estimates/ad-hoc-estimate-form.html'"
+            ng-if="UI.createEstimate == 'adHoc'"
+        ></div>
+        <div 
+            ng-include="'/dist/partials/estimators/list.html'"
+            ng-if="UI.createEstimate == 'estimators'"
+        ></div>
+        <div 
+            ng-include="'/dist/forms/estimates/ai-estimate-form.html'"
+            ng-if="UI.createEstimate == 'ai'"
+        ></div>
+    </div>
+</div>
+<div
+    class="events-create-event-reveal reveal"
+    id="eventsCreateEventReveal"
+    data-reveal
+    data-close-on-click="false"
+    ng-class="{'events-create-event-expanded': event.categoryType}"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsCreateEventReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        ng-include="'dist/forms/address-form.html'"
+        ng-if="UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/phone-number-form.html'"
+        ng-if="UI.createPhoneNumber && !UI.createAddress && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/email-form.html'"
+        ng-if="UI.createEmail && !UI.createAddress && !UI.createPhoneNumber"
+    ></div>
+    <div 
+        ng-include="'dist/forms/events/event-create-form.html'"
+        ng-if="!UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+</div>
+<div
+    class="invoice-creation-reveal reveal"
+    id="invoiceCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/invoices/ad-hoc-invoice-form.html'"></div>
+</div>

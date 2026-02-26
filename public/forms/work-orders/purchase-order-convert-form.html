@@ -1,0 +1,57 @@
+<div class="purchase-order-convert-form-container estimate-form-container form-container">
+    <div class="golura-block purchase-order-convert estimate-form-details">
+        <form 
+            class="purchase-order-convert-form estimate-form golura-form form"
+            id="PurchaseOrderConvertForm"
+            name="PurchaseOrderConvertForm"
+        >
+            <h1>
+                <b>
+                    Convert Purchase order
+                </b>
+            </h1>
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.purchaseOrderStatusesLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.purchaseOrderStatusesLoaded"
+                        ></div>
+                        <label for="purchaseOrderStatus">
+                            Purchase Order Status
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="statusOptions"
+                            options="purchaseOrderStatuses"
+                            id="purchaseOrderStatus"
+                            name="purchaseOrderStatus"
+                            ng-model="purchaseOrder.statusId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="purchase-order-convert-form-submit-button submit-button button" 
+                        id="purchaseOrderFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+        

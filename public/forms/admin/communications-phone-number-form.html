@@ -1,0 +1,229 @@
+<div class="admin-twilio-phone-search-form-container admin-form-container">
+    <div class="admin-twilio-phone-search-form-details admin-form-details">
+        <h1>
+            <b>
+                Get Phone Number
+            </b>
+        </h1>
+        <form 
+            class="twilio-phone-search-form admin-form golura-form"
+            id="twilioPhoneSearchForm"
+            name="twilioPhoneSearchForm"
+            ng-submit="searchTwilioPhoneNumbers(communications.searchCriteria)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <p class="text-muted">Search and purchase a phone number with voice, text, MMS, and fax capabilities.</p>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Search Criteria</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="areaCode">
+                            Area Code
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="areaCode"
+                            name="areaCode"
+                            placeholder="e.g., 415"
+                            ng-model="communications.searchCriteria.areaCode"
+                            maxlength="3"
+                            pattern="[0-9]{3}"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="city">
+                            City
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="e.g., San Francisco"
+                            ng-model="communications.searchCriteria.inLocality"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-3 large-3">
+                    <div class="input-container">
+                        <label for="state">
+                            State
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="state"
+                            name="state"
+                            placeholder="e.g., CA"
+                            ng-model="communications.searchCriteria.inRegion"
+                            maxlength="2"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-3 large-3">
+                    <div class="input-container">
+                        <label for="postalCode">
+                            Postal Code
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="postalCode"
+                            name="postalCode"
+                            placeholder="e.g., 94102"
+                            ng-model="communications.searchCriteria.inPostalCode"
+                            maxlength="5"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="twilio-phone-search-submit-button submit-button button" 
+                        id="twilioPhoneSearchSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.searchingNumbers"
+                        ng-class="{'form-saving': UI.searchingNumbers}"
+                    >
+                        <span ng-if="!UI.searchingNumbers">
+                            <i class="fal fa-search"></i> 
+                            Search Numbers
+                        </span>
+                        <span ng-if="UI.searchingNumbers">
+                            Searching...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="grid-x grid-margin-x align-middle" ng-if="UI.searchingNumbers">
+            <div class="cell small-12 medium-12 large-12 text-center">
+                <div class="loading-spinner">
+                    <i class="fal fa-spinner fa-spin fa-2x"></i>
+                    <p>Searching for available phone numbers...</p>
+                </div>
+            </div>
+        </div>
+        <div class="grid-x grid-margin-x" ng-if="communications.availableNumbers.length > 0">
+            <div class="cell small-12 medium-12 large-12">
+                <hr/>
+                <h2>
+                    <b>Available Phone Numbers ({{communications.availableNumbers.length}})</b>
+                </h2>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <div class="available-numbers-list-container list-container">
+                    <ul class="available-numbers-list list">
+                        <li
+                            class="available-numbers-list-item list-item position-relative"
+                            ng-repeat="number in communications.availableNumbers track by number.phoneNumber"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="number-info">
+                                        <div class="cell auto">
+                                            <h5 class="number-type">
+                                                <b>
+                                                    {{number.friendlyName}}
+                                                </b>
+                                            </h5>
+                                            <h6 class="number-display">
+                                                <b>
+                                                    {{number.phoneNumber | formatPhoneNumber}}
+                                                </b>
+                                            </h6>
+                                            <h6>
+                                                <i class="fal fa-map-marker-alt"></i>
+                                                {{number.locality}}, {{number.region}} {{number.postalCode}}
+                                            </h6>
+                                            <h6 class="number-price">
+                                                <i>
+                                                    ${{number.price | number:2}} / month
+                                                </i>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <span 
+                                        class="label primary white-text"
+                                        ng-if="number.type === 'local'"
+                                    >
+                                        Local
+                                    </span>
+                                    <span 
+                                        class="label secondary white-text"
+                                        ng-if="number.type === 'tollFree'"
+                                    >
+                                        Toll Free
+                                    </span>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="number-capabilities">
+                                        <span 
+                                            class="label success white-text" 
+                                            ng-if="number.capabilities.voice"
+                                        >
+                                            <i class="fal fa-phone"></i> 
+                                            Voice
+                                        </span>
+                                        <span 
+                                            class="label success white-text" 
+                                            ng-if="number.capabilities.sms"
+                                        >
+                                            <i class="fal fa-sms"></i> 
+                                            SMS
+                                        </span>
+                                        <span 
+                                            class="label success white-text" 
+                                            ng-if="number.capabilities.mms"
+                                        >
+                                            <i class="fal fa-image"></i> 
+                                            MMS
+                                        </span>
+                                        <span 
+                                            class="label success white-text" 
+                                            ng-if="number.capabilities.fax"
+                                        >
+                                            <i class="fal fa-fax"></i> 
+                                            Fax
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div 
+                                        class="button-group"
+                                        ng-class="{'align-right': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="purchase-phone-number-button button success white-text"
+                                            ng-click="purchaseTwilioPhoneNumber(number)"
+                                            ng-disabled="UI.purchasingNumber"
+                                            ng-class="{'form-saving': UI.purchasingNumber}"
+                                        >
+                                            <span ng-if="!UI.purchasingNumber">
+                                                <i class="fal fa-shopping-cart"></i> 
+                                                Purchase
+                                            </span>
+                                            <span ng-if="UI.purchasingNumber">
+                                                Purchasing...
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

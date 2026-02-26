@@ -1,0 +1,115 @@
+<div class="side-bar-container">
+    <div format-users user="$root.user"></div>
+    <div class="side-bar-user-weather-container">
+        <div 
+            class="side-bar-user-weather"
+            ng-class="{'ssc': !$root.UI.weatherLoaded}"
+        >
+            <div 
+                class="ssc-square"
+                ng-if="!$root.UI.weatherLoaded"
+            ></div>
+            <weather-display 
+                weather="$root.weather" 
+                forecast="false"
+                ng-if="$root.UI.weatherLoaded"
+            ></weather-display>
+            <button 
+                class="side-bar-user-weather-options-button button clear"
+                ng-click="initWeatherOptions()"
+                ng-class="{'is-active': UI.toggleWeatherOptions}"
+                ng-mouseenter="UI.toggleWeatherOptions = true"
+                ng-mouseleave="UI.toggleWeatherOptions = false"
+                ng-if="$root.UI.weatherLoaded && !$root.UI.weatherErrMessage"
+                title="Weather Options"
+                aria-label="sideBarWeatherButton"
+            >
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+    <div class="side-bar grid-y">
+        <div class="cell shrink">
+            <div 
+                class="side-bar-user-weather-error-message callout alert alert-text text-center"
+                ng-if="$root.UI.weatherLoaded && $root.UI.weatherErrMessage"
+            >
+                <p>
+                    {{$root.UI.weatherErrMessage}}
+                </p>
+                <span>
+                    <b>Problem Location: </b>
+                    {{$root.preferences.defaultLocation.city}}
+                </span>
+                <button 
+                    class="side-bar-user-weather-button button expanded success white-text"
+                    ng-click="initWeatherOptions()"
+                    aria-label="closeWeatherErrorMessage"
+                >
+                    <i class="fal fa-edit"></i> Set Location
+                </button>
+            </div>
+            <user-icon 
+                user="$root.user"
+                preferences="$root.preferences"
+                data-close
+            ></user-icon>
+        </div>
+        <div class="cell auto">
+            <h3 class="text-center">
+                {{$root.user.fullName}}
+            </h3>
+            <h4 class="text-center white-text">
+                {{$root.user.role.name}}
+            </h4>
+            <div class="side-bar-user-details-container text-center">
+                <h5 class="white-text">
+                    {{$root.company.name}}
+                </h5>
+                <div class="side-bar-user-options-container">
+                    <ul class="side-bar-user-options-list text-left">
+                        <li class="side-bar-user-options-list-item">
+                            <button 
+                                class="side-bar-user-reminders-button button clear"
+                                id="sideBarUserRemindersButton"
+                                ng-click="initUserReminders()"
+                            >
+                                <i class="fal fa-alarm-clock"></i> Reminders
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="cell shrink text-center align-self-bottom">
+            <div class="side-bar-user-options-container">
+                <div class="grid-x align-middle">
+                    <div class="cell auto text-left">
+                        <a 
+                            class="side-bar-user-settings-button button clear"
+                            ng-href="/users/user/{{user.id}}/edit"
+                            id="sideBarUserButton"
+                            title="User Setting"
+                            aria-label="sideBarUserButton" 
+                            data-close
+
+                        >
+                            <i class="fal fa-cog"></i>
+                        </a>
+                    </div>
+                    <div class="cell shrink">
+                        <button 
+                            class="side-bar-log-out-button log-out-button button alert white-text" 
+                            ng-click="logOut()"
+                            type="button"
+                            aria-label="sideBarLogOutButton" 
+                            data-close
+                        >
+                            <i class="fal fa-sign-out-alt"></i> Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

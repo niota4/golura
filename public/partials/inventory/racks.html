@@ -1,0 +1,239 @@
+<div 
+    class="inventory-racks-container"
+    ng-init="initInventoryRacks()"
+>
+    <div class="inventory-racks">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="inventory-racks-search-container list-search-container">
+                    <div class="inventory-racks-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="inventory-racks-search-create-button-container create-button-container">
+                                        <a 
+                                            class="inventory-racks-create-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> Back
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="inventory-racks-search-input search-input"
+                                        id="inventoryRacksSearchInput" 
+                                        type="text"
+                                        placeholder="Search inventory racks..."
+                                        ng-model="search.inventoryRacks.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="cell shrink">
+                                        <div class="sort-input-container">
+                                            <div class="grid-x">
+                                                <div class="cell auto">
+                                                    <selectize
+                                                        class="inventory-racks-search-sort-input form-input sort-input"
+                                                        id="inventoryRacksSearchSortInput"
+                                                        config="sortOptions"
+                                                        options="inventoryRacksOptions"
+                                                        ng-model="sort.inventoryRacks.id"
+                                                        ng-change="orderBy(sort.inventoryRacks.id)"
+                                                        ng-cloak
+                                                    >
+                                                    </selectize>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <span class="sort-icon">
+                                                        <i class="fal fa-sort"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="inventory-racks-search-create-button-container create-button-container">
+                                        <a 
+                                            class="inventory-racks-search-create-button submit-button create-button button success white-text" 
+                                            id="inventoryRacksSearchCreateButton"
+                                            type="button"
+                                            ng-href="inventory/racks/rack"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="inventory-racks-list-header-container list-header-container">
+                    <div class="inventory-racks-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>ID</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-4 large-4">
+                                <h3>
+                                    <b>Name</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-4 large-4">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-shrink large-shrink"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="inventory-racks-list-container list-container">
+                    <ul 
+                        class="inventory-racks-list list"
+                        id="inventoryRacksList"
+                    >
+                        <li ng-if="!UI.inventoryRacksLoaded">
+                            <div class="ssc inventory-racks-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="inventory-racks-list-item list-item position-relative"
+                            ng-repeat="rack in filteredInventoryRacks = 
+                            (inventoryRacks | filter:search.inventoryRacks.value) |
+                            orderBy: sort.inventoryRacks.value |
+                            limitTo: UI.inventoryRacksDisplayed track by $index"
+                            ng-class="{'selected': rack.selected}"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        #{{rack.id}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <h6 class="inventory-racks-list-item-role text-capitalize">
+                                        {{rack.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <h6>
+                                        {{rack.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div class="list-item-options-container">
+                                        <a 
+                                            class="list-item-options-button button white-text"
+                                            ng-href="inventory/racks/rack/{{rack.id}}"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="rack.delete = !rack.delete"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="inventory-racks-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="rack.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this rack?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            id="inventoryRackFormSubmitButton"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteInventoryRack(rack)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="rack.delete = !rack.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="inventory-racks-list-infinite-scroll text-center"
+                            id="inventoryRacksListInfiniteScroll"
+                            ng-init="initInventoryRackInfiniteScroll()"
+                            ng-show="filteredInventoryRacks.length > 20"
+                            ng-click="updateInventoryRacksDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredInventoryRacks.length"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Rack you're looking, 
+                                    try to double check your spelling!
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

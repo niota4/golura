@@ -1,0 +1,52 @@
+<div class="view-form-container view-container">
+    <div class="view-form view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell auto">
+                        <div class="view-form-options-container view-options-container">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div 
+                                    class="cell small-12 medium-auto large-auto"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <a 
+                                        class="view-event-options-button back-button button warning white-text"
+                                        ng-click="$root.goBack()"
+                                    >
+                                        <i class="fal fa-circle-arrow-left"></i> Back
+                                    </a>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="button-group"
+                                        ng-class="{'align-right': !$root.UI.isMobile}"
+                                    >
+                                        <a 
+                                            class="view-event-options-button back-button button warning white-text"
+                                            ng-click="$root.goBack()"
+                                            ng-if="$root.UI.isMobile"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> Back
+                                        </a>
+                                        <button 
+                                            class="delete-button button alert white-text" 
+                                            type="button"
+                                            ng-click="UI.formDeleteConfirmation = !UI.formDeleteConfirmation"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div ></div>
+            </div>
+        </div>
+    </div>
+</div>

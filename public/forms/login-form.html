@@ -1,0 +1,294 @@
+
+<div class="login-container" role="main" aria-label="Login Section">
+    <div class="login">
+        <form 
+            class="login-form golura-form"
+            id="companyCheckForm"
+            name="companyCheckForm"
+            ng-submit="initCompanyCheck($event, user.companyName)"
+            ng-if="!$root.company && !$root.user"
+            golura-form-validation
+            aria-labelledby="companyCheckFormTitle"
+        >
+            <div
+                class="alert-text text-center"
+                ng-if="UI.errMessage"
+                role="alert"
+                aria-live="assertive"
+            >
+                <span class="golura-login-error">
+                    {{UI.errMessage}}
+                </span>
+            </div>
+            <div class="grid-y align-center">
+                <div 
+                    class="cell small-shrink medium-shrink large-shrink"
+                    ng-if="!$root.user"
+                >
+                    <div class="input-container">
+                        <label for="companyNameFormInput" id="companyCheckFormTitle">
+                            Company Name
+                        </label>
+                        <input
+                            class="company-name-form-input login-form-input form-input"
+                            id="companyNameFormInput"
+                            name="companyName"
+                            type="text"
+                            placeholder="Enter your company name..."
+                            ng-model="user.companyName"
+                            required
+                            aria-required="true"
+                            aria-describedby="companyCheckFormTitle"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-shrink medium-shrink large-shrink text-right">
+                    <button 
+                        class="company-check-form-submit-button submit-button button" 
+                        id="companyCheckFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        aria-label="Continue to login"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            Continue <i class="fal fa-circle-arrow-right" aria-hidden="true"></i>
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form 
+            class="login-form golura-form"
+            id="loginForm"
+            name="loginForm"
+            ng-submit="login($event, user)"
+            ng-if="UI.forgotPassword || UI.passwordResetSent || $root.company"
+            golura-form-validation
+            aria-labelledby="loginFormTitle"
+        >
+            <span 
+                class="alert-text text-center" 
+                ng-show="loginForm.email.$dirty && logIn.email.$invalid"
+                role="alert"
+                aria-live="assertive"
+            >
+                <span ng-show="loginForm.email.$error.required">
+                    Email address is required.
+                </span>
+                <span ng-show="loginForm.email.$error.email">
+                    Please enter a valid email address.
+                </span>
+            </span>
+            <div
+                class="alert-text text-center"
+                ng-if="UI.loginError"
+            >
+                <span class="golura-login-error">
+                    {{UI.loginMessage}}
+                </span>
+            </div>
+            <div 
+                class="grid-x" 
+                ng-if="!UI.forgotPassword && !UI.passwordResetSent"
+            >
+                <div 
+                    class="cell"
+                    ng-if="!$root.user"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'alert': loginForm.$submitted && 
+                        loginForm.email.$error && 
+                        !UI.loginAttempt}"
+                    >
+                        <label for="emailFormInput" id="loginFormTitle">
+                            Email
+                        </label>
+                        <input
+                            class="email-form-input login-form-input form-input"
+                            id="emailFormInput"
+                            name="email"
+                            type="email"
+                            placeholder="Enter your email..."
+                            ng-model="user.email"
+                            required
+                            aria-required="true"
+                            aria-describedby="loginFormTitle"
+                        />
+                    </div>
+                </div>
+                <div class="cell">
+                    <div 
+                        class="input-container"
+                        ng-class="{'alert': loginForm.$submitted && 
+                        loginForm.email.$error && 
+                        !UI.loginAttempt}"
+                    >
+                        <label for="passwordFormInput" id="passwordLabel">
+                            Password
+                        </label>
+                        <input
+                            class="password-form-input login-form-input form-input"
+                            id="passwordFormInput"
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password..." 
+                            ng-model="user.password" 
+                            ng-attr-type="{{ user.passwordVisibility ? 'text' : 'password' }}"
+                            required
+                            aria-required="true"
+                            aria-describedby="passwordLabel"
+                        />
+                        <button 
+                            class="login-password-visibility password-visibility button clear hollow"
+                            type="button"
+                            ng-click="user.passwordVisibility = !user.passwordVisibility"
+                            aria-label="Toggle password visibility"
+                        >
+                            <i 
+                                class="fal fa-eye"
+                                ng-if="user.passwordVisibility" 
+                                aria-hidden="true"
+                            ></i>
+                            <i 
+                                class="fal fa-eye"
+                                ng-if="!user.passwordVisibility" 
+                                aria-hidden="true"
+                            ></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class="grid-x align-middle">
+                        <div 
+                            class="cell small-12 medium-auto large-auto"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <a 
+                                class="login-forgot-password medium-gray-text" 
+                                ng-href="#" 
+                                ng-click="UI.forgotPassword = !UI.forgotPassword; UI.errMessage = '';"
+                                aria-label="Forgot Password?"
+                            >
+                                Forgot Password?
+                            </a>
+                        </div>
+                        <div class="cell small-12 medium-shrink large-shrink">
+                            <button
+                                class="login-form-cancel-button button warning white-text"
+                                id="loginFormCancelButton"
+                                type="button"
+                                ng-click="logOut()"
+                                ng-if="$root.user"
+                                aria-label="Cancel login"
+                            >
+                                <i class="fal fa-times-circle" aria-hidden="true"></i> 
+                                Cancel
+                            </button>
+                            <button 
+                                class="login-form-submit-button submit-button button" 
+                                id="loginFormSubmitButton"
+                                type="submit"
+                                ng-disabled="UI.loginAttempt"
+                                ng-class="{'form-saving': UI.loginAttempt}"
+                                aria-label="Login"
+                            >
+                                <span ng-if="!UI.loginAttempt">
+                                    Login <i class="fal fa-sign-in-alt" aria-hidden="true"></i>
+                                </span>
+                                <span ng-if="UI.loginAttempt">
+                                    Please Wait...
+                                </span>
+                            </button>
+                        </div>
+                        <div 
+                            class="cell small-12 medium-auto large-auto text-center"
+                            ng-if="$root.UI.isMobile"
+                        >
+                            <a 
+                                class="login-forgot-password medium-gray-text" 
+                                ng-href="#" 
+                                ng-click="UI.forgotPassword = !UI.forgotPassword; UI.errMessage = '';"
+                                aria-label="Forgot Password?"
+                            >
+                                Forgot Password?
+                            </a>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="grid-x"
+                ng-if="UI.forgotPassword"
+            >  
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="RecoveryEmailFormInput" id="recoveryEmailLabel">
+                            Recovery Email
+                        </label>
+                        <input
+                            class="recovery-email-form-input login-form-input"
+                            id="RecoveryEmailFormInput"
+                            name="emailFormInput"
+                            type="text"
+                            placeholder="Enter your recovery email..."
+                            ng-model="user.recoveryEmail" 
+                            required
+                            aria-required="true"
+                            aria-describedby="recoveryEmailLabel"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <button
+                        class="forgot-password-back-button button warning white-text"
+                        id="forgotPasswordBackButton"
+                        type="button"
+                        ng-click="UI.forgotPassword = !UI.forgotPassword"
+                        aria-label="Back to login"
+                    >
+                        <i class="fal fa-circle-arrow-left" aria-hidden="true"></i> 
+                        Back
+                    </button>
+                </div>
+                <div class="cell small-12 medium-6 large-6 text-right">
+                    <button 
+                        class="submit-recovery-email-button button success white-text" 
+                        id="submitRecoveryEmailButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="sendPasswordReset(user.recoveryEmail)"
+                        aria-label="Send password reset link"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-paper-plane" aria-hidden="true"></i> Send link
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div 
+                class="grid-x"
+                ng-if="UI.passwordResetSent"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>
+                            Password Reset Link Sent!
+                        </b>
+                    </h2>
+                    <p>
+                        Please check your email for the password reset link.
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

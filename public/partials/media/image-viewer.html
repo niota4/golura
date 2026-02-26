@@ -1,0 +1,106 @@
+
+<div class="image-viewer-container media-viewer-container">
+    <div class="image-viewer media-viewer">
+        <div 
+            class="image"
+            ng-style="{'background-image': 'url(' + image.url + ')'}"
+        ></div>
+        <div class="button-container">
+            <button 
+                class="download-button button white-text"
+                type="button" 
+                ng-click="$root.downloadFromUrl(image.url)"
+                ng-if="!image.options"
+            >
+                <b>
+                    <i class="fal fa-cloud-arrow-down"></i> 
+                    <span ng-if="!$root.UI.isMobile">
+                        Download
+                    </span>
+                </b>
+            </button>
+            <button 
+                class="options-button button warning white-text"
+                ng-class="{'float-right': $root.UI.isMobile}"
+                type="button"
+                ng-click="image.options = !image.options"
+                ng-if="!image.options"
+            >
+                <b>
+                    <i class="fal fa-gear"></i>
+                    <span ng-if="!$root.UI.isMobile">
+                        Options
+                    </span>
+                </b>
+            </button>
+        </div>
+        <button
+            class="fullscreen-button button white-text"
+            type="button"
+            ng-class="{'warning': image.fullscreen}"
+            ng-click="image.fullscreen = !image.fullscreen"
+            ng-if="!image.options && !$root.UI.isMobile"
+        >
+            <span ng-if="!image.fullscreen">
+                <i class="fal fa-expand"></i> Fullscreen
+            </span>
+            <span ng-if="image.fullscreen">
+                <i class="fal fa-compress"></i> Exit Fullscreen
+            </span>
+        </button>
+        <div 
+            class="media-options-overlay media-overlay black-overlay"
+            ng-if="image.options"
+        >
+            <div class="media-overlay-content">
+                <div ng-include="'dist/partials/media/image-details.html'"></div>
+            </div>
+        </div>
+        <div 
+            class="image-delete-confirm-overlay media-overlay black-overlay"
+            ng-if="image.delete"
+            ng-init="image.options = false"
+        >
+            <div class="media-overlay-content">
+                <div class="golura-block grid-x grid-padding-x align-center-middle text-center">
+                    <div class="cell small-12 medium-shrink large-shrink">
+                        <span class="delete-icon">
+                            <i class="fal fa-circle-exclamation"></i>
+                        </span>
+                    </div>
+                    <div class="cell small-12 medium-shrink large-shrink">
+                        <h4>
+                            <b class="alert-text">Warning: </b>
+                            <span class="white-text">Are you sure you want to Delete 
+                                this Image?
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <button 
+                            class="delete-estimate-button button alert white-text"
+                            type="button"
+                            ng-disabled="imageDeleting"
+                            ng-class="{'form-alert': imageDeleting}"
+                            ng-click="deleteImage(image)"
+                        >
+                            <span ng-if="!imageDeleting">
+                                <i class="fal fa-check-circle"></i> Confirm
+                            </span>
+                            <span ng-if="imageDeleting">
+                                Please Wait...
+                            </span>
+                        </button>
+                        <button 
+                            class="cancel-button button warning white-text"
+                            type="button"
+                            ng-click="image.delete = !image.delete"
+                        >
+                            <i class="fal fa-times-circle"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

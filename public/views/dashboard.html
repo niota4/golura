@@ -1,0 +1,248 @@
+<div 
+    class="callout sticky text-center fade"
+    ng-hide="!UI.message.length &&
+    !UI.errMessage.length || 
+    UI.modalFormSaved"
+    ng-class="{'success success-text': UI.message,
+    'alert alert-text': UI.errMessage}"
+    data-sticky 
+    data-options="marginTop:0;"
+>
+    <button 
+        class="close-button button clear"
+        ng-class="{'success': UI.message,
+        'alert': UI.errMessage}"
+        type="button"
+        ng-click="UI.errMessage = !UI.errMessage;
+        UI.message = !UI.message"
+    >
+        <i class="fal fa-times-circle"></i>
+    </button>
+    <p ng-if="UI.message.length">
+        {{UI.message}}
+    </p>
+    <p ng-if="UI.errMessage.length">
+        {{UI.errMessage}}
+    </p>
+</div>
+<div 
+    class="dashboard-container"
+    ng-init="initDashboard()"
+>
+   <user-onboarding page-name="dashboard" auto-start="true"></user-onboarding>    
+    <div class="dashboard">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="dashboard-title-container">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell auto">
+                            <h1 class="text-capitalize">
+                                <b>
+                                    Welcome, {{user.fullName}}
+                                </b>
+                            </h1>
+                        </div>
+                        <div class="cell shrink">
+                            <div class="button-group align-right">
+                                <button
+                                    class="dashboard-edit-button button"
+                                    type="button"
+                                    ng-click="initDashboardEditWidget()"
+                                    ng-if="!UI.widgetEdit"
+                                >
+                                    <i class="fal fa-cog"></i>
+                                    <span class="hide-for-small-only">
+                                         Edit
+                                    </span>
+                                </button>
+                                <button 
+                                    class="cancel-button button success white-text"
+                                    type="button"
+                                    ng-click="updateWidgetsSizeAndPosition(userWidgets)"
+                                    ng-if="UI.widgetEdit"
+                                >
+                                    <i class="fal fa-save"></i> 
+                                    <span class="hide-for-small-only">
+                                        Save
+                                    </span>
+                                </button>
+                                <button 
+                                    class="cancel-button button warning white-text"
+                                    type="button"
+                                    ng-click="initWidgets()"
+                                    ng-if="UI.widgetEdit"
+                                >
+                                    <i class="fal fa-times-circle"></i> 
+                                    <span class="hide-for-small-only">
+                                        Cancel
+                                    </span>
+                                </button>
+                                <button
+                                    class="add-widget-button button success white-text"
+                                    type="button"
+                                    ng-click="initAvailableWidgets()"
+                                    ng-if="!UI.widgetEdit"
+                                    data-open="widgetsReveal"
+                                >
+                                    <i class="fal fa-plus-circle"></i> 
+                                    <span class="hide-for-small-only">
+                                        Add Widget
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div 
+                    class="dashboard-empty-container" 
+                    ng-if="!userWidgets.length"
+                >
+                    <div class="dashboard-grid-stack-container">
+                        <div class="dashboard-empty-message text-center">
+                            <div class="dashboard-empty-icon-container">
+                                <i class="fal fa-grid-2-plus"></i>
+                            </div>
+                            <h2>
+                                <span><b>Your Dashboard is Empty</b></span>
+                                <br/>
+                                Click on the 
+                                <b>
+                                    "Add Widget" 
+                                </b>
+                                button to customize your dashboard
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-grid-stack-container">
+                    <div class="dashboard-grid-stack" 
+                        ng-class="{'grid-stack': !isMobileDevice, 'mobile-widget-container': isMobileDevice}" 
+                        style="min-height: 400px;">
+                        <div 
+                            class="dashboard-grid-stack-item" 
+                            ng-class="{'grid-stack-item': !isMobileDevice, 'mobile-widget-item': isMobileDevice, 'item-edit': UI.widgetEdit}"
+                            ng-repeat="widget in userWidgets track by widget.widgetId"
+                            data-widget-id="{{widget.widgetId}}"
+                            gs-w="{{widget.width}}" 
+                            gs-h="{{widget.height}}" 
+                            gs-x="{{widget.x}}" 
+                            gs-y="{{widget.y}}"
+                            gs-min-w="{{widget.Widget.minWidth || 1}}"
+                            gs-min-h="{{widget.Widget.minHeight || 1}}"
+                            gs-max-w="{{widget.Widget.maxWidth || 12}}"
+                            gs-max-h="{{widget.Widget.maxHeight || 20}}"
+                        >
+                            <div 
+                                class="dashboard-grid-stack-item-content grid-stack-item-content"
+                            >
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/estimates-widget-data.html'"
+                                    ng-if="widget.Widget.name == 'Estimates'"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/sales-overview-widget.html'"
+                                    ng-if="widget.Widget.name == 'Sales Overview'"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/work-orders-summary-widget.html'"
+                                    ng-if="widget.Widget.name == 'Work Orders Summary'"
+                                    ng-init="initWorkOrdersSummary()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/client-insights-widget.html'"
+                                    ng-if="widget.Widget.name == 'Client Insights'"
+                                    ng-init="initClientInsights()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/upcoming-events-widget.html'"
+                                    ng-if="widget.Widget.name == 'Upcoming Events'"
+                                    ng-init="initUpcomingEvents()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/invoice-status-widget.html'"
+                                    ng-if="widget.Widget.name == 'Invoice Status'"
+                                    ng-init="initInvoiceStatus()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/activity-timeline-widget.html'"
+                                    ng-if="widget.Widget.name == 'Activity Timeline'"
+                                    ng-init="initActivityTimeline()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/activity-summary-widget.html'"
+                                    ng-if="widget.Widget.name == 'Activity Summary'"
+                                    ng-init="initActivitySummary()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/estimate-analytics-widget.html'"
+                                    ng-if="widget.Widget.name == 'Estimate Analytics'"
+                                    ng-init="initEstimateAnalytics()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/payroll-monthly-widget.html'"
+                                    ng-if="widget.Widget.name == 'Payroll Monthly'"
+                                    ng-init="initPayrollMonthly()"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/widgets/payroll-monthly-expenses-widget.html'"
+                                    ng-if="widget.Widget.name == 'Payroll Monthly Expenses'"
+                                    ng-init="initPayrollMonthlyExpenses()"
+                                ></div>
+                                <div 
+                                    class="white-overlay"
+                                    ng-if="UI.widgetEdit"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="widgets-reveal reveal large"
+    id="widgetsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeWidgetsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="golura-block grid-y">
+        <div class="cell shrink">
+            <h3 class="text-center">
+                <b>Manage Widgets</b>
+            </h3>
+            <p class="text-center">
+                Select widgets to add to your dashboard
+            </p>
+        </div>
+        <div class="cell auto">
+            <div 
+                class="golura-block"
+                ng-include="'/dist/partials/widgets/widgets.html'"
+            ></div>
+        </div>
+    </div>
+</div>

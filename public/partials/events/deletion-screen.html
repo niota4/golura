@@ -1,0 +1,29 @@
+<div class="event-deletion-screen-container deletion-screen-container black-overlay">
+    <div class="event-deletion-screen deletion-screen text-center">        
+        <h2>
+            <b>
+                Are You Sure?
+            </b>
+            <br>
+        </h2>
+        <h6>
+            You want to delete this Event?
+        </h6>
+        <button 
+            class="delete-button button alert white-text" 
+            type="button"
+            ng-class="{'expanded': $root.UI.isMobile}"
+            ng-click="deleteEvent(event)"
+        >
+            <i class="fal fa-check-circle"></i> Confirm
+        </button>
+        <button 
+            class="cancel-button button warning white-text" 
+            type="button"
+            ng-class="{'expanded': $root.UI.isMobile}"
+            ng-click="UI.eventDeleteConfirmation = !UI.eventDeleteConfirmation"
+        >
+            <i class="fal fa-times-circle"></i> Cancel
+        </button>
+    </div>
+</div>

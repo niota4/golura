@@ -1,0 +1,406 @@
+<div 
+    class="user-setup-form-container create-edit-container"
+    ng-init="initUserSetupForm()"
+>
+    <div format-users user="user"></div>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="user-setup-form create-edit grid-container">
+        <div class="user-setup-form-logo">
+            <img
+                src="/dist/assets/img/logos/golura/golura-logo.svg"
+                ng-if="!$root.preferences.darkMode"
+                alt="Golura Logo"
+            />
+            <img
+                src="/dist/assets/img/logos/golura/golura-logo-white.svg"
+                ng-if="$root.preferences.darkMode"
+                alt="Golura Logo"
+            />
+        </div>
+        <hr/>
+        <form 
+            class="user-form golura-form"
+            id="setupUserForm"
+            name="setupUserForm"
+            ng-submit="setupUser($event, user)"
+        >
+            <div ng-if="UI.currentStep === 1">
+                <h1>
+                    <b>
+                        Activation Code
+                    </b>
+                </h1>
+                <p>
+                    Please enter the activation code sent to your email.
+                    <br>
+                    If you haven't received it, please check your spam folder.
+                    <br>
+                    If you still can't find it, please contact support.
+                    <br>
+                    <br>
+                </p>
+                <p class="text-center">
+                    <b class="alert-text">
+                        The activation code is valid for 1 hour.
+                    </b>
+                </p>
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="user-setup-form-activation-code-container">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[0]"
+                                        ng-change="moveToNextInput(0, $event)"
+                                        ng-keydown="moveToNextInput(0, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                        autofocus
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[1]"
+                                        ng-change="moveToNextInput(1, $event)"
+                                        ng-keydown="moveToNextInput(1, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[2]"
+                                        ng-change="moveToNextInput(2, $event)"
+                                        ng-keydown="moveToNextInput(2, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[3]"
+                                        ng-change="moveToNextInput(3, $event)"
+                                        ng-keydown="moveToNextInput(3, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[4]"
+                                        ng-change="moveToNextInput(4, $event)"
+                                        ng-keydown="moveToNextInput(4, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="user-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[5]"
+                                        ng-change="moveToNextInput(5, $event)"
+                                        ng-keydown="moveToNextInput(5, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button
+                            class="button warning white-text"
+                            type="button"
+                            ng-click="sendValidationCode()"
+                        >
+                            <i class="fal fa-paper-plane"></i> 
+                            Resend Code
+                        </button>
+                        <button 
+                            type="button" 
+                            class="button" 
+                            ng-click="validateActivationCode()"
+                            ng-disabled="activationCode.join('').length !== 6"
+                        >
+                            <i class="fal fa-check-circle"></i>  
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="grid-x grid-margin-x" 
+                ng-if="UI.currentStep === 2"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="user-setup-step-container">
+                        <h2>
+                            <b>
+                                Welcome {{user.fullName}}!
+                            </b>
+                        </h2>
+                        <h3>
+                            Let's get started, and set up your account.
+                        </h3>
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="grid-x grid-marign-x align-middle">
+                                    <div class="cell shrink">
+                                        <div class="user-form-profile-photo-container">
+                                            <h4 
+                                                class="user-form-profile-photo-empty text-center"
+                                                ng-if="!user.profilePictureUrl"
+                                            >
+                                                <b>No Profile Picture Uploaded</b>
+                                            </h4>
+                                            <div 
+                                                class="user-form-profile-photo"
+                                                ng-style="{'background-image': 'url(' + user.profilePictureUrl + ')'}" 
+                                                ng-if="user.profilePictureUrl"
+                                            ></div>
+                                            <button 
+                                                class="user-form-profile-photo-remove-button button clear alert"
+                                                type="button"
+                                                ng-click="removeProfilePicture()"
+                                                ng-if="user.profilePictureUrl"
+                                            >
+                                                <i class="fal fa-times"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <button 
+                                            class="user-form-profile-photo-button button clear secondary" 
+                                            id="userSetupFormProfilePhotoButton"
+                                            type="button"
+                                            ng-click="uploadProfilePicture(user)"
+                                        >
+                                            <i class="fal fa-upload"></i> 
+                                            <span ng-if="!user.profilePictureUrl">
+                                                Upload 
+                                            </span>
+                                            <span ng-if="user.profilePictureUrl">
+                                                Change 
+                                            </span>
+                                            Profile Picture
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-container">
+                            <label>
+                                Phone Number
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="text"
+                                name="phone"
+                                placeholder="(123) 456-7890"
+                                ng-model="worker.phoneNumber"
+                                ui-mask="(999) 999-9999"
+                                ui-mask="99.99.9999"  
+                                ui-mask-placeholder 
+                                ui-mask-placeholder-char="_"
+                            />
+                        </div>
+                        <div class="input-container">
+                            <label>
+                                Password
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <password-strength 
+                                ng-model="user.password" 
+                                required="true"
+                                strength="strength"
+                            ></password-strength>
+                        </div>
+                        <div class="input-container">
+                            <label>
+                                Confirm Password
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="password"
+                                name="confirmPassword"
+                                ng-model="user.confirmPassword"
+                                placeholder="Confirm your password"
+                                required 
+                            />
+                        </div>
+                        <div class="cell small-12 text-right">
+                            <button 
+                                type="button" 
+                                class="button" 
+                                ng-click="updateStep(3)" 
+                                ng-disabled="!user.firstName || !user.lastName || !user.password || !user.confirmPassword || user.password !== user.confirmPassword || user.password.length < 8 || strength !== 'Strong'"
+                            >
+                                <i class="fal fa-check-circle"></i>  
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="grid-x grid-margin-x"
+                ng-if="UI.currentStep === 3"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h6>
+                        <b>Preferences</b>
+                    </h6>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="user-form-select-button-container select-container">
+                                <div class="grid-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="user-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="user.notifyByEmail = !user.notifyByEmail"
+                                            ng-class="{'selected': user.notifyByEmail}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="user.notifyByEmail"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label>
+                                            Notify by Email
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="user-form-select-button-container select-container">
+                                <div class="grid-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="user-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="user.notifyByText = !user.notifyByText"
+                                            ng-class="{'selected': user.notifyByText}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="user.notifyByText"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label>
+                                            Notify by Text
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="user-form-select-button-container select-container">
+                                <div class="grid-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="user-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="updateDarkModeToggle()"
+                                            ng-class="{'selected': user.darkMode}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="user.darkMode"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label>
+                                            Dark Mode
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 text-right">
+                    <button 
+                        class="button warning white-text" 
+                        type="button" 
+                        ng-click="updateStep(2)"
+                    >
+                        <i class="fal fa-circle-arrow-left"></i> 
+                        Back
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="button" 
+                        ng-disabled="UI.formSaving"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div 
+    ng-include="'dist/partials/users/setup-screen.html'"
+    ng-if="UI.userCreating"
+></div>

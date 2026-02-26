@@ -1,0 +1,262 @@
+@font-face {
+    font-family: "wx-icons";
+    src: url("../fonts/dhtmlx-icons.woff2") format("woff"),
+    url("../fonts/dhtmlx-icons.woff2") format("woff2");
+}
+
+i[class^="wxi-"]:before, i[class*=" wxi-"]:before {
+    font-family: wx-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wxi-alert:before {
+    content: "\f101";
+}
+.wxi-angle-dbl-down:before {
+    content: "\f102";
+}
+.wxi-angle-dbl-left:before {
+    content: "\f103";
+}
+.wxi-angle-dbl-right:before {
+    content: "\f104";
+}
+.wxi-angle-dbl-up:before {
+    content: "\f105";
+}
+.wxi-angle-down:before {
+    content: "\f106";
+}
+.wxi-angle-left:before {
+    content: "\f107";
+}
+.wxi-angle-right:before {
+    content: "\f108";
+}
+.wxi-angle-up:before {
+    content: "\f109";
+}
+.wxi-arrow-down:before {
+    content: "\f10a";
+}
+.wxi-arrow-left:before {
+    content: "\f10b";
+}
+.wxi-arrow-right:before {
+    content: "\f10c";
+}
+.wxi-arrow-up:before {
+    content: "\f10d";
+}
+.wxi-arrows-h:before {
+    content: "\f10e";
+}
+.wxi-arrows-v:before {
+    content: "\f10f";
+}
+.wxi-asc:before {
+    content: "\f110";
+}
+.wxi-assign:before {
+    content: "\f111";
+}
+.wxi-bullhorn:before {
+    content: "\f112";
+}
+.wxi-calendar:before {
+    content: "\f113";
+}
+.wxi-camera:before {
+    content: "\f114";
+}
+.wxi-cat:before {
+    content: "\f115";
+}
+.wxi-check:before {
+    content: "\f116";
+}
+.wxi-clock:before {
+    content: "\f117";
+}
+.wxi-close:before {
+    content: "\f118";
+}
+.wxi-content-copy:before {
+    content: "\f119";
+}
+.wxi-content-cut:before {
+    content: "\f11a";
+}
+.wxi-content-paste:before {
+    content: "\f11b";
+}
+.wxi-convert:before {
+    content: "\f11c";
+}
+.wxi-delete-outline:before {
+    content: "\f11d";
+}
+.wxi-delete:before {
+    content: "\f11e";
+}
+.wxi-desc:before {
+    content: "\f11f";
+}
+.wxi-dots-h:before {
+    content: "\f120";
+}
+.wxi-dots-v:before {
+    content: "\f121";
+}
+.wxi-download:before {
+    content: "\f122";
+}
+.wxi-duplicate:before {
+    content: "\f123";
+}
+.wxi-earth:before {
+    content: "\f124";
+}
+.wxi-edit-outline:before {
+    content: "\f125";
+}
+.wxi-edit:before {
+    content: "\f126";
+}
+.wxi-emoticon-outline:before {
+    content: "\f127";
+}
+.wxi-empty:before {
+    content: "\f128";
+}
+.wxi-external:before {
+    content: "\f129";
+}
+.wxi-eye:before {
+    content: "\f12a";
+}
+.wxi-file:before {
+    content: "\f12b";
+}
+.wxi-filter-check:before {
+    content: "\f12c";
+}
+.wxi-filter-multiple-outline:before {
+    content: "\f12d";
+}
+.wxi-filter-multiple:before {
+    content: "\f12e";
+}
+.wxi-filter-outline:before {
+    content: "\f12f";
+}
+.wxi-filter-plus-outline:before {
+    content: "\f130";
+}
+.wxi-filter-plus:before {
+    content: "\f131";
+}
+.wxi-folder:before {
+    content: "\f132";
+}
+.wxi-food-fork-drink:before {
+    content: "\f133";
+}
+.wxi-human-handsdown:before {
+    content: "\f134";
+}
+.wxi-indent:before {
+    content: "\f135";
+}
+.wxi-information-outline:before {
+    content: "\f136";
+}
+.wxi-loading:before {
+    content: "\f137";
+}
+.wxi-menu-down:before {
+    content: "\f138";
+}
+.wxi-menu-right:before {
+    content: "\f139";
+}
+.wxi-paperclip:before {
+    content: "\f13a";
+}
+.wxi-paste:before {
+    content: "\f13b";
+}
+.wxi-pin-outline:before {
+    content: "\f13c";
+}
+.wxi-plus:before {
+    content: "\f13d";
+}
+.wxi-pound:before {
+    content: "\f13e";
+}
+.wxi-redo:before {
+    content: "\f13f";
+}
+.wxi-refresh:before {
+    content: "\f140";
+}
+.wxi-rename:before {
+    content: "\f141";
+}
+.wxi-search:before {
+    content: "\f142";
+}
+.wxi-soccer:before {
+    content: "\f143";
+}
+.wxi-sort:before {
+    content: "\f144";
+}
+.wxi-split:before {
+    content: "\f145";
+}
+.wxi-star-outline:before {
+    content: "\f146";
+}
+.wxi-subtask:before {
+    content: "\f147";
+}
+.wxi-table-column-plus-after:before {
+    content: "\f148";
+}
+.wxi-table-row-plus-after:before {
+    content: "\f149";
+}
+.wxi-table-row-plus-before:before {
+    content: "\f14a";
+}
+.wxi-undo:before {
+    content: "\f14b";
+}
+.wxi-unindent:before {
+    content: "\f14c";
+}
+.wxi-upload:before {
+    content: "\f14d";
+}
+.wxi-view-column:before {
+    content: "\f14e";
+}
+.wxi-view-grid:before {
+    content: "\f14f";
+}
+.wxi-view-sequential:before {
+    content: "\f150";
+}
+
+
+.wxi-spin {
+    -webkit-animation:fa-spin 2s linear infinite;animation:fa-spin 2s linear infinite
+}

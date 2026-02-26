@@ -1,0 +1,165 @@
+.payment-form-container {
+    padding: 0px;
+
+    .payment {
+        padding: 1rem;
+
+        .payment-form,
+        .payment-form-estimate-view-container {
+            max-width: 45rem;
+            margin-bottom: 1rem;
+
+            .payment-form-success-container {
+                padding: 0px 2rem;
+
+                h2 {
+                    font-size: 2rem;
+                }
+            }
+        }
+    }
+
+    // ACH Payment Step Indicator
+    .ach-steps-container {
+        padding: 1rem;
+        border-radius: $container-radius;
+
+        .ach-steps {
+            margin: 0 auto;
+
+            .step {
+                text-align: center;
+                position: relative;
+
+                .step-number {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background: $white;
+                    color:  var(--medium-gray);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin: 0 auto 8px;
+                    transition: all 0.3s ease;
+                }
+
+                .step-label {
+                    font-size: 12px;
+                    color: var(--medium-gray);
+                    font-weight: 500;
+                }
+
+                &.is-active {
+                    .step-number {
+                        background: var(--primary-color);
+                        color: $white;
+                    }
+
+                    .step-label {
+                        color: var(--primary-color);
+                        font-weight: bold;
+                    }
+                }
+
+                &.completed {
+                    .step-number {
+                        background: $success-color;
+                        color: white;
+                    }
+
+                    .step-label {
+                        font-weight: bold;
+                        color:  $success-color;
+                    }
+
+                    + .step-line {
+                        background: $success-color;
+                    }
+                }
+            }
+
+            .step-line {
+                height: 2px;
+                background:  var(--medium-gray);
+                margin: 20px 0 0 0;
+                position: relative;
+            }
+        }
+    }
+
+    // Custom checkbox styles for ACH terms
+    .checkbox-container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1.4;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+
+            &:checked ~ .checkmark {
+                background-color: var(--primary-color);
+
+                &:after {
+                    display: block;
+                }
+            }
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+
+            &:after {
+                content: "";
+                position: absolute;
+                display: none;
+                left: 6px;
+                top: 2px;
+                width: 5px;
+                height: 10px;
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                transform: rotate(45deg);
+            }
+        }
+
+        &:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+    }
+
+    // Form states
+    .form-saving {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    // Help text styling
+    .help-text {
+        color: #666;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    // Test button for development
+    .test-button {
+        margin: 10px 0;
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,27 @@
+<div class="event-completion-screen-container completion-screen-container black-overlay">
+    <div class="event-completion-screen completion-screen text-center">        
+        <h2>
+            <b>
+                Are You Sure?
+            </b>
+            <br>
+        </h2>
+        <h6>
+            you want to mark this event as completed?
+        </h6>
+        <button 
+            class="delete-button button alert white-text" 
+            type="button"
+            ng-click="completeEvent(event)"
+        >
+            <i class="fas fa-star"></i> Complete
+        </button>
+        <button 
+            class="back-button button warning white-text" 
+            type="button"
+            ng-click="UI.confirmComplete = !UI.confirmComplete"
+        >
+            <i class="fal fa-times-circle"></i> Cancel
+        </button>
+    </div>
+</div>

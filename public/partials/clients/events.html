@@ -1,0 +1,490 @@
+<div 
+    class="view-client-events-container view-client-container view-container"
+    ng-init="initClient()"
+>
+    <div format-clients client="client"></div>
+    <div format-events events="events" past-events="pastEvents" future-events="futureEvents"></div>
+    <div class="view-client-events view-client view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="button-group align-right">
+                    <button
+                        class="view-client-events-create-event-button submit-button create-button button success white-text" 
+                        id="viewClientEventsCreateEstimateButton"
+                        type="button"
+                        ng-if="subPermissions.events.canCreate"
+                        ng-click="initEventForm()"
+                        data-open="eventsCreateEventReveal"
+                    >
+                        <i class="fal fa-layer-plus"></i> Schedule Event
+                    </button>
+                    <button
+                        class="view-client-events-create-event-button submit-button create-button button white-text"
+                        ng-class="{'alert': !UI.archiveEvents}"
+                        id="viewClientEventsCreateEventButton"
+                        type="button"
+                        ng-if="subPermissions.events.canArchive"
+                        ng-click="initEvents(!UI.archiveEvents)"
+                    >
+                        <span ng-if="!UI.archiveEvents">
+                            <i class="fal fa-box-archive"></i> View Archived
+                        </span>
+                        <span ng-if="UI.archiveEvents">
+                            <i class="fal fa-search"></i> View Active
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!UI.archiveEvents"
+            >
+                <div class="view-client-events-details-container">
+                    <h1>
+                        <b>
+                            Upcoming Events
+                        </b>
+                    </h1>
+                    <div class="view-client-events-details">
+                        <div class="view-client-upcoming-events-container list-container swiper-container">
+                            <ul 
+                                class="view-client-upcoming-events-list list"
+                                ng-class="{'swiper-wrapper': !$root.UI.isMobile}"
+                                data-equalizer
+                            >
+                                <li 
+                                    class="view-client-upcoming-events-list-item"
+                                    ng-if="!filteredFutureEvents.length"
+                                >
+                                    <h5>
+                                        <b>No Future Events Found</b>
+                                    </h5>
+                                </li>
+                                <li 
+                                    class="view-client-upcoming-events-list-item list-item swiper-slide"
+                                    ng-repeat="event in filteredFutureEvents = 
+                                    (futureEvents | filter: search.events.value | orderBy: 'endDate')
+                                    track by $index"
+                                >
+                                    <h4 class="separator-center">
+                                        <b>
+                                            {{event.title}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Start Date:
+                                        </b>
+                                        {{event.formattedStartDate}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            End Date:
+                                        </b>
+                                        {{event.formattedEndDate}}
+                                    </h6>
+                                    <h6 ng-if="event.recurring">
+                                        <b>
+                                            Original Start Date:
+                                        </b>
+                                        {{event.recurringOriginalStartDate}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Type:
+                                        </b>
+                                        {{event.EventType.name}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Group:
+                                        </b>
+                                        {{event.Group.name}}
+                                    </h6>
+                                    <h6 ng-if="event.recurring">
+                                        <b>
+                                            Recurring:
+                                        </b>
+                                        <span ng-if="event.RecurrencePattern.frequency != 'custom'">
+                                            {{event.RecurrencePattern.frequency}}
+                                        </span>
+                                        <span ng-if="event.RecurrencePattern.endDate">
+                                            Ends on {{event.RecurrencePattern.endDate}}
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Created By:
+                                        </b>
+                                        {{event.Creator.firstName}} {{event.Creator.lastName}}
+                                    </h6>
+                                    <br/>
+                                    <h6 ng-if="event.EventParticipants.length">
+                                        <b>
+                                            Participants:
+                                        </b>
+                                    </h6>
+                                    <div class="view-client-events-list-item-participants-container">
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div 
+                                                class="cell small-1 medium-1 large-1"
+                                                ng-repeat="participant in event.EventParticipants"
+                                            >
+                                                <div format-users user="participant.User"></div>
+                                                <div class="golura-user-icon-container text-center frame-container">
+                                                    <div 
+                                                        class="golura-user-icon text-center" 
+                                                        ng-style="{'background-color': participant.User.Preferences.backgroundColor}"
+                                                    >
+                                                        <h2 class="flex-child-auto align-middle">
+                                                            <a 
+                                                                class="white-text"
+                                                                ng-href="users/user/{{participant.User.id}}"
+                                                                ng-cloak
+                                                            >
+                                                                {{participant.User.shortName}}
+                                                            </a>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="view-client-events-list-item-button-container button-group align-right">
+                                        <a 
+                                            class="success-button button"
+                                            ng-href="/events/event/{{event.originalId}}"
+                                        >
+                                            <i class="fal fa-search"></i> View
+                                        </a>
+                                        <a 
+                                            class="edit-button button success white-text"
+                                            ng-href="/events/event/{{event.originalId}}/edit"
+                                        >
+                                            <i class="fal fa-edit"></i> edit
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="view-client-events-details-container view-details-container">
+                    <div class="view-client-events-details view-details">
+                        <h1>
+                            <b ng-if="!UI.archiveEvents">
+                                Past 
+                            </b>
+                            <b ng-if="UI.archiveEvents">
+                                Archived 
+                            </b>
+                            <b>
+                                Events
+                            </b>
+                        </h1>
+                        <div class="grid-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="view-client-past-events-container list-container">
+                                    <ul 
+                                        class="view-client-past-events-list list"
+                                        ng-if="UI.eventsLoaded"
+                                    >
+                                        <li ng-if="!filteredPastEvents.length">
+                                            <h5>
+                                                <b>
+                                                    No 
+                                                </b>
+                                                <b ng-if="!UI.archiveEvents">
+                                                    Past 
+                                                </b>
+                                                <b ng-if="UI.archiveEvents">
+                                                    Archived 
+                                                </b>
+                                                <b>Events Found</b>
+                                            </h5>
+                                        </li>
+                                        <li 
+                                            class="view-client-past-events-list-item"
+                                            ng-repeat="event in filteredPastEvents = 
+                                            (pastEvents | filter: search.events.value | orderBy: '-endDate') 
+                                            track by $index"
+                                        >
+                                            <div class="grid-x grid-margin-x align-stretch">
+                                                <div 
+                                                    class="view-client-past-events-list-item-date-container cell small-12 medum-2 large-2"
+                                                    ng-if="!$root.UI.isMobile"
+                                                >
+                                                    <div class="view-client-past-events-list-item-date text-center">
+                                                        <h3>
+                                                            <b>
+                                                                {{event.formattedShortStartDate}}
+                                                            </b>
+                                                        </h3>
+                                                        <h6>
+                                                            {{event.formattedShortStartTime}}
+                                                        </h6>
+                                                        <span>
+                                                            TO
+                                                        </span>
+                                                        <h3>
+                                                            <b>
+                                                                {{event.formattedShortEndDate}}
+                                                            </b>
+                                                        </h3>
+                                                        <h6>
+                                                            {{event.formattedShortStartTime}}
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                                <div class="cell auto list-item">
+                                                    <h4 class="separator-center">
+                                                        <b>
+                                                            {{event.title}}
+                                                        </b>
+                                                    </h4>
+                                                    <div 
+                                                        class="view-client-past-events-list-item-date-container cell small-12 medum-2 large-2"
+                                                        ng-if="$root.UI.isMobile"
+                                                    >
+                                                        <div class="view-client-past-events-list-item-date text-center">
+                                                            <h3>
+                                                                <b>
+                                                                    {{event.formattedShortStartDate}}
+                                                                </b>
+                                                            </h3>
+                                                            <h6>
+                                                                {{event.formattedShortStartTime}}
+                                                            </h6>
+                                                            <span>
+                                                                TO
+                                                            </span>
+                                                            <h3>
+                                                                <b>
+                                                                    {{event.formattedShortEndDate}}
+                                                                </b>
+                                                            </h3>
+                                                            <h6>
+                                                                {{event.formattedShortStartTime}}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    <h6 ng-if="!$root.UI.isMobile">
+                                                        <b>
+                                                            Start Date:
+                                                        </b>
+                                                        {{event.formattedStartDate}}
+                                                    </h6>
+                                                    <h6 ng-if="!$root.UI.isMobile">
+                                                        <b>
+                                                            Type:
+                                                        </b>
+                                                        {{event.EventType.name}}
+                                                    </h6>
+                                                    <h6>
+                                                        <b>
+                                                            Group:
+                                                        </b>
+                                                        {{event.Group.name}}
+                                                    </h6>
+                                                    <h6 ng-if="event.recurring">
+                                                        <b>
+                                                            Recurring:
+                                                        </b>
+                                                        <span ng-if="event.RecurrencePattern.frequency != 'custom'">
+                                                            {{event.RecurrencePattern.frequency}}
+                                                        </span>
+                                                        <span ng-if="event.RecurrencePattern.endDate">
+                                                            Ends on {{event.RecurrencePattern.endDate}}
+                                                        </span>
+                                                    </h6>
+                                                    <h6>
+                                                        <b>
+                                                            Created By:
+                                                        </b>
+                                                        {{event.Creator.firstName}} {{event.Creator.lastName}}
+                                                    </h6>
+                                                    <br/>
+                                                    <h6 ng-if="event.EventParticipants.length">
+                                                        <b>
+                                                            Participants:
+                                                        </b>
+                                                    </h6>
+                                                    <div class="view-client-events-list-item-participants-container">
+                                                        <div class="grid-x align-middle">
+                                                            <div 
+                                                                class="cell small-1 medium-shrink large-shrink"
+                                                                ng-repeat="participant in event.EventParticipants"
+                                                            >
+                                                                <div format-users user="participant.User"></div>
+                                                                <div class="golura-user-icon-container text-center frame-container">
+                                                                    <div 
+                                                                        class="golura-user-icon text-center" 
+                                                                        ng-style="{'background-color': participant.User.Preferences.backgroundColor}"
+                                                                    >
+                                                                        <h2 class="flex-child-auto align-middle">
+                                                                            <a 
+                                                                                class="white-text"
+                                                                                ng-href="users/user/{{participant.User.id}}"
+                                                                                ng-cloak
+                                                                            >
+                                                                                {{participant.User.shortName}}
+                                                                            </a>
+                                                                        </h2>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="view-client-events-list-item-button-container text-right">
+                                                        <a 
+                                                            class="success-button button"
+                                                            ng-href="/events/event/{{event.originalId}}"
+                                                        >
+                                                            <i class="fal fa-search"></i> View
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li 
+                                            class="view-client-past-events-list-item"
+                                            ng-repeat="event in filteredEvents = 
+                                            (events | filter: search.events.value | orderBy: '-endDate') 
+                                            track by $index"
+                                            ng-if="UI.archiveEvents"
+                                        >
+                                            <div class="grid-x grid-margin-x align-stretch">
+                                                <div class="view-client-past-events-list-item-date-container cell small-12 medum-2 large-2">
+                                                    <div class="view-client-past-events-list-item-date text-center">
+                                                        <h3>
+                                                            <b>
+                                                                {{event.formattedShortStartDate}}
+                                                            </b>
+                                                        </h3>
+                                                        <h6>
+                                                            {{event.formattedShortStartTime}}
+                                                        </h6>
+                                                        <span>
+                                                            TO
+                                                        </span>
+                                                        <h3>
+                                                            <b>
+                                                                {{event.formattedShortEndDate}}
+                                                            </b>
+                                                        </h3>
+                                                        <h6>
+                                                            {{event.formattedShortStartTime}}
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                                <div class="cell auto list-item">
+                                                    <div class="view-client-past-events-list-item-details">
+                                                        <h4 class="separator-center">
+                                                            <b>
+                                                                {{event.title}}
+                                                            </b>
+                                                        </h4>
+                                                        <h6>
+                                                            <b>
+                                                                Start Date:
+                                                            </b>
+                                                            {{event.formattedStartDate}}
+                                                        </h6>
+                                                        <h6>
+                                                            <b>
+                                                                Type:
+                                                            </b>
+                                                            {{event.EventType.name}}
+                                                        </h6>
+                                                        <h6>
+                                                            <b>
+                                                                Group:
+                                                            </b>
+                                                            {{event.Group.name}}
+                                                        </h6>
+                                                        <h6 ng-if="event.recurring">
+                                                            <b>
+                                                                Recurring:
+                                                            </b>
+                                                            <span ng-if="event.RecurrencePattern.frequency != 'custom'">
+                                                                {{event.RecurrencePattern.frequency}}
+                                                            </span>
+                                                            <span ng-if="event.RecurrencePattern.endDate">
+                                                                Ends on {{event.RecurrencePattern.endDate}}
+                                                            </span>
+                                                        </h6>
+                                                        <h6>
+                                                            <b>
+                                                                Created By:
+                                                            </b>
+                                                            {{event.Creator.firstName}} {{event.Creator.lastName}}
+                                                        </h6>
+                                                        <br/>
+                                                        <h6 ng-if="event.EventParticipants.length">
+                                                            <b>
+                                                                Participants:
+                                                            </b>
+                                                        </h6>
+                                                        <div class="view-client-events-list-item-participants-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div 
+                                                                    class="cell small-1 medium-shrink large-shrink"
+                                                                    ng-repeat="participant in event.EventParticipants"
+                                                                >
+                                                                    <div format-users user="participant.User"></div>
+                                                                    <div class="golura-user-icon-container text-center frame-container">
+                                                                        <div 
+                                                                            class="golura-user-icon text-center" 
+                                                                            ng-style="{'background-color': participant.User.Preferences.backgroundColor}"
+                                                                        >
+                                                                            <h2 class="flex-child-auto align-middle">
+                                                                                <a 
+                                                                                    class="white-text"
+                                                                                    ng-href="users/user/{{participant.User.id}}"
+                                                                                    ng-cloak
+                                                                                >
+                                                                                    {{participant.User.shortName}}
+                                                                                </a>
+                                                                            </h2>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="view-client-events-list-item-button-container text-right">
+                                                            <a 
+                                                                class="success-button button"
+                                                                ng-href="/events/event/{{event.id}}"
+                                                            >
+                                                                <i class="fal fa-search"></i> View
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

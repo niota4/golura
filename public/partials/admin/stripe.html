@@ -1,0 +1,343 @@
+<div class="admin-stripe-container admin-form-container">
+    <div class="admin-stripe admin-form-details">
+        <div class="golura-block grid-y golura-form">
+            <div class="cell shrink">
+                <div class="admin-stripe-options-container">
+                    <h1 ng-if="UI.stripeSettingsLoaded && stripe.account.id">
+                        <b>
+                            Stripe Settings
+                        </b>
+                    </h1>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-if="UI.stripeSettingsLoaded && !stripe.account.id"
+            >
+                <div class="admin-stripe-setup-container grid-container text-center">
+                    <h1>
+                        <i class="fal fa-exclamation-triangle"></i>
+                        <b>
+                            No Stripe Account Connected
+                        </b>
+                    </h1>
+                    <p>Connect your Stripe account to start accepting payments.</p>
+                    <button 
+                        class="button success white-text"
+                        type="button"
+                        ng-class="{'form-saving': UI.stripeAccountCreating,
+                        'expanded': $root.UI.isMobile}"
+                        ng-click="createStripeAccount()"
+                        ng-disabled="UI.stripeAccountCreating"
+                    >
+                        <span ng-if="!UI.stripeAccountCreating">
+                            <i class="fal fa-plus-circle"></i>
+                            Connect Stripe Account
+                        </span>
+                        <span ng-if="UI.stripeAccountCreating">
+                            Creating...
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-if="UI.stripeSettingsLoaded && stripe.account.id"
+            >
+                <div class="admin-stripe-details-container admin-form">
+                    <h2>
+                        <b>
+                            Stripe Connect Account
+                        </b>
+                    </h2>
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <h6>
+                                <b>Account ID: </b> 
+                                {{stripe.account.id}}
+                            </h6>
+                            <h6 ng-if="stripe.account.email">
+                                <b>Email:</b> {{stripe.account.email}}
+                            </h6>
+                            <h6 ng-if="stripe.account.country">
+                                <b>Country:</b> {{stripe.account.country}}
+                            </h6>
+                            <h6>
+                                <b>Status: </b> 
+                                <span 
+                                    class="label white-text"
+                                    ng-class="{
+                                        'success': stripe.account.charges_enabled && stripe.account.payouts_enabled,
+                                        'warning': !stripe.account.charges_enabled || !stripe.account.payouts_enabled,
+                                        'alert': !stripe.account.details_submitted
+                                    }"
+                                >
+                                    {{getStripeAccountStatus()}}
+                                </span>
+                            </h6>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12 text-right">
+                            <button 
+                                class="button white-text"
+                                ng-class="{'form-saving': UI.stripeAccountRefreshing,
+                                'expanded': $root.UI.isMobile}"
+                                type="button"
+                                ng-click="refreshStripeAccount()"
+                                ng-disabled="UI.stripeAccountRefreshing"
+                            >
+                                <span ng-if="!UI.stripeAccountRefreshing">
+                                    <i class="fal fa-refresh"></i>
+                                    Refresh
+                                </span>
+                                <span ng-if="UI.stripeAccountRefreshing">
+                                    Refreshing...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="!stripe.account.charges_enabled || !stripe.account.payouts_enabled">
+                        <hr>
+                        <div class="callout warning">
+                            <h6>
+                                <i class="fal fa-exclamation-triangle"></i>
+                                Account Setup Required
+                            </h6>
+                            <p>Complete your Stripe onboarding to start accepting payments.</p>
+                            <button 
+                                class="button warning white-text"
+                                type="button"
+                                ng-click="createOnboardingLink()"
+                                ng-disabled="UI.onboardingLinkCreating"
+                            >
+                                <i class="fal fa-external-link" ng-if="!UI.onboardingLinkCreating"></i>
+                                <i class="fal fa-spinner fa-spin" ng-if="UI.onboardingLinkCreating"></i>
+                                {{UI.onboardingLinkCreating ? 'Creating Link...' : 'Complete Onboarding'}}
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="stripe.account.capabilities">
+                        <hr>
+                        <h2>
+                            <b>
+                                Account Capabilities
+                            </b>
+                        </h2>
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <h6>
+                                    <i 
+                                        class="fal"
+                                        ng-class="{
+                                            'fa-check-circle success-text': stripe.account.capabilities.transfers === 'active',
+                                            'fa-times-circle alert-text': stripe.account.capabilities.transfers !== 'active'
+                                        }"
+                                    ></i>
+                                    <b>
+                                        Transfers: 
+                                    </b>
+                                    {{stripe.account.capabilities.transfers || 'inactive'}}
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <h6>
+                                    <i 
+                                        class="fal"
+                                        ng-class="{
+                                            'fa-check-circle success-text': stripe.account.capabilities.card_payments === 'active',
+                                            'fa-times-circle alert-text': stripe.account.capabilities.card_payments !== 'active'
+                                        }"
+                                    ></i>
+                                    <b>
+                                        Card Payments: 
+                                    </b>
+                                    {{stripe.account.capabilities.card_payments || 'inactive'}}
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <h2>
+                        <b>
+                            Payment Methods
+                        </b>
+                    </h2>
+                    <div ng-if="!UI.paymentMethodsLoaded">
+                        <div class="text-center">
+                            <i class="fal fa-spinner fa-spin"></i>
+                            Loading payment methods...
+                        </div>
+                    </div>
+                    <div ng-if="UI.paymentMethodsLoaded && !stripe.paymentMethods.length">
+                        <div class="callout secondary">
+                            <p>No payment methods configured.</p>
+                            <button 
+                                class="button success white-text"
+                                ng-class="{'expanded': $root.UI.isMobile}"
+                                type="button"
+                                data-open="paymentMethodFormReveal"
+                                ng-click="initPaymentMethodForm()"
+                            >
+                                <i class="fal fa-plus"></i>
+                                <span ng-if="!$root.UI.isMobile">
+                                    Add Payment Method
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="UI.paymentMethodsLoaded && stripe.paymentMethods.length">
+                        <div class="stripe-payment-methods-list">
+                            <div 
+                                class="stripe-payment-method-item grid-x grid-margin-x align-middle"
+                                ng-repeat="method in stripe.paymentMethods track by $index"
+                            >
+                                <div class="cell auto">
+                                    <h6>
+                                        <b>
+                                            {{method.name}}
+                                        </b>
+                                    </h6>
+                                    <h6>
+                                        {{method.description}}
+                                    </h6>
+                                </div>
+                                <div class="cell shrink" ng-if="method.removable">
+                                    <button 
+                                        class="button white-text"
+                                        ng-class="{'alert': method.isActive, 'success': !method.isActive}"
+                                        type="button"
+                                        ng-click="updatePaymentMethod(method)"
+                                        title="Remove Payment Method"
+                                    >
+                                        <i 
+                                            class="fal fa-archive"
+                                            ng-if="method.isActive"
+                                        ></i>
+                                        <i
+                                            class="fal fa-box-open"
+                                            ng-if="!method.isActive"
+                                        ></i>
+                                        <span ng-if="!$root.UI.isMobile && method.isActive">
+                                            Disable
+                                        </span>
+                                        <span ng-if="!$root.UI.isMobile && !method.isActive">
+                                            Enable
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <h2>
+                        <b>
+                            ACH Settings
+                        </b>
+                    </h2>
+                    <form 
+                        class="stripe-ach-form"
+                        ng-submit="updateACHSettings($event, stripe.achSettings)"
+                    >
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="stripe-form-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="stripe-form-select-button select-button button"
+                                                type="button"
+                                                aria-label="enable ACH payments button"
+                                                ng-click="stripe.achSettings.enabled = !stripe.achSettings.enabled"
+                                                ng-class="{'selected': stripe.achSettings.enabled}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="stripe.achSettings.enabled"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Enable ACH Payments
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-12 large-12" 
+                                ng-if="stripe.achSettings.enabled"
+                            >
+                                <div class="input-container">
+                                    <label>
+                                        ACH Processing Fee (%)
+                                    </label>
+                                    <input
+                                        class="form-input"
+                                        type="text"
+                                        id="workOrderDefaultHourlyRate"
+                                        name="workOrderDefaultHourlyRate"
+                                        placeholder="0.00"
+                                        ng-model="stripe.achSettings.processingFee"
+                                        format-number 
+                                        allow-decimal="true" 
+                                        decimal-places="2" 
+                                        ui-mask-placeholder 
+                                        ui-mask-placeholder-char="·"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-12 large-12" 
+                                ng-if="stripe.achSettings.enabled"
+                            >
+                                <div class="stripe-form-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="stripe-form-select-button select-button button"
+                                                type="button"
+                                                aria-label="enable ACH payments button"
+                                                ng-click="stripe.achSettings.requireVerification = !stripe.achSettings.requireVerification"
+                                                ng-class="{'selected': stripe.achSettings.requireVerification}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="stripe.achSettings.requireVerification"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Require Bank Account Verification
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12 text-right">
+                                <button 
+                                    class="strip-submit-button submit-button button white-text"
+                                    type="submit"
+                                    ng-class="{'form-saving': UI.achSettingsSaving}"
+                                    ng-disabled="UI.achSettingsSaving"
+                                >
+                                    <span ng-if="!UI.achSettingsSaving">
+                                        <i class="fal fa-check-circle"></i> Update
+                                    </span>
+                                    <span ng-if="UI.achSettingsSaving">
+                                        Please Wait...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

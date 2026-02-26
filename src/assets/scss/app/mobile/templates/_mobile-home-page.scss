@@ -1,0 +1,45 @@
+// Mobile Home Page Styles
+@include breakpoint(small only) {
+    .home-container {
+        .home {
+            padding: 1rem;
+            
+            .welcome-section {
+                margin-bottom: 2rem;
+                
+                .welcome-text {
+                    text-align: center !important;
+                }
+                
+                .welcome-actions {
+                    text-align: center !important;
+                    
+                    .button {
+                        width: 100%;
+                        margin-bottom: 0.5rem;
+                    }
+                }
+            }
+            
+            .dashboard-widgets {
+                .widget-container {
+                    margin-bottom: 1rem;
+                    
+                    .widget {
+                        padding: 1rem;
+                        
+                        .widget-header {
+                            margin-bottom: 0.5rem;
+                        }
+                        
+                        .widget-content {
+                            .widget-stat {
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

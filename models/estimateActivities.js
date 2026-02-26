@@ -1,0 +1,125 @@
+const Sequelize = require('sequelize');
+
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define('EstimateActivity', {
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    estimateId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'estimates',
+        key: 'id',
+      },
+    },
+    companyId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'companies',
+        key: 'id',
+      },
+    },
+    relatedModel: {
+      type: DataTypes.STRING,
+      allowNull: true, // Name of the related model (e.g., EstimateLineItem)
+    },
+    relatedModelId: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // ID of the related record in the related model
+    },
+    action: {
+      type: DataTypes.ENUM('CREATE', 'UPDATE', 'DELETE', 'VIEW', 'APPROVE', 'REJECT', 'REQUEST_CHANGES', 'FEEDBACK', 'TERMS_ACCEPTED'),
+      allowNull: false, // Action performed on the record
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false, // Human-readable description of the change
+    },
+    fieldName: {
+      type: DataTypes.STRING,
+      allowNull: true, // Field that was updated, null for CREATE/DELETE
+    },
+    oldValue: {
+      type: DataTypes.JSON,
+      allowNull: true, // Previous value for the field
+    },
+    newValue: {
+      type: DataTypes.JSON,
+      allowNull: true, // New value for the field
+    },
+    changedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null, // User ID of the person who made the change
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+    },
+    timestamp: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Time of the action
+    },
+    ipAddress: {
+      type: DataTypes.STRING,
+      allowNull: true, // IP address of the user
+    },
+    sessionId: {
+      type: DataTypes.STRING,
+      allowNull: true, // Unique identifier for the user's session/request
+    },
+    scope: {
+      type: DataTypes.ENUM('SYSTEM', 'USER_ACTION', 'ADMIN_OVERRIDE'),
+      allowNull: false,
+      defaultValue: 'USER_ACTION', // Classifies the type of action
+    },
+    status: {
+      type: DataTypes.ENUM('PENDING', 'COMPLETED', 'FAILED'),
+      allowNull: false,
+      defaultValue: 'COMPLETED', // Status of the activity
+    },
+    metadata: {
+      type: DataTypes.JSON,
+      allowNull: true, // Additional context for the change
+    },
+  }, {
+    sequelize,
+    tableName: 'estimateActivities',
+    timestamps: false, // Explicitly disable Sequelize auto timestamps
+    indexes: [
+      {
+        name: "estimateId_idx",
+        using: "BTREE",
+        fields: [
+          { name: "estimateId" },
+        ],
+      },
+      {
+        name: "relatedModel_idx",
+        using: "BTREE",
+        fields: [
+          { name: "relatedModel" },
+        ],
+      },
+      {
+        name: "changedBy_idx",
+        using: "BTREE",
+        fields: [
+          { name: "changedBy" },
+        ],
+      },
+      {
+        name: "timestamp_idx",
+        using: "BTREE",
+        fields: [
+          { name: "timestamp" },
+        ],
+      },
+    ],
+  });
+};

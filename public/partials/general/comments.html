@@ -1,0 +1,71 @@
+<div class="comments-container">
+    <ul 
+        class="comments"
+        ng-class="{'ssc': !UI.commentsLoaded}"
+    >
+        <li 
+            class="ssc-square"
+            ng-repeat="x in [].constructor(10) track by $index"
+            ng-if="!UI.commentsLoaded"
+        ></li>
+        <li 
+            class="comment-item"
+            ng-class="{'parent-comment': comment.replies.length}"
+            ng-repeat="comment in comments | filter:{parentCommentId: null} track by comment.id"
+            ng-include="'dist/partials/general/comment.html'"
+        >
+        </li>
+        <h6
+            class="text-center"
+            ng-if="!comments.length"
+        >   
+            <b>
+                Oh! 
+            </b>
+            Theres no comments so far.
+        </h6>
+    </ul>
+</div>
+<div 
+    class="reveal" 
+    id="allRepliesModal" 
+    data-reveal
+>
+    <h4>Replies</h4>
+    <ul class="all-replies">
+        <li 
+            class="nested-comment"
+            ng-repeat="reply in comment.replies track by reply.id"
+        >
+            <div ng-include="'dist/partials/general/comment.html'"></div>
+        </li>
+    </ul>
+    <button 
+        type="button" 
+        class="close-button" 
+        data-close
+    >
+        Close
+    </button>
+</div>
+<div
+    class="comment-image-view-reveal image-reveal media-reveal reveal"
+    id="commentImageViewReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeCommentImageViewReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/media/image-viewer.html'"
+    ></div>
+</div>

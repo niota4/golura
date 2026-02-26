@@ -1,0 +1,698 @@
+<div
+    class="invoice-edit-form-container edit-container"
+    ng-init="initInvoiceForm()"
+>
+    <div class="invoice-edit edit">
+        <div format-users users="users"></div>
+        <div format-users user="invoice.Creator"></div>
+        <div format-clients client="invoice.Client"></div>
+        <div 
+            class="callout sticky text-center fade"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length || 
+            UI.modalFormSaved"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            data-sticky 
+            data-options="marginTop:0;"
+        >
+            <button 
+                class="close-button button clear"
+                ng-class="{'success': UI.message,
+                'alert': UI.errMessage}"
+                type="button"
+                ng-click="UI.errMessage = !UI.errMessage;
+                UI.message = !UI.message"
+            >
+                <i class="fal fa-times-circle"></i>
+            </button>
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>
+        <form 
+            class="invoice-form golura-form"
+            id="invoiceForm"
+            name="invoiceForm"
+            ng-submit="updateInvoice($event, invoice)"
+        >
+            <div class="golura-block grid-x grid-margin-x">
+                <div class="golura-block cell small-12 medium-auto large-auto">
+                    <div class="invoice-form-sidebar">
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> Back
+                        </button>
+                        <button 
+                            class="analyze-invoice-button button teal white-text"
+                            type="button"
+                            ng-if="$root.company.goEsti"
+                            data-open="invoiceAnalysisReveal"
+                            ng-click="initInvoiceAnalysis()"
+                        >
+                            <i class="fal fa-sparkles"></i> Analyze
+                        </button>
+                        <ul 
+                            class="invoice-form-sidebar-list accordion" 
+                            data-accordion
+                            data-deep-link="false"
+                            data-allow-all-closed="true"
+                        >
+                            <li 
+                                class="invoice-form-sidebar-list-item invoice-form-sidebar-list-item-signed warning-message accordion-item alert-background" 
+                                ng-show="invoice.InvoiceSignature
+                                || invoice.converted"
+                            >   
+                                <div class="grid-x grid-margin-x align-middle white-text">
+                                    <div class="cell small-12 medium-shrink large-shrink">
+                                        <span class="invoice-form-sidebar-list-item-signed-icon">
+                                            <i class="fal fa-exclamation-circle"></i>
+                                        </span>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <h4 class="white-text">
+                                            <b>
+                                                This Invoice has been signed or converted,
+                                                <br/>
+                                                and most fields are now locked.
+                                            </b>
+                                            <br/>
+                                            You can copy the Invoice however, to create a new one.
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-3 large-3">                                        
+                                        <button 
+                                            class="back-button button success white-text" 
+                                            type="button"
+                                            ng-click="copyInvoice"
+                                        >
+                                            <i class="fal fa-clone"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li 
+                                class="invoice-form-sidebar-list-item accordion-item is-active" 
+                                data-accordion-item
+                            >
+                                <a 
+                                    class="invoice-form-sidebar-list-item-title accordion-title"
+                                    href="#"
+                                >
+                                    <b>
+                                        <i class="fal fa-circle-info"></i> Details
+                                    </b>
+                                </a>
+                                <div 
+                                    class="invoice-form-sidebar-list-item-content accordion-content" 
+                                    data-tab-content
+                                >
+                                    <div class="grid-y">
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded,
+                                                'disabled': invoice.InvoiceSignature ||
+                                                invoice.converted}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label for="invoiceMarkup">
+                                                    Markup
+                                                </label>
+                                                <input
+                                                    class="form-input"
+                                                    type="number"
+                                                    id="invoiceMarkup"
+                                                    name="invoiceMarkup"
+                                                    placeholder="Enter invoice markup"
+                                                    ng-model="invoice.markUp"
+                                                    ng-disabled="invoice.InvoiceSignature ||
+                                                    invoice.converted"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded,
+                                                'disabled': invoice.InvoiceSignature ||
+                                                invoice.converted}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label for="InvoiceSalesTaxRate">
+                                                    Sales Tax Rate
+                                                </label>
+                                                <input
+                                                    class="form-input"
+                                                    type="number"
+                                                    step="0.01"
+                                                    id="InvoiceSalesTaxRate"
+                                                    name="InvoiceSalesTaxRate"
+                                                    placeholder="Enter invoice sales tax rate"
+                                                    ng-model="invoice.salesTaxRate"
+                                                    ng-disabled="invoice.InvoiceSignature ||
+                                                    invoice.converted"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded,
+                                                'disabled': invoice.InvoiceSignature ||
+                                                invoice.converted}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label for="InvoiceSubTotalPrice">
+                                                    Sub Total
+                                                </label>
+                                                <input
+                                                    class="form-input"
+                                                    type="text"
+                                                    id="InvoiceSubTotalPrice"
+                                                    name="InvoiceSubTotalPrice"
+                                                    autocomplete="off"
+                                                    format-number 
+                                                    allow-decimal="true" 
+                                                    decimal-places="2" 
+                                                    ui-mask-placeholder 
+                                                    ui-mask-placeholder-char="·"
+                                                    placeholder="Enter invoice sub total price"
+                                                    ng-model="invoice.subTotal"
+                                                    ng-disabled="invoice.InvoiceSignature ||
+                                                    invoice.converted"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div class="invoice-form-select-button-container select-container">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="invoice-form-select-button select-button button"
+                                                            type="button"
+                                                            aria-label="invoice email button"
+                                                            ng-click="invoice.lineItemPrice = !invoice.lineItemPrice"
+                                                            ng-class="{'selected': invoice.lineItemPrice}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="invoice.lineItemPrice"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <label>
+                                                            Show Line Item Price?
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div 
+                                            class="cell shrink"
+                                            ng-if="invoice.adHocReason"
+                                        >
+                                            <div class="input-container disabled">
+                                                <label>
+                                                    Ad-Hoc Reason
+                                                </label>
+                                                <div class="form-textarea-container">
+                                                    <textarea 
+                                                        class="form-textarea" 
+                                                        name="reason" 
+                                                        placeholder="Enter reason for creating the Ad-Hoc Invoice." 
+                                                        ng-model="invoice.adHocReason"
+                                                        disabled
+                                                    ></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="invoice-settings-submit-button submit-button button"
+                                                type="submit"
+                                                ng-disabled="UI.formSaving"
+                                                ng-class="{'form-saving': UI.formSaving}"
+                                            >
+                                                <span ng-if="!UI.formSaving">
+                                                    <i class="fal fa-check-circle"></i> Update
+                                                </span>
+                                                <span ng-if="UI.formSaving">
+                                                    Please Wait...
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li 
+                                class="invoice-form-sidebar-list-item accordion-item" 
+                                data-accordion-item
+                            >
+                                <a 
+                                    class="invoice-form-sidebar-list-item-title accordion-title"
+                                    href="#"
+                                >
+                                    <b>
+                                        <i class="fal fa-user"></i> Client
+                                    </b>
+                                </a>
+                                <div 
+                                    class="invoice-form-sidebar-list-item-content accordion-content" 
+                                    data-tab-content
+                                >
+                                    <div class="grid-y">
+                                        <div format-addresses addresses="client.ClientAddresses"></div>
+                                        <div format-phone-numbers phone-numbers="client.ClientPhoneNumbers"></div>
+                                        <div class="cell shrink">
+                                            <h6 class="invoice-form-sidebar-client">
+                                                <b>
+                                                    Client: 
+                                                </b>
+                                                <a ng-href="clients/client/{{invoice.clientId}}">
+                                                    {{invoice.Client.fullName}}
+                                                </a>
+                                            </h6>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label>
+                                                    Phone Number
+                                                </label>
+                                                <selectize
+                                                    class="invoice-input form-input"
+                                                    id="invoiceClientPhoneNumber"
+                                                    config="phoneNumberOptions"
+                                                    options="invoice.Client.ClientPhoneNumbers"
+                                                    name="invoicePhoneNumber"
+                                                    ng-model="invoice.clientPhoneNumberId"
+                                                >
+                                                </selectize>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label>
+                                                    Email
+                                                </label>
+                                                <selectize
+                                                    class="invoice-input form-input email-input"
+                                                    id="invoiceClientEmail"
+                                                    config="emailOptions"
+                                                    options="invoice.Client.ClientEmails"
+                                                    name="invoiceEmail"
+                                                    ng-model="invoice.clientEmailId"
+                                                >
+                                                </selectize>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label>
+                                                    Address
+                                                </label>
+                                                <selectize
+                                                    class="invoice-input form-input"
+                                                    config="addressOptions"
+                                                    options="invoice.Client.ClientAddresses"
+                                                    name="invoiceAddress"
+                                                    ng-model="invoice.clientAddressId"
+                                                >
+                                                </selectize>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.invoiceLoaded}"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.invoiceLoaded"
+                                                ></div>
+                                                <label>
+                                                    Billing Address
+                                                </label>
+                                                <selectize
+                                                    class="invoice-input form-input"
+                                                    config="addressOptions"
+                                                    options="invoice.Client.ClientAddresses"
+                                                    name="invoiceAddress"
+                                                    ng-model="invoice.clientAddressId"
+                                                >
+                                                </selectize>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="invoice-settings-submit-button submit-button button"
+                                                type="submit"
+                                                ng-disabled="UI.formSaving"
+                                                ng-class="{'form-saving': UI.formSaving}"
+                                            >
+                                                <span ng-if="!UI.formSaving">
+                                                    <i class="fal fa-check-circle"></i> Update
+                                                </span>
+                                                <span ng-if="UI.formSaving">
+                                                    Please Wait...
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li 
+                                class="invoice-form-sidebar-list-item accordion-item" 
+                                data-accordion-item
+                            >
+                                <a 
+                                    class="invoice-form-sidebar-list-item-title accordion-title"
+                                    ng-click="UI.showMemo = !UI.showMemo"
+                                    href="#"
+                                >
+                                    <b>
+                                        <i class="fal fa-memo"></i> Memo
+                                    </b>
+                                </a>
+                                <div 
+                                    class="invoice-form-sidebar-list-item-content invoice-form-sidebar-list-item-memo-container accordion-content" 
+                                    data-tab-content
+                                >
+                                    <div 
+                                        id="invoiceMemo"
+                                        rich-text-editor 
+                                        ng-model="invoice.memo"
+                                        on-submit="updateInvoice($event, invoice)"
+                                        invoice="invoice"
+                                    ></div>
+                                </div>
+                            </li>
+                            <li 
+                                class="invoice-form-sidebar-list-item accordion-item" 
+                                data-accordion-item
+                                ng-show="!invoice.InvoiceSignature"
+                            >
+                                <a 
+                                    class="invoice-form-sidebar-list-item-title accordion-title"
+                                    href="#"
+                                >
+                                    <b>
+                                        <i class="fal fa-list"></i> Line Items
+                                    </b>
+                                </a>
+                                <div 
+                                    class="invoice-form-sidebar-list-item-content invoice-form-sidebar-list-item-line-items-container accordion-content" 
+                                    data-tab-content
+                                >
+                                    <div class="invoice-form-sidebar-item-line-items-container">
+                                        <div class="line-items">
+                                            <div class="golura-block grid-y">
+                                                <div class="cell shrink position-relative">
+                                                    <div class="line-items-search-container list-search-container">
+                                                        <div class="line-items-search list-search">
+                                                            <div class="invoice-form-line-items-create-button-container text-right">
+                                                                <button 
+                                                                    class="invoice-form-line-items-add-button add-button submit-button button success white-text" 
+                                                                    id="invoiceQuestionCreateButton"
+                                                                    type="button"
+                                                                    ng-click="initLineItems()"
+                                                                    data-open="invoiceAddLineItemFormReveal"
+                                                                    ng-disabled="invoice.InvoiceSignature || invoice.converted"
+                                                                >
+                                                                    <i class="fal fa-plus-circle"></i> Add Line Item
+                                                                </button>
+                                                                <button 
+                                                                    class="invoice-form-line-items-create-button button white-text"
+                                                                    type="button"
+                                                                    data-open="invoiceLineItemFormReveal"
+                                                                    ng-if="permissions.canEdit"
+                                                                    ng-click="initInvoiceLineItemForm()"
+                                                                    ng-cloak
+                                                                >
+                                                                    <i class="fal fa-edit"></i> Create Line Item
+                                                                </button>
+                                                            </div>
+                                                            <div class="search-input-container">
+                                                                <div class="grid-x align-middle">
+                                                                    <div class="cell auto align-self-bottom">
+                                                                        <input
+                                                                            class="line-items-search-input search-input"
+                                                                            id="lineItemsSearchInput" 
+                                                                            type="text"
+                                                                            placeholder="Search line items..."
+                                                                            ng-model="search.lineItems.value"
+                                                                        />
+                                                                    </div>
+                                                                    <div class="cell shrink align-self-bottom">
+                                                                        <span class="search-icon">
+                                                                            <i class="fal fa-search"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12 overflow-scroll">
+                                                    <div class="line-items-list-container list-container">
+                                                        <ul 
+                                                            class="line-items-list list"
+                                                            id="lineItemsList"
+                                                        >
+                                                            <li ng-if="!UI.invoiceLoaded">
+                                                                <div class="ssc line-items-ssc">
+                                                                    <div 
+                                                                        class="ssc-square"
+                                                                        ng-repeat="x in [].constructor(40) track by $index"
+                                                                    ></div>
+                                                                </div>
+                                                            </li>
+                                                            <li
+                                                                class="line-items-list-item list-item position-relative"
+                                                                ng-repeat="l in filteredLineItems = 
+                                                                (invoice.InvoiceLineItems | filter:search.lineItems.value) |
+                                                                orderBy: sort.lineItems.value |
+                                                                limitTo: UI.lineItemsDisplayed track by $index"
+                                                                ng-class="{'selected': l.LineItems.selected}"
+                                                            >
+                                                                <div class="grid-x grid-padding-x align-middle">
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h6>
+                                                                            {{l.name}}
+                                                                        </h6>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h6>
+                                                                            {{l.quantity}}
+                                                                        </h6>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h6>
+                                                                            {{l.unit}}
+                                                                        </h6>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h6 ng-if="l.lineItemPrice">
+                                                                            {{l.totalPrice | currency}}
+                                                                        </h6>
+                                                                        <h6 ng-if="!l.lineItemPrice">
+                                                                            Hidden {{l.totalPrice | currency}}
+                                                                        </h6>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                                        <div class="list-item-options-container">
+                                                                            <button 
+                                                                                class="list-item-options-button button white-text"
+                                                                                type="button"
+                                                                                data-open="invoiceLineItemFormReveal"
+                                                                                ng-if="permissions.canEdit"
+                                                                                ng-click="initInvoiceLineItemForm(l)"
+                                                                                ng-cloak
+                                                                            >
+                                                                                <i class="fal fa-edit"></i> Edit
+                                                                            </button>
+                                                                            <button 
+                                                                                class="list-item-options-button button alert white-text"
+                                                                                type="button"
+                                                                                ng-click="l.delete = !l.delete"
+                                                                                ng-if="permissions.canArchive"
+                                                                            >
+                                                                                <i class="fal fa-archive"></i> Delete
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div 
+                                                                    class="line-items-list-item-delete-container delete-container black-overlay"
+                                                                    ng-if="l.delete"
+                                                                >
+                                                                    <div class="grid-x grid-padding-x align-middle">
+                                                                        <div class="cell small-12 medium-auto large-auto text-center">
+                                                                            <h4>
+                                                                                <b class="alert-text">Warning: </b>
+                                                                                <span class="white-text">Are you sure you want to delete 
+                                                                                    this Line Item?
+                                                                                </span>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-shrink large-shrink">
+                                                                            <button 
+                                                                                class="list-item-options-button button alert white-text"
+                                                                                type="button"
+                                                                                ng-disabled="UI.formSaving"
+                                                                                ng-class="{'form-alert': UI.formSaving}"
+                                                                                ng-click="removeLineItemFromInvoice(l)"
+                                                                            >
+                                                                                <span ng-if="!UI.formSaving">
+                                                                                    <i class="fal fa-check-circle"></i> Confirm
+                                                                                </span>
+                                                                                <span ng-if="UI.formSaving">
+                                                                                    Please Wait...
+                                                                                </span>
+                                                                            </button>
+                                                                            <button 
+                                                                                class="list-item-options-button button warning white-text"
+                                                                                type="button"
+                                                                                ng-click="l.delete = !l.delete"
+                                                                            >
+                                                                                <i class="fal fa-times-circle"></i> Cancel
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li 
+                                                                class="line-items-list-empty text-center"
+                                                                ng-show="!invoice.InvoiceLineItems.length"
+                                                            >
+                                                                <div class="grid-container">
+                                                                    <h3>
+                                                                        <b>Woah! </b>
+                                                                        Looks like you have no line items!
+                                                                    </h3>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                          </ul>
+                    </div>
+                </div>
+                <div 
+                    class="golura-block cell overflow-scroll"
+                    ng-class="{'small-12 medium-12 large-4': !UI.showMemo,
+                    'small-12 medium-12 large-3': UI.showMemo}"
+                >
+                    <div ng-include="'/dist/partials/invoices/view.html'"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div
+    class="invoice-analysis-reveal reveal"
+    id="invoiceAnalysisReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceAnalysisReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/invoices/analysis.html'"
+    ></div>
+</div>
+<div
+    class="invoice-add-line-item-form-reveal form-reveal reveal large no-padding"
+    id="invoiceAddLineItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAddInvoiceLineItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/invoices/add-line-item-to-invoice-form.html'"
+    ></div>
+</div>
+<div
+    class="invoice-line-item-form-reveal reveal"
+    id="invoiceLineItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceLineItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/invoices/invoice-line-item-form.html'"
+    ></div>
+</div>

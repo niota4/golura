@@ -1,0 +1,143 @@
+
+<div class="view-worker-order-purchase-orders-container view-details-container">
+    <div class="view-work-order-purchase-orders list-container view-details">
+        <div class="golura-block">
+            <h2 ng-if="page.name !== 'inventory">
+                <b>
+                    Purchase Orders
+                </b>
+            </h2>
+            <div class="view-work-order-purchase-orders-list-container">
+                <ul class="view-work-order-purchase-orders-list list">
+                    <li ng-show="!UI.purchaseOrdersLoaded">
+                        <div class="ssc purchase-order-ssc">
+                            <div 
+                                class="ssc-square"
+                                ng-repeat="x in [].constructor(40) track by $index"
+                            ></div>
+                        </div>
+                    </li>
+                    <li 
+                        class="view-client-work-orders-purchase-orders-list-item"
+                        ng-if="!purchaseOrders.length &&
+                        UI.purchaseOrdersLoaded"
+                    >
+                        <h5>
+                            <b>No Purchase Orders Found</b>
+                        </h5>
+                    </li>
+                    <li
+                        class="view-work-order-purchase-orders-list-item list-item"
+                        ng-repeat="purchaseOrder in purchaseOrders track by $index"
+                    >
+                        <div format-clients client="purchaseOrder.Client"></div>
+                        <div format-users user="purchaseOrder.Creator"></div>
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        ID: 
+                                    </b>
+                                    #{{purchaseOrder.purchaseOrderNumber}}
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Vendor: 
+                                    </b>
+                                    <a 
+                                        ng-href="inventory/vendors/vendor/{{purchaseOrder.vendorId}}"
+                                        ng-if="purchaseOrder.Vendor.name"
+                                    >
+                                        {{purchaseOrder.Vendor.name}}
+                                    </a>
+                                    <span ng-if="!purchaseOrder.Vendor.name">
+                                        N/A
+                                    </span>
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Order Date: 
+                                    </b>
+                                    {{ purchaseOrder.orderDate ? (purchaseOrder.orderDate | DateTimeFormat) : 'N/A' }}
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Delivery Date: 
+                                    </b>
+                                    {{ purchaseOrder.deliveryDate ? (purchaseOrder.deliveryDate | DateTimeFormat) : 'N/A' }}
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Created: 
+                                    </b>
+                                    {{purchaseOrder.createdAt | DateTimeFormat}}
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Created By: 
+                                    </b>
+                                    <a ng-href="users/user/{{purchaseOrder.creatorId}}">
+                                        {{purchaseOrder.Creator.fullName}}
+                                    </a>
+                                </h6>
+                                <h6>
+                                    <b>
+                                        Status: 
+                                    </b>
+                                    <span 
+                                        class="label white-text"
+                                        ng-class="{
+                                            'success': purchaseOrder.PurchaseOrderStatus.name == 'fulfilled',
+                                            'warning': purchaseOrder.PurchaseOrderStatus.name == 'pending',
+                                            'alert': purchaseOrder.PurchaseOrderStatus.name == 'rejected'
+                                        }"
+                                        ng-if="purchaseOrder.PurchaseOrderStatus.name"
+                                    >
+                                        {{purchaseOrder.PurchaseOrderStatus.name}}
+                                    </span>
+                                    <span ng-if="!purchaseOrder.PurchaseOrderStatus.name">
+                                        N/A
+                                    </span>
+                                </h6>
+                            </div>
+                            <div class="cell shrink">
+                                <div class="button-group">
+                                    <a 
+                                        class="view-purchase-order-button button"
+                                        ng-href="/work-orders/work-order/purchase-orders/purchase-order/{{purchaseOrder.id}}"
+                                    >
+                                        <i class="fal fa-search"></i>
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="purchase-order-step-container step-container grid-x align-center text-center">
+                                    <div 
+                                        class="step-item cell auto"
+                                        ng-repeat="status in purchaseOrder.filteredStatuses track by $index"
+                                        ng-show="!validateStopperStatus(status.name)"
+                                        ng-class="{
+                                            'first': $index === 0,
+                                            'last': $index === purchaseOrder.filteredStatuses.length - 1,
+                                            'active': $index === purchaseOrder.currentStatusIndex,
+                                            'completed': status.completed,
+                                            'canceled': status.fenced
+                                        }"
+                                    >
+                                        <div class="step-counter">
+                                            {{$index + 1}}
+                                        </div>
+                                        <div class="step-name">
+                                            {{status.name}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

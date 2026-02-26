@@ -1,0 +1,1012 @@
+<div
+    class="client-edit-container"
+    ng-init="initClientForm()"
+>
+    <div class="client-edit">
+        <div format-clients client="client"></div>
+        <div class="client-form-details-container">
+            <div class="golura-block grid-x">
+                <div class="golura-block cell small-12 medium-shrink large-shrink">
+                    <div class="client-form-tabs-container">
+                        <div class="client-form-tabs">
+                            <ul 
+                                class="client-form-tabs-list tabs vertical" 
+                                id="clientFormTabs"
+                                data-responsive-accordion-tabs="tabs small-accordion large-tabs" 
+                                data-deep-link="false"
+                                data-tabs 
+                            >
+                                <li class="client-form-tabs-title tabs-title is-active">
+                                    <a  
+                                        class="client-form-tabs-title-link"
+                                        data-tabs-target="primary"
+                                    >
+                                        <i class="fas fa-star"></i> Primary Details
+                                    </a>
+                                </li>
+                                <li class="client-form-tabs-title tabs-title">
+                                    <a  
+                                        class="client-form-tabs-title-link"
+                                        data-tabs-target="emails"
+                                    >
+                                        <i class="fal fa-envelope"></i> Email Addresses
+                                    </a>
+                                </li>
+                                <li class="client-form-tabs-title tabs-title">
+                                    <a  
+                                        class="client-form-tabs-title-link"
+                                        data-tabs-target="numbers"
+                                    >
+                                        <i class="fal fa-phone-office"></i> Phone Numbers
+                                    </a>
+                                </li>
+                                <li class="client-form-tabs-title tabs-title">
+                                    <a  
+                                        class="client-form-tabs-title-link"
+                                        data-tabs-target="addresses"
+                                    >
+                                        <i class="fal fa-address-book"></i> Addresses
+                                    </a>
+                                </li>
+                                <li class="client-form-tabs-title tabs-title">
+                                    <a  
+                                        class="client-form-tabs-title-link"
+                                        data-tabs-target="notes"
+                                    >
+                                        <i class="fal fa-notes"></i> Notes
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="golura-block cell small-12 medium-auto large-auto">
+                    <div 
+                        class="golura-block client-form-tabs-content tabs-content" 
+                        data-tabs-content="clientFormTabs"
+                    >
+                        <div 
+                            class="callout sticky success success-text text-center fade"
+                            ng-hide="!UI.formSaved"
+                            data-sticky 
+                            data-options="marginTop:0;"
+                        >
+                            <p>
+                                {{UI.message}}
+                            </p>
+                        </div>
+                        <div class="golura-block grid-y">
+                            <div class="cell shrink">
+                                <div class="client-form-tabs-content-options-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell small-12 medium-shrink large-shrink">
+                                            <button 
+                                                class="back-button button warning white-text" 
+                                                type="button"
+                                                ng-click="$root.goBack()"
+                                            >
+                                                <i class="fal fa-circle-arrow-left"></i> Back
+                                            </button>
+                                            <a
+                                                class="event-form-client-view-button button"
+                                                ng-href="clients/client/{{client.id}}"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-search"></i> 
+                                                View
+                                            </a>
+                                        </div>
+                                        <div 
+                                            class="cell small-12 medium-auto large-auto"
+                                            ng-class="{'text-center': $root.UI.isMobile}"
+                                        >
+                                            <h2>
+                                                <b>
+                                                    Editing Client 
+                                                </b>
+                                                
+                                                <a
+                                                    ng-href="clients/client/{{client.id}}"
+                                                    ng-cloak
+                                                >
+                                                    #{{client.fullName}}
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div class="cell small-12 medium-shrink large-shrink">
+                                            <button 
+                                                class="delete-button button alert white-text" 
+                                                type="button"
+                                                ng-click="UI.clientDeleteConfirmation = !UI.clientDeleteConfirmation"
+                                                ng-if="permissions.canArchive"
+                                            >
+                                                <i class="fal fa-archive"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell auto">
+                                <div 
+                                    class="client-form-tabs-panel tabs-panel is-active" 
+                                    id="primary"
+                                >
+                                    <div class="client-form-primary-container client-form-details-item-container">
+                                        <form
+                                            class="client-form-edit-form golura-form"
+                                            id="clientFormPrimaryEditForm"
+                                            name="clientFormPrimaryEditForm"
+                                            ng-submit="updateClient($event, client)"
+                                            golura-form-validation
+                                        >
+                                            <div class="grid-x grid-margin-x">
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.clientLoaded"
+                                                        ></div>
+                                                        <label>   
+                                                            First Name
+                                                            <span class="alert-text">
+                                                                *
+                                                            </span>
+                                                        </label>
+                                                        <input
+                                                            class="form-input"
+                                                            type="text"
+                                                            name="primaryFirstName"
+                                                            placeholder="Johnny"
+                                                            ng-model="client.firstName"
+                                                            autocomplete="off"
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.clientLoaded"
+                                                        ></div>
+                                                        <label>   
+                                                            Last Name
+                                                            <span class="alert-text">
+                                                                *
+                                                            </span>
+                                                        </label>
+                                                        <input
+                                                            class="form-input"
+                                                            type="text"
+                                                            name="primaryLastName"
+                                                            placeholder="Appleseed"
+                                                            ng-model="client.lastName"
+                                                            autocomplete="off"
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.clientLoaded"
+                                                        ></div>
+                                                        <legend>   
+                                                            Priority
+                                                            <span class="alert-text">
+                                                                *
+                                                            </span>
+                                                        </legend>
+                                                        <selectize
+                                                            class="event-priority-input form-input"
+                                                            id="priorityInput"
+                                                            config="priorityOptions"
+                                                            options="priorities"
+                                                            name="priority"
+                                                            ng-model="client.priorityId"
+                                                            ng-cloak
+                                                            required
+                                                        >
+                                                        </selectize>
+                                                    </div>
+                                                </div>
+                                                <div class="cell small-12 medium-12 large-12 text-right">
+                                                    <button 
+                                                        class="client-form-button submit-button success button white-text" 
+                                                        id="clientFormClientSubmitButton"
+                                                        type="submit"
+                                                        ng-disabled="UI.formSaving"
+                                                        ng-class="{'form-saving': UI.formSaving}"
+                                                    >
+                                                        <span ng-if="!UI.formSaving">
+                                                            <i class="fal fa-check-circle"></i> Update
+                                                        </span>
+                                                        <span ng-if="UI.formSaving">
+                                                            Please Wait...
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="client-form-tabs-panel tabs-panel" 
+                                    id="emails"
+                                >
+                                    <div class="client-form-emails-container client-form-details-item-container">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell shrink position-relative">
+                                                <div class="client-form-emails-search-container client-form-details-search-container">
+                                                    <div class="client-form-emails-search client-form-details-search">
+                                                        <div class="search-input-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell auto align-self-bottom">
+                                                                    <input
+                                                                        class="client-form-emails-search-input search-input"
+                                                                        id="clientFormEmailsSearchInput" 
+                                                                        name="clientFormEmailsSearch" 
+                                                                        type="text"
+                                                                        placeholder="Search Emails..."
+                                                                        ng-model="search.emails.value"
+                                                                    />
+                                                                </div>
+                                                                <div class="cell shrink align-self-bottom">
+                                                                    <span class="search-icon">
+                                                                        <i class="fal fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-7 medium-shrink large-shrink"
+                                                                    ng-if="!$root.UI.isMobile"
+                                                                >
+                                                                    <div class="sort-input-container">
+                                                                        <div class="grid-x">
+                                                                            <div class="cell auto">
+                                                                                <selectize
+                                                                                    class="users-search-sort-input form-input sort-input"
+                                                                                    id="clientEmailSearchSortInput"
+                                                                                    config="sortOptions"
+                                                                                    options="sort.ClientEmails.options"
+                                                                                    ng-model="sort.ClientEmails.selected"
+                                                                                    ng-change="toggleSortDirection('ClientEmails')"
+                                                                                    ng-cloak
+                                                                                >
+                                                                                </selectize>
+                                                                            </div>
+                                                                            <div class="cell shrink">
+                                                                                <span class="sort-icon">
+                                                                                    <i class="fal fa-sort"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="cell shrink">
+                                                                    <div class="client-form-details-create-button-container">
+                                                                        <button 
+                                                                            class="client-form-details-create-button button success white-text"
+                                                                            type="button"
+                                                                            ng-click="UI.createEmail = !UI.createEmail"
+                                                                            ng-disabled="UI.createEmail"
+                                                                        >
+                                                                            <i class="fal fa-layer-plus"></i> Create
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">                                                
+                                                <ul class="client-form-emails-list client-form-details-list grid-y grid-margin-y">
+                                                    <li 
+                                                        class="client-form-emails-list-item client-form-details-list-create-item cell shrink"
+                                                        ng-if="UI.createEmail"
+                                                    >
+                                                        <div ng-include="'dist/forms/email-form.html'"></div>
+                                                    </li>
+                                                    <li 
+                                                        class="client-form-emails-list-item client-form-details-list-item cell shrink"
+                                                        ng-repeat="email in client.ClientEmails | 
+                                                        filter: search.emails.value |
+                                                        orderBy:sort.ClientEmails.selected:sort.ClientEmails.reverse 
+                                                        track by $index"
+                                                    >
+                                                        <div ng-include="'dist/forms/email-form.html'"></div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="client-form-tabs-panel tabs-panel" 
+                                    id="numbers"
+                                > 
+                                    <div class="client-form-numbers-container client-form-details-item-container">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell shrink position-relative">
+                                                <div class="client-form-numbers-search-container client-form-details-search-container">
+                                                    <div class="client-form-numbers-search client-form-details-search">
+                                                        <div class="search-input-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell auto align-self-bottom">
+                                                                    <input
+                                                                        class="client-form-numbers-search-input search-input"
+                                                                        id="clientFormNumbersSearchInput" 
+                                                                        name="clientFormNumbersSearch"
+                                                                        type="text"
+                                                                        placeholder="Search Phone Numbers..."
+                                                                        ng-model="search.numbers.value"
+                                                                    />
+                                                                </div>
+                                                                <div class="cell shrink align-self-bottom">
+                                                                    <span class="search-icon">
+                                                                        <i class="fal fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-7 medium-shrink large-shrink"
+                                                                    ng-if="!$root.UI.isMobile"
+                                                                >
+                                                                    <div class="sort-input-container">
+                                                                        <div class="grid-x">
+                                                                            <div class="cell auto">
+                                                                                <selectize
+                                                                                    class="users-search-sort-input form-input sort-input"
+                                                                                    id="clientNumberSearchSortInput"
+                                                                                    config="sortOptions"
+                                                                                    options="sort.ClientPhoneNumbers.options"
+                                                                                    ng-model="sort.ClientPhoneNumbers.selected"
+                                                                                    ng-change="toggleSortDirection('ClientPhoneNumbers')"
+                                                                                    ng-cloak
+                                                                                >
+                                                                                </selectize>
+                                                                            </div>
+                                                                            <div class="cell shrink">
+                                                                                <span class="sort-icon">
+                                                                                    <i class="fal fa-sort"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="cell shrink">
+                                                                    <div class="client-form-details-create-button-container">
+                                                                        <button 
+                                                                            class="client-form-details-create-button button success white-text"
+                                                                            type="button"
+                                                                            ng-click="UI.createPhoneNumber = !UI.createPhoneNumber"
+                                                                            ng-disabled="UI.createPhoneNumber"
+                                                                        >
+                                                                            <i class="fal fa-layer-plus"></i> Create
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">                                              
+                                                <ul class="client-form-number-list client-form-details-list  grid-y grid-margin-y">
+                                                    <li 
+                                                        class="client-form-number-list-item client-form-details-list-create-item cell shrink"
+                                                        ng-if="UI.createPhoneNumber"
+                                                    >
+                                                        <div ng-include="'dist/forms/phone-number-form.html'"></div>
+                                                    </li>
+                                                    <li 
+                                                        class="client-form-number-list-item client-form-details-list-item cell shrink"
+                                                        ng-repeat="phoneNumber in client.ClientPhoneNumbers | 
+                                                        filter: search.numbers.value |
+                                                        orderBy:sort.ClientPhoneNumbers.selected:sort.ClientPhoneNumbers.reverse 
+                                                        track by $index"
+                                                        ng-if="phoneNumber.isActive"
+                                                    >
+                                                        <div 
+                                                            class="client-form-details-list-item-delete-container list-item-delete-container black-overlay"
+                                                            ng-if="phoneNumber.delete"
+                                                        >
+                                                            <div class="golura-block grid-x grid-padding-x align-middle">
+                                                                <div 
+                                                                    class="cell small-12 medium-12 large-12 text-center"
+                                                                    ng-if="phoneNumber.isPrimary"
+                                                                >
+                                                                    <h4>
+                                                                        <b class="alert-text">Alert: </b>
+                                                                        <span class="white-text">
+                                                                            You can't delete a Primary Phone Number until <br/>
+                                                                            you replace it. Please make another contact <br/> 
+                                                                            primary before deleting this.
+                                                                        </span>
+                                                                    </h4>
+                                                                    <button 
+                                                                        class="cancel-button button warning white-text"
+                                                                        type="button"
+                                                                        ng-click="phoneNumber.delete = !phoneNumber.delete"
+                                                                    >
+                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                    </button>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-12 medium-auto large-auto"
+                                                                    ng-if="!phoneNumber.isPrimary"
+                                                                >
+                                                                    <h4>
+                                                                        <b class="alert-text">Warning: </b>
+                                                                        <span class="white-text">Are you sure you want to delete 
+                                                                            this Phone Number?
+                                                                        </span>
+                                                                    </h4>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-12 medium-auto large-auto"
+                                                                    ng-if="!phoneNumber.isPrimary"
+                                                                    ng-class="{'text-center': $root.UI.isMobile}"
+                                                                >
+                                                                    <button
+                                                                        class="delete-button button alert white-text"
+                                                                        type="button"
+                                                                        ng-class="{'form-alert': phoneNumber.deleting}"
+                                                                        ng-click="deleteClientPhoneNumber(phoneNumber)"
+                                                                    >
+                                                                        <span ng-if="!phoneNumber.deleting">
+                                                                            <i class="fal fa-times-circle"></i> Confirm
+                                                                        </span>
+                                                                        <span ng-if="phoneNumber.deleting">
+                                                                            Please Wait...
+                                                                        </span>
+                                                                    </button>
+                                                                    <button 
+                                                                        class="button warning white-text"
+                                                                        type="button"
+                                                                        ng-click="phoneNumber.delete = !phoneNumber.delete"
+                                                                    >
+                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div ng-include="'dist/forms/phone-number-form.html'"></div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="client-form-tabs-panel tabs-panel" 
+                                    id="addresses"
+                                >
+                                    <div class="client-form-addresses-container client-form-details-item-container">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell shrink position-relative">
+                                                <div class="client-form-addresses-search-container client-form-details-search-container">
+                                                    <div class="client-form-addresses-search client-form-details-search">
+                                                        <div class="search-input-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell auto align-self-bottom">
+                                                                    <input
+                                                                        class="client-form-addresses-search-input search-input"
+                                                                        id="clientFormAddressesSearchInput" 
+                                                                        name="clientFormAddressesSearch"
+                                                                        type="text"
+                                                                        placeholder="Search Addresses..."
+                                                                        ng-model="search.addresses.value"
+                                                                    />
+                                                                </div>
+                                                                <div class="cell shrink align-self-bottom">
+                                                                    <span class="search-icon">
+                                                                        <i class="fal fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="cell shrink">
+                                                                    <div class="client-form-details-create-button-container">
+                                                                        <button 
+                                                                            class="client-form-details-create-button button success white-text"
+                                                                            type="button"
+                                                                            ng-click="UI.createAddress = !UI.createAddress"
+                                                                            ng-disabled="UI.createAddress"
+                                                                            data-open="clientCreateAddressReveal"
+                                                                        >
+                                                                            <i class="fal fa-layer-plus"></i> Create
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">                                                 
+                                                <ul class="client-form-address-list client-form-details-list grid-y grid-margin-y">
+                                                    <li 
+                                                        class="client-form-address-list-item client-form-details-list-create-item cell shrink"
+                                                        ng-if="UI.createAddress"
+                                                    >
+                                                        <div ng-include="'dist/forms/address-form.html'"></div>
+                                                    </li>
+                                                    <li 
+                                                        class="client-form-address-list-item client-form-details-list-item cell shrink"
+                                                        ng-repeat="address in client.ClientAddresses | 
+                                                        filter: search.addresses.value |
+                                                        orderBy:sort.ClientAddresses.selected:sort.ClientAddresses.reverse 
+                                                        track by $index"
+                                                        ng-if="address.isActive"
+                                                    >
+                                                        <div 
+                                                            class="client-form-details-list-item-delete-container list-item-delete-container black-overlay"
+                                                            ng-if="address.delete"
+                                                        >
+                                                            <div class="golura-block grid-x grid-padding-x align-middle">
+                                                                <div 
+                                                                    class="cell small-12 medium-12 large-12 text-center"
+                                                                    ng-if="address.isPrimary"
+                                                                >
+                                                                    <h4>
+                                                                        <b class="alert-text">Alert: </b>
+                                                                        <span class="white-text">
+                                                                            You can't delete a Primary Address until <br/>
+                                                                            you replace it. Please make another contact <br/> 
+                                                                            primary before deleting this.
+                                                                        </span>
+                                                                    </h4>
+                                                                    <button 
+                                                                        class="cancel-button button warning white-text"
+                                                                        type="button"
+                                                                        ng-click="address.delete = !address.delete"
+                                                                    >
+                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                    </button>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-12 medium-auto large-auto"
+                                                                    ng-if="!address.isPrimary"
+                                                                >
+                                                                    <h4>
+                                                                        <b class="alert-text">Warning: </b>
+                                                                        <span class="white-text">Are you sure you want to delete 
+                                                                            this Address?
+                                                                        </span>
+                                                                    </h4>
+                                                                </div>
+                                                                <div 
+                                                                    class="cell small-12 medium-auto large-auto"
+                                                                    ng-if="!address.isPrimary"
+                                                                    ng-class="{'text-center': $root.UI.isMobile}"
+                                                                >
+                                                                    <button
+                                                                        class="delete-button button alert white-text"
+                                                                        type="button"
+                                                                        ng-class="{'form-alert': address.deleting}"
+                                                                        ng-click="deleteClientAddress(address)"
+                                                                    >
+                                                                        <span ng-if="!address.deleting">
+                                                                            <i class="fal fa-times-circle"></i> Confirm
+                                                                        </span>
+                                                                        <span ng-if="address.deleting">
+                                                                            Please Wait...
+                                                                        </span>
+                                                                    </button>
+                                                                    <button 
+                                                                        class="button warning white-text"
+                                                                        type="button"
+                                                                        ng-click="address.delete = !address.delete"
+                                                                    >
+                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div ng-include="'dist/forms/address-form.html'"></div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="client-form-tabs-panel tabs-panel" 
+                                    id="notes"
+                                >
+                                    <div class="client-form-notes-container client-form-details-item-container">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell shrink position-relative">
+                                                <div class="client-form-notes-search-container client-form-details-search-container">
+                                                    <div class="client-form-notes-search client-form-details-search">
+                                                        <div class="search-input-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell auto align-self-bottom">
+                                                                    <input
+                                                                        class="client-form-notes-search-input search-input"
+                                                                        id="clientFormNotesSearchInput" 
+                                                                        id="clientFormNotesSearch" 
+                                                                        type="text"
+                                                                        placeholder="Search Notes..."
+                                                                        ng-model="search.notes.value"
+                                                                    />
+                                                                </div>
+                                                                <div class="cell shrink align-self-bottom">
+                                                                    <span class="search-icon">
+                                                                        <i class="fal fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="cell shrink">
+                                                                    <div class="client-form-details-create-button-container">
+                                                                        <button 
+                                                                            class="client-form-details-create-button button success white-text"
+                                                                            type="button"
+                                                                            ng-click="UI.newNote = !UI.newNote"
+                                                                            ng-disabled="UI.newNote"
+                                                                        >
+                                                                            <i class="fal fa-layer-plus"></i> Create
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">                                                 
+                                                <ul class="client-form-notes-list client-form-details-list grid-y grid-margin-y">
+                                                    <li 
+                                                        class="client-form-notes-list-item client-form-details-list-create-item cell shrink"
+                                                        ng-if="UI.newNote"
+                                                    >
+                                                        <div class="client-note-create-edit-container create-edit-container">
+                                                            <div class="client-note-create-edit create-edit"> 
+                                                                <div 
+                                                                    class="callout sticky text-center fade"
+                                                                    ng-class="{'success success-text': UI.message,
+                                                                    'alert alert-text': UI.errMessage}"
+                                                                    ng-hide="!UI.message.length &&
+                                                                    !UI.errMessage.length"
+                                                                >
+                                                                    <p ng-if="UI.message.length">
+                                                                        {{UI.message}}
+                                                                    </p>
+                                                                    <p ng-if="UI.errMessage.length">
+                                                                        {{UI.errMessage}}
+                                                                    </p>
+                                                                </div>  
+                                                                <form
+                                                                    class="client-form-create-form golura-form"
+                                                                    id="clientFormNoteCreateForm"
+                                                                    name="clientFormNoteCreateForm"
+                                                                    ng-submit="updateClientNote($event, client.new.note)"
+                                                                    golura-form-validation
+                                                                >
+                                                                    <h6 class="primary-text">
+                                                                        <b>
+                                                                            New Note
+                                                                        </b>
+                                                                    </h6>
+                                                                    <div class="grid-x grid-margin-x">
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="input-container">
+                                                                                <label>   
+                                                                                    Title
+                                                                                    <span class="alert-text">
+                                                                                        *
+                                                                                    </span>
+                                                                                </label>
+                                                                                <input
+                                                                                    class="form-input"
+                                                                                    type="text"
+                                                                                    name="newNotesTitle"
+                                                                                    placeholder="Notes about Johnny"
+                                                                                    ng-model="client.new.note.title"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="input-container">
+                                                                                <label>   
+                                                                                    Note
+                                                                                    <span class="alert-text">
+                                                                                        *
+                                                                                    </span>
+                                                                                </label>
+                                                                                <div class="form-textarea-container">
+                                                                                    <textarea
+                                                                                        class="form-textarea"
+                                                                                        id="newNotes"
+                                                                                        name="newNotesTextarea"
+                                                                                        ng-model="client.new.note.note"
+                                                                                    ></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell small-6 medium-6 large-6">
+                                                                                    <div class="client-form-select-button-container">
+                                                                                        <div class="grid-x grid-margin-x align-middle">
+                                                                                            <div class="cell shrink text-right">
+                                                                                                <button 
+                                                                                                    class="client-form-select-button select-button button"
+                                                                                                    type="button"
+                                                                                                    ng-click="client.new.notes.selected = !client.new.notes.selected"
+                                                                                                    ng-class="{'selected': client.new.notes.selected}"
+                                                                                                >
+                                                                                                    <div 
+                                                                                                        class="check-icon"
+                                                                                                        ng-if="client.new.notes.selected"
+                                                                                                    >
+                                                                                                        <i class="fal fa-check"></i>
+                                                                                                    </div>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="cell auto">
+                                                                                                <label 
+                                                                                                    title="Updating this will override the current Primary Note"
+                                                                                                >
+                                                                                                    Primary? 
+                                                                                                    <span>
+                                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                                    </span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="cell small-6 medium-6 large-6 text-right">
+                                                                                    <button 
+                                                                                        class="client-form-new-notes-button submit-button success button white-text" 
+                                                                                        id="clientFormNewNoteSubmitButton"
+                                                                                        type="submit"
+                                                                                        ng-disabled="UI.formSaving"
+                                                                                        ng-class="{'form-saving': UI.formSaving}"
+                                                                                    >
+                                                                                        <span ng-if="!UI.formSaving">
+                                                                                            <i class="fal fa-save"></i> Save
+                                                                                        </span>
+                                                                                        <span ng-if="UI.formSaving">
+                                                                                            Please Wait...
+                                                                                        </span>
+                                                                                    </button>
+                                                                                    <button
+                                                                                        class="back-button button warning white-text"
+                                                                                        type="button"
+                                                                                        ng-click="UI.newNote = !UI.newNote"
+                                                                                    >
+                                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li 
+                                                        class="client-form-notes-list-item client-form-details-list-item cell shrink"
+                                                        ng-repeat="note in client.ClientNotes | 
+                                                        filter: search.notes.value |
+                                                        orderBy:sort.ClientNotes.selected:sort.ClientNotes.reverse 
+                                                        track by $index"
+                                                        ng-if="note.isActive"
+                                                    >
+                                                        <div class="client-note-create-edit-container create-edit-container">
+                                                            <div class="client-note-create-edit create-edit"> 
+                                                                <div 
+                                                                    class="callout sticky text-center fade"
+                                                                    ng-class="{'success success-text': UI.message,
+                                                                    'alert alert-text': UI.errMessage}"
+                                                                    ng-hide="!UI.message.length &&
+                                                                    !UI.errMessage.length"
+                                                                >
+                                                                    <p ng-if="UI.message.length">
+                                                                        {{UI.message}}
+                                                                    </p>
+                                                                    <p ng-if="UI.errMessage.length">
+                                                                        {{UI.errMessage}}
+                                                                    </p>
+                                                                </div>
+                                                                <form
+                                                                    class="client-form-edit-form golura-form"
+                                                                    id="clientFormNotesEditForm-{{$index + 1}}"
+                                                                    name="clientFormNotesEditForm-{{$index + 1}}"
+                                                                    ng-submit="updateClientNote($event, note)"
+                                                                    golura-form-validation
+                                                                >
+                                                                    <div 
+                                                                        class="client-form-details-list-item-delete-container list-item-delete-container black-overlay"
+                                                                        ng-if="note.delete"
+                                                                    >
+                                                                        <div class="golura-block grid-x grid-padding-x align-middle">
+                                                                            <div 
+                                                                                class="cell small-12 medium-12 large-12 text-center"
+                                                                                ng-if="note.primary_id"
+                                                                            >
+                                                                                <h4>
+                                                                                    <b class="alert-text">Alert: </b>
+                                                                                    <span class="white-text">
+                                                                                        You can't delete a Primary Note until <br/>
+                                                                                        you replace it. Please make another contact <br/> 
+                                                                                        primary before deleting this.
+                                                                                    </span>
+                                                                                </h4>
+                                                                                <button 
+                                                                                    class="cancel-button button warning white-text"
+                                                                                    type="button"
+                                                                                    ng-click="note.delete = !note.delete"
+                                                                                >
+                                                                                    <i class="fal fa-times-circle"></i> Cancel
+                                                                                </button>
+                                                                            </div>
+                                                                            <div 
+                                                                                class="cell small-12 medium-auto large-auto"
+                                                                                ng-if="!note.primary_id"
+                                                                            >
+                                                                                <h4>
+                                                                                    <b class="alert-text">Warning: </b>
+                                                                                    <span class="white-text">Are you sure you want to delete 
+                                                                                        this Note?
+                                                                                    </span>
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div 
+                                                                                class="cell small-12 medium-auto large-auto"
+                                                                                ng-if="!note.primary_id"
+                                                                                ng-class="{'text-center': $root.UI.isMobile}"
+                                                                            >
+                                                                                <button
+                                                                                    class="delete-button button alert white-text"
+                                                                                    type="button"
+                                                                                    ng-class="{'form-alert': note.deleting}"
+                                                                                    ng-click="deleteClientNote(n)"
+                                                                                >
+                                                                                    <span ng-if="!note.deleting">
+                                                                                        <i class="fal fa-times-circle"></i> Confirm
+                                                                                    </span>
+                                                                                    <span ng-if="note.deleting">
+                                                                                        Please Wait...
+                                                                                    </span>
+                                                                                </button>
+                                                                                <button 
+                                                                                    class="button warning white-text"
+                                                                                    type="button"
+                                                                                    ng-click="note.delete = !note.delete"
+                                                                                >
+                                                                                    <i class="fal fa-times-circle"></i> Cancel
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h6>
+                                                                        <b>
+                                                                            Note #{{$index + 1}}
+                                                                        </b>
+                                                                    </h6>
+                                                                    <div class="grid-x grid-margin-x">
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="input-container">
+                                                                                <label>   
+                                                                                    Title
+                                                                                    <span class="alert-text">
+                                                                                        *
+                                                                                    </span>
+                                                                                </label>
+                                                                                <input
+                                                                                    class="form-input"
+                                                                                    type="text"
+                                                                                    name="newNotesTitle"
+                                                                                    name="clientFormnotesEditTitleInput-{{$index + 1}}"
+                                                                                    placeholder="Notes about Johnny"
+                                                                                    ng-model="note.title"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="input-container">
+                                                                                <label>   
+                                                                                    Note
+                                                                                    <span class="alert-text">
+                                                                                        *
+                                                                                    </span>
+                                                                                </label>
+                                                                                <div class="form-textarea-container">
+                                                                                    <textarea
+                                                                                        class="form-textarea"
+                                                                                        id="newNotes"
+                                                                                        name="clientFormnotesEditTextarea-{{$index + 1}}"
+                                                                                        ng-model="note.content"
+                                                                                    ></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-12 large-12">
+                                                                            <div class="grid-x align-middle">
+                                                                                <div class="cell small-6 medium-6 large-6">
+                                                                                    <div class="client-form-select-button-container">
+                                                                                        <div class="grid-x grid-margin-x align-middle">
+                                                                                            <div class="cell shrink text-right">
+                                                                                                <button 
+                                                                                                    class="client-form-select-button select-button button"
+                                                                                                    type="button"
+                                                                                                    ng-click="note.isImportant = !note.isImportant"
+                                                                                                    ng-class="{'selected': note.isImportant}"
+                                                                                                >
+                                                                                                    <div 
+                                                                                                        class="check-icon"
+                                                                                                        ng-if="note.isImportant"
+                                                                                                    >
+                                                                                                        <i class="fal fa-check"></i>
+                                                                                                    </div>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="cell auto">
+                                                                                                <label 
+                                                                                                    title="Updating this will override the current Primary Note"
+                                                                                                >
+                                                                                                    Important? 
+                                                                                                    <span>
+                                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                                    </span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="cell small-6 medium-6 large-6 text-right">
+                                                                                    <button 
+                                                                                        class="client-form-new-notes-button submit-button button white-text" 
+                                                                                        id="clientFormNewNoteSubmitButton"
+                                                                                        type="submit"
+                                                                                        ng-disabled="note.saving"
+                                                                                        ng-class="{'form-saving': note.saving}"
+                                                                                    >
+                                                                                        <span ng-if="!UI.formSaving">
+                                                                                            <i class="fal fa-check-circle"></i> Update
+                                                                                        </span>
+                                                                                        <span ng-if="note.saving">
+                                                                                            Please Wait...
+                                                                                        </span>
+                                                                                    </button>
+                                                                                    <button
+                                                                                        class="delete-button button alert white-text"
+                                                                                        type="button"
+                                                                                        ng-class="{'form-alert': note.deleting}"
+                                                                                        ng-click="note.delete = !note.delete"
+                                                                                    >
+                                                                                        <i class="fal fa-times-circle"></i> Delete
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

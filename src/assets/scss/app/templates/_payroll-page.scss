@@ -1,0 +1,307 @@
+.payroll-container {
+    height: 100%;
+
+    .payroll {
+        height: 100%;
+
+        .payroll-list-container {
+
+            .payroll-list {
+
+                .payroll-list-item {
+                    
+                    .payroll-list-item-name, 
+                    .payroll-list-item-role, 
+                    .payroll-list-item-team {
+                        text-transform: capitalize;
+                    }
+                    .payroll-list-item-date {
+                        font-size: .75rem;
+                        color: $medium-gray;
+                    }
+                    h6 {
+                        font-size: .75rem;
+                        margin: 0px;
+                    }
+                    .payroll-list-item-options-container,
+                    .payroll-list-item-delete-container {
+
+                        h4 {
+                            b {
+                                font-size: 1.25rem;
+                            }
+                            margin: 0px;
+                        }
+
+                        .payroll-list-item-options-button {
+                            margin-bottom: 0px;
+                        }
+                        a {
+                            margin-right: .25rem;
+                        }
+                    }
+                    .payroll-list-item-delete-container {
+                        padding: 1rem 0px;
+                    }
+                }
+                .payroll-list-infinite-scroll {
+                    padding: 1rem 2rem;
+        
+                    .dispatch-loader {
+                        height: 4rem;
+                        margin: 0px;
+                    }
+                }
+
+                .payroll-list-empty-container  {
+                    padding: 2rem 8rem;
+        
+                    h3 {
+                        color: $medium-gray;
+                        padding: .5rem 0px;
+                        margin: 0px 0px 1rem;
+                            
+                        span {
+                            font-weight: bold;
+                            color: $black;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.view-payroll-container {
+    height: 100%;
+
+    .view-payroll {
+        height: 100%;
+        position: relative;
+        overflow: auto;
+
+        .view-payroll-header-container {
+
+            .view-payroll-header {
+                background-color: var(--white);
+                border: 1px solid var(--light-gray);
+                border-radius: $container-radius;
+                padding: 1rem;
+                margin-bottom: 1rem;
+
+                .view-payroll-title {
+
+                    h1 {
+                        margin: 0px;
+                        font-size: 1.25rem;
+
+                        b {
+                            font-weight: bold;
+                        }
+                        span {
+                            margin-left: 1rem;
+                            font-size: 0.8rem;
+                            font-weight: normal;
+                        }
+                    }
+                    h5 {
+                        margin: 1rem 0px 0px;
+                    }
+                    h6 {
+                        margin: 0px;
+                        font-size: 0.75rem;
+                        color: var(--medium-gray);
+                    }
+                }
+                .view-payroll-actions {
+                    margin-top: 0px;
+                    margin-bottom: 0px;
+                }
+                .view-payroll-summary {
+                    padding: 1rem 0px;
+                    text-align: center;
+                }
+            }
+        }
+        .view-payroll-details {
+            padding: 1rem;
+            background-color: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: $container-radius;
+
+            .view-payroll-details-content {
+
+                .view-payroll-detail-item {
+
+                    h6 {
+                        margin-bottom: .5rem;
+                    }
+                    p {
+                        margin: 0px;
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+        }
+        .view-payroll-employees-container {
+            height: 100%;
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: $container-radius;
+            overflow: hidden;
+
+            .view-payroll-employees-list-container {
+
+                .view-payroll-employees-list {
+
+                    .view-payroll-employee-list-item {
+
+                        .view-payroll-employee-hours {
+
+                            .label {
+                                margin-right: .5rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.payroll-create-edit-container {
+
+    .payroll-create-edit {
+
+        .payroll-form {
+            padding: 1rem;
+
+            .payroll-create-select-period {
+                padding: 4rem;
+            }
+        }
+    }
+}
+.payroll-item-form-container {
+
+    .payroll-item {
+
+        .payroll-item-form {
+
+            .payroll-item-employee-pay-rates-container {
+
+                .payroll-item-employee-pay-rates {
+
+                    .payroll-item-employee-pay-rates-list-container {
+
+                        .payroll-item-employee-pay-rates-list {
+
+                            .payroll-item-employee-pay-rates-list-item {
+
+                                .label {
+                                    margin-right: .5rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .payroll-item-form-details-container {
+
+                .payroll-item-form-details {
+                    
+                    h6 {
+                        font-size: .75rem; 
+
+                    }
+                }
+            }
+        }
+    }
+}
+.payroll-paystub-view-container {
+    height: 100%; 
+
+    .payroll-paystub-view {
+            height: 100%; 
+
+        
+        .view-paystub-header-container {
+
+            .view-paystub-header {
+                background-color: var(--white);
+                border: 1px solid var(--light-gray);
+                border-radius: $container-radius;
+                padding: 1rem;
+                margin-bottom: 1rem;
+
+                .view-paystub-title {
+
+                    h1 {
+                        margin: 0px;
+                        font-size: 1.25rem;
+
+                        b {
+                            font-weight: bold;
+                        }
+                        span {
+                            margin-left: 1rem;
+                            font-size: 0.8rem;
+                            font-weight: normal;
+                        }
+                    }
+                    h5 {
+                        margin: 1rem 0px 0px;
+                    }
+                    h6 {
+                        margin: 0px;
+                        font-size: 0.75rem;
+                        color: var(--medium-gray);
+                    }
+                }
+                .view-paystub-summary {
+                    padding: 1rem 0px;
+                    text-align: center;
+                }
+            }
+        }
+        .view-paystub-details {
+            padding: 1rem 0px;
+        }
+    }
+}
+.stripe-onboarding-completetion-container {
+    position: relative;
+    height: 100%;
+
+    .stripe-onboarding-completetion {
+        text-align: center;
+
+        .stripe-onboarding-completetion-icon {
+            font-size: 8rem;
+            color: $success-color;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            margin-top: 0px;
+        }
+        p {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+        button {
+            margin-top: 1rem;
+        }
+    }
+}
+.payroll-item-form-reveal,
+.payroll-deduction-form-reveal {
+
+    .payroll-item-form-container,
+    .payroll-deduction-form-container {
+
+        .payroll-item-form,
+        .payroll-deduction-form {
+            min-height: 20rem;
+        }
+    }
+}

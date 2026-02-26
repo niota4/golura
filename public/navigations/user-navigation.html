@@ -1,0 +1,55 @@
+<div class="sub-navigation-container">
+    <ul 
+        class="sub-navigation-list grid-x grid-margin-x text-center"
+        ng-class="{'align-middle': !$root.UI.isMobile, 'align-center-middle': $root.UI.isMobile}"
+    >
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'drive'}"
+            ng-if="worker.id == user.id || permissions.canEdit"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="users/user/{{worker.id}}/drive"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-hard-drive"></i>
+                </span>
+                Drive
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'events'}"
+            ng-if="subPermissions.events.canView"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="users/user/{{worker.id}}/events"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-calendar-days"></i>
+                </span>
+                Events
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'estimates'}"
+            ng-if="subPermissions.estimates.canView"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="users/user/{{worker.id}}/estimates"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-memo-circle-info"></i>
+                </span>
+                Estimates
+            </a>
+        </li>
+    </ul>
+</div>

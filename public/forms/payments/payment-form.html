@@ -1,0 +1,343 @@
+
+<div 
+    class="callout sticky text-center fade"
+    ng-hide="!UI.message.length &&
+    !UI.errMessage.length"
+    ng-class="{'success success-text': UI.message,
+    'alert alert-text': UI.errMessage}"
+    data-sticky 
+    data-options="marginTop:0;"
+>
+    <button 
+        class="close-button button clear"
+        ng-class="{'success': UI.message,
+        'alert': UI.errMessage}"
+        type="button"
+        ng-click="UI.errMessage = null;
+        UI.message = null"
+    >
+        <i class="fal fa-times-circle"></i>
+    </button>
+    <p ng-if="UI.message.length">
+        {{UI.message}}
+    </p>
+    <p ng-if="UI.errMessage.length">
+        {{UI.errMessage}}
+    </p>
+</div>
+<div 
+    class="payment-form-container create-edit-container"
+    ng-init="initPayment()"
+>
+    <div class="payment">
+        <button 
+            class="back-button button warning white-text" 
+            type="button"
+            ng-click="$root.goBack()"
+        >
+            <i class="fal fa-circle-arrow-left"></i> 
+            <span ng-if="!$root.UI.isMobile">
+                Back
+            </span>
+        </button>
+        <div 
+            class="payment-form-estimate-view-container view-details-container create-edit grid-container"
+            ng-if="estimate.id &&
+            !UI.payProcessed"
+        >
+            <h1>
+                <b>
+                    {{estimate.estimateNumber}}
+                </b>
+            </h1>
+            <h2>
+                <b ng-if="!estimate.won">
+                    Due Now: ${{estimate.dueNow || payment.amount}}
+                </b>
+                <b 
+                    class="success-text"
+                    ng-if="estimate.won"
+                >
+                    Paid
+                </b>
+            </h2>
+            <h6>
+                Sub Total: 
+                <span ng-if="estimate.subTotal">
+                    ${{estimate.subTotal}}
+                </span>
+                <span ng-if="!estimate.subTotal">
+                    0.00
+                </span>
+            </h6>
+            <h6>
+                Discounts Total: 
+                <span ng-if="estimate.discountTotal">
+                    -{{estimate.discountTotal}}
+                </span>
+                <span ng-if="!estimate.discountTotal">
+                    -0.00
+                </span>
+            </h6>
+            <h6>
+                Total: 
+                <span ng-if="estimate.total">
+                    ${{estimate.total}}
+                </span>
+                <span ng-if="!estimate.total">
+                    0.00
+                </span>
+            </h6>
+            <h6>
+                Billing Address: 
+                <span ng-if="estimate.total">
+                    {{estimate.billingAddress.street1}} {{estimate.billingAddress.street2}} <br/>
+                    {{estimate.billingAddress.city}}, {{estimate.billingAddress.State.abbreviation}}
+                    {{estimate.billingAddress.zipCode}}
+                </span>
+                <span ng-if="!estimate.total">
+                    0.00
+                </span>
+            </h6>
+        </div>
+        <div 
+            class="payment-form-invoice-view-container view-details-container create-edit grid-container"
+            ng-if="invoice.id &&
+            !UI.payProcessed"
+        >
+            <h1>
+                <b>
+                    {{invoice.invoiceNumber}}
+                </b>
+            </h1>
+            <h2>
+                <b ng-if="!invoice.paid">
+                    Due Now: ${{invoice.dueNow || payment.amount}}
+                </b>
+                <b 
+                    class="success-text"
+                    ng-if="invoice.paid"
+                >
+                    Paid
+                </b>
+            </h2>
+            <h6>
+                Sub Total: 
+                <span ng-if="invoice.subTotal">
+                    ${{invoice.subTotal}}
+                </span>
+                <span ng-if="!invoice.subTotal">
+                    0.00
+                </span>
+            </h6>
+            <h6>
+                Sales Tax Total: 
+                <span ng-if="invoice.salesTaxTotal">
+                    ${{invoice.salesTaxTotal}}
+                </span>
+                <span ng-if="!invoice.salesTaxTotal">
+                    $0.00
+                </span>
+            </h6>
+            <h6>
+                Markup: 
+                <span ng-if="invoice.markUp">
+                    ${{invoice.markUp}}
+                </span>
+                <span ng-if="!invoice.markUp">
+                    $0.00
+                </span>
+            </h6>
+            <h6>
+                Total: 
+                <span ng-if="invoice.total">
+                    ${{invoice.total}}
+                </span>
+                <span ng-if="!invoice.total">
+                    $0.00
+                </span>
+            </h6>
+            <h6 ng-if="invoice.Client && invoice.Client.billingAddress">
+                Billing Address: 
+                <span>
+                    {{invoice.Client.billingAddress.street1}} {{invoice.Client.billingAddress.street2}} <br/>
+                    {{invoice.Client.billingAddress.city}}, {{invoice.Client.billingAddress.State.abbreviation}}
+                    {{invoice.Client.billingAddress.zipCode}}
+                </span>
+            </h6>
+        </div>
+        <form 
+            class="payment-form golura-form create-edit grid-container" 
+            id="paymentInitForm" 
+            name="paymentInitForm"
+            ng-submit="submitPayment($event)"
+            golura-form-validation
+        >
+            <div 
+                class="grid-x grid-margin-x align-middle"
+                ng-if="!UI.payProcessed && (estimate || invoice)"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b>
+                            Payment Form
+                            <span ng-if="estimate"> - {{estimate.estimateNumber}}</span>
+                            <span ng-if="invoice"> - {{invoice.invoiceNumber}}</span>
+                        </b>
+                    </h1>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            Billing First Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="paymentFirstName"
+                            placeholder="Johnny"
+                            ng-model="payment.firstName"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            Billing Last Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="paymentlastName"
+                            placeholder="Appleseed"
+                            ng-model="payment.lastName"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Email
+                        </label>
+                        <input
+                            class="form-input"
+                            type="email"
+                            name="email"
+                            placeholder="johnnyappleseed@golura.net"
+                            ng-model="payment.email"
+                            autocomplete="off"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Phone Number
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="phoneNumber"
+                            placeholder="(123) 456-7890"
+                            ng-model="payment.number"
+                            ui-mask="(999) 999-9999"
+                            ui-mask="99.99.9999"  
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="_"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Card Number
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <div 
+                            id="card-number-element" 
+                            class="form-input"
+                        ></div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Expiration Date
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <div 
+                            id="card-expiry-element" 
+                            class="form-input"
+                        ></div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            CVC
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <div 
+                            id="card-cvc-element" 
+                            class="form-input"
+                        ></div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="payment-init-form-submit-button submit-button button" 
+                        id="paymentInitFormSubmitButton" 
+                        type="submit" 
+                        ng-disabled="!UI.isFormValid || UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-credit-card"></i> Pay
+                        </span>
+                        <span ng-if="UI.formSaving">Please Wait...</span>
+                    </button>
+                </div>
+            </div>
+            <div 
+                class="payment-form-success-container text-center"
+                ng-if="UI.payProcessed"
+            >
+                <h2 class="success-text">
+                    <b>
+                        Payment Success
+                    </b>
+                </h2>
+                <p>
+                    Thank you for the payment! Your transaction was successful.
+                    <span ng-if="estimate">Your estimate payment has been processed.</span>
+                    <span ng-if="invoice">Your invoice payment has been processed.</span>
+                    You can click the button below to return to the 
+                    previous page and continue your activities.
+                </p>
+                <button 
+                    class="back-button button success white-text" 
+                    type="button"
+                    ng-click="$root.goBack()"
+                >
+                    <i class="fal fa-check-circle"></i> Return
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

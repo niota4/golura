@@ -1,0 +1,97 @@
+<div class="view-user-top-bar-container top-bar-container">
+    <div class="grid-x grid-margin-x align-middle">
+        <div class="cell small-12 medium-12 large-12">
+            <div class="view-user-options-container view-options-container">
+                <a 
+                    class="view-user-options-button back-button button warning white-text"
+                    ng-click="$root.goBack()"
+                    ng-if="!$root.UI.isMobile"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> Back
+                </a>
+                <div 
+                    class="grid-x"
+                    ng-if="$root.UI.isMobile"
+                >
+                    <div class="cell auto">
+                        <a 
+                            class="view-event-options-button back-button button warning white-text"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i>
+                        </a>
+                    </div>
+                    <div class="cell auto text-center">
+                        <h3
+                            class="sub-page"
+                            ng-if="$root.UI.isMobile"
+                        >
+                            <b>
+                                {{UI.subPage}}
+                            </b>
+                        </h3>
+                    </div>
+                    <div 
+                        class="cell auto text-right"
+                        ng-if="$root.UI.isMobile"
+                    >
+                        <button 
+                            class="view-user-options-reveal-button view-options-reveal-button button clear"
+                            type="button"
+                            data-open="viewUserOptionsMobileReveal"
+                            aria-label="Open User Options"
+                        >
+                            <i class="fal fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-user-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewUserOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewUserOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-user-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <a 
+                        class="view-user-options-options-button button white-text"
+                        ng-href="users/user/{{worker.id}}/edit"
+                        ng-if="permissions.canEdit"
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="delete-button button alert white-text" 
+                        type="button"
+                        ng-click="UI.userDeleteConfirmation = !UI.userDeleteConfirmation"
+                        ng-if="permissions.canArchive"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+                <div ng-include="'/dist/navigations/user-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    ng-include="'/dist/partials/users/deletion-screen.html'"
+    ng-if="UI.userDeleteConfirmation"
+></div>

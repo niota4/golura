@@ -1,0 +1,192 @@
+<div class="message-container">
+    <div 
+        format-text-messages 
+        text-message="textMessage"
+    ></div>
+    <div 
+        format-phone-numbers 
+        phone-number="textMessage.PhoneNumber"
+    ></div>
+    <div 
+        format-users 
+        user="textMessage.Creator"
+    ></div>
+    <div class="grid-x grid-margin-x align-bottom">
+        <div class="cell auto">
+            <h6>
+                <span>
+                    {{textMessage.User.fullName}}
+                </span>
+            </h6>
+            <h6 class="text-message-recipient">
+                <b>To: </b> 
+                <span>
+                    {{textMessage.PhoneNumber.formattedNumber}}
+                </span>
+            </h6>
+            <div 
+                class="message"
+                ng-class="{'failed': textMessage.status === 'failed'}"
+                data-toggle="textMessageDropDown-{{textMessage.id}}"
+            >
+                <div class="text-message-content">
+                    <div ng-bind-html="textMessage.formattedMessage || textMessage.message">
+                    </div>
+                </div>
+                <div 
+                    class="text-message-media-container"
+                    ng-if="textMessage.media && textMessage.parsedMedia.length"
+                >
+                    <div 
+                        class="grid-x grid-margin-x"
+                    >
+                        <div 
+                            class="cell small-12 medium-6 large-4"
+                            ng-repeat="media in textMessage.parsedMedia track by $index"
+                        >
+                            <div 
+                                class="text-message-media-container"
+                                ng-click="initImage(media)"
+                                data-open="textMessageMediaViewReveal"
+                            >
+                                <div class="text-message-media">
+                                    <div 
+                                        class="text-message-media-background"
+                                        style="background-image: url('{{media}}');"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="text-message-associations"
+                    ng-if="textMessage.Client"
+                >
+                    <h6 
+                        class="text-message-estimate"
+                        ng-if="textMessage.Estimate"
+                        ng-if="subPermissions.estimate.canView"
+                    >
+                        <b>
+                            Estimate: 
+                        </b> 
+                        <a ng-href="/estimates/estimate/{{textMessage.Estimate.id}}">
+                            {{textMessage.Estimate.estimateNumber}}
+                        </a>
+                    </h6>
+                    <h6 
+                        class="text-message-event"
+                        ng-if="subPermissions.event.canView"
+                        ng-if="textMessage.Event"
+                    >
+                        <b>
+                            Event: 
+                        </b> 
+                        <a ng-href="/events/event/{{textMessage.Event.id}}">
+                            {{textMessage.Event.title}}
+                        </a>
+                    </h6>
+                    <h6 
+                        class="text-message-work-order"
+                        ng-if="textMessage.WorkOrder" 
+                        ng-if="subPermissions.workOrder.canView"
+                    >
+                        <b>
+                            Work Order: 
+                        </b>
+                        <a ng-href="/work-orders/work-order/{{textMessage.WorkOrder.id}}">
+                            #{{textMessage.WorkOrder.workOrderNumber}}
+                        </a>
+                    </h6>
+                    <h6 
+                        class="text-message-invoice"
+                        ng-if="textMessage.Invoice"
+                        ng-if="subPermissions.invoice.canView"
+                    >
+                        <b>
+                            Invoice: 
+                        </b> 
+                        <a ng-href="/invoices/invoice/{{textMessage.Invoice.id}}">
+                            {{textMessage.Invoice.invoiceNumber}}
+                        </a>
+                    </h6>
+                </div>
+                <div class="text-message-time-container text-right">
+                    <span class="message-time">
+                        <i ng-if="textMessage.sentAt">
+                            {{textMessage.sentAt | TimeAgoFormat}}
+                        </i>
+                        <i ng-if="!textMessage.sentAt">
+                            {{textMessage.createdAt | TimeAgoFormat}}
+                        </i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="cell shrink">
+            <div class="message-user-container">
+                <user-icon user="textMessage.Creator"></user-icon>
+            </div>
+        </div>
+    </div>
+    <div 
+        class="text-message-drop-down-pane dropdown-pane top float-right" 
+        id="textMessageDropDown-{{textMessage.id}}" 
+        data-dropdown 
+        data-hover="true" 
+        data-hover-pane="true"
+        data-v-offset="10"
+    >
+        <div class="grid-x grid-margin-x align-middle">
+            <div class="cell shrink">
+                <button
+                    class="reply-button text-message-button button clear"
+                    type="button"
+                    title="Reply to Text Message"
+                    ng-click="initTextMessageReply(textMessage)"
+                >
+                    <i class="fal fa-message"></i>
+                </button>
+                <button
+                    class="resend-button text-message-button button clear"
+                    type="button"
+                    title="Resend Message"
+                    ng-if="textMessage.status === 'Failed'"
+                    ng-click="resendTextMessage(textMessage)"
+                >
+                    <i class="fal fa-redo"></i>
+                </button>
+                <button
+                    class="more-button text-message-button button clear"
+                    type="button"
+                    title="More Options"
+                    ng-click="textMessage.moreOptions = !textMessage.moreOptions"
+                >
+                    <i class="fas fa-ellipsis"></i>
+                </button>
+                <div 
+                    ng-if="textMessage.moreOptions"
+                    ng-mouseleave="textMessage.moreOptions = false">
+                    <button
+                        class="edit-button more-dropdown-pane-button button clear expanded"
+                        type="button"
+                        ng-if="$root.user.id == textMessage.Creator.id ||
+                        subPermissions.adminSettings.canEdit"
+                        ng-click="textMessage.edit = !textMessage.edit;"
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </button>
+                    <button
+                        class="delete-button more-dropdown-pane-button button clear expanded alert"
+                        type="button"
+                        ng-if="subPermissions.adminSettings.canArchive"
+                        ng-click="deleteTextMessage(textMessage)"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

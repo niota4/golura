@@ -1,0 +1,252 @@
+<div class="admin-forms-container admin-form-container">
+    <div class="admin-forms admin-form-details">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="admin-forms-options-container">
+                    <h1>
+                        <b>
+                            Form Settings
+                        </b>
+                    </h1>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="admin-forms-details-container">
+                    <div class="golura-block grid-x">
+                        <div 
+                            class="golura-block cell small-12 medium-3 large-3"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <div class="admin-forms-list-container">
+                                <button
+                                    class="admin-create-folder-button admin-button button success white-text"
+                                    id="adminCreateFolderButton"
+                                    type="button"
+                                    data-open="folderCreateFormReveal"
+                                    ng-click="initFolderForm()"
+                                >
+                                    <i class="fal fa-layer-plus"></i> Create folder
+                                </button>
+                                <div 
+                                    class="admin-forms-list"
+                                    id="adminFormsList"
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="golura-block cell small-12 medium-auto large-auto">
+                            <div class="admin-forms-forms-container">
+                                <div class="admin-forms-forms">
+                                    <div class="golura-block grid-y">
+                                        <div 
+                                            class="cell shrink"
+                                        >
+                                            <div class="golura-block grid-x grid-margin-x align-middle">
+                                                <div class="cell small-shrink medium-auto large-auto">
+                                                    <button
+                                                        class="admin-create-form-button admin-button button warning white-text"
+                                                        id="adminBackFolderButton"
+                                                        type="button"
+                                                        ng-click="updateFormFolderView()"
+                                                        ng-if="folder || form.id"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-circle-arrow-left"></i> 
+                                                        <span ng-if="!$root.UI.isMobile">
+                                                            Back
+                                                        </span>
+                                                    </button>
+                                                    <button 
+                                                        class="admin-forms-options-reveal-button admin-options-reveal-button button clear float-right"
+                                                        type="button"
+                                                        data-open="adminFormOptionsMobileReveal"
+                                                        aria-label="Open Form Options"
+                                                        ng-if="$root.UI.isMobile"
+                                                    >
+                                                        <i class="fal fa-bars"></i>
+                                                    </button>
+                                                </div>
+                                                <div 
+                                                    class="cell small-12 medium-auto large-auto"
+                                                    ng-if="folder"
+                                                >
+                                                    <h3>
+                                                        <b>
+                                                            {{folder.name}}
+                                                        </b>
+                                                    </h3>
+                                                </div>
+                                                <div 
+                                                    class="cell small-12 medium-auto large-auto text-right"
+                                                    ng-if="form.id && !$root.UI.isMobile"
+                                                >
+                                                    <button
+                                                        class="admin-edit-form-button admin-button button success white-text"
+                                                        id="adminEditFormButton"
+                                                        type="button"
+                                                        ng-click="initFormBuilderForm(form)"
+                                                        data-open="formCreateFormReveal"
+                                                    >
+                                                        <i class="fal fa-edit"></i>  Edit
+                                                    </button>
+                                                </div>
+                                                <div 
+                                                    class="cell small-12 medium-shrink large-shrink"
+                                                    ng-if="folder && !$root.UI.isMobile"
+                                                >
+                                                    <button
+                                                        class="admin-create-form-button admin-button button success white-text"
+                                                        id="adminCreateFormButton"
+                                                        type="button"
+                                                        ng-click="initFormBuilderForm()"
+                                                        data-open="formCreateFormReveal"
+                                                    >
+                                                        <i class="fal fa-layer-plus"></i> Create Form
+                                                    </button>
+                                                    <button
+                                                        class="admin-edit-folder-button admin-button button white-text"
+                                                        id="adminEditFolderButton"
+                                                        type="button"
+                                                        data-open="folderCreateFormReveal"
+                                                        ng-click="initFolderForm(folder)"
+                                                    >
+                                                        <i class="fal fa-edit"></i> Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-auto large-auto">
+                                            <div 
+                                                class="admin-forms-data-view-container"
+                                                id="adminFormsDataViewContainer"
+                                                ng-show="!UI.formView"
+                                            ></div>
+                                            <div 
+                                                class="admin-form-view-container"
+                                                ng-show="UI.formView"
+                                            >
+                                                <h3>
+                                                    <b>
+                                                        {{form.name}}
+                                                    </b>
+                                                </h3>
+                                                <div class="grid-container">
+                                                    <div 
+                                                        class="admin-form-view golura-form"
+                                                        id="adminFormView"
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="folder-create-form-reveal reveal large"
+    id="folderCreateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeFolderCreateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/general/folder-form.html'"></div>
+</div>
+<div
+    class="form-create-form-reveal reveal large"
+    id="formCreateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeFormCreateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/admin/form-form.html'"
+    ></div>
+</div>
+<div 
+    class="admin-form-options-mobile-reveal admin-options-mobile-reveal reveal large"
+    id="adminFormOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAdminFormOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="admin-form-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <button
+                        class="admin-create-folder-button admin-button button success white-text"
+                        type="button"
+                        data-open="folderCreateFormReveal"
+                        ng-click="initFolderForm()"
+                        data-close
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Folder
+                    </button>
+                    <button
+                        class="admin-create-form-button admin-button button success white-text"
+                        type="button"
+                        ng-click="initFormBuilderForm()"
+                        data-open="formCreateFormReveal"
+                        ng-if="folder"
+                        data-close
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Form
+                    </button>
+                    <button
+                        class="admin-edit-form-button admin-button button success white-text"
+                        type="button"
+                        ng-click="initFormBuilderForm(form)"
+                        data-open="formCreateFormReveal"
+                        ng-if="form.id"
+                        data-close
+                    >
+                        <i class="fal fa-edit"></i> Edit Form
+                    </button>
+                    <button
+                        class="admin-edit-folder-button admin-button button white-text"
+                        type="button"
+                        data-open="folderCreateFormReveal"
+                        ng-click="initFolderForm(folder)"
+                        ng-if="folder"
+                        data-close
+                    >
+                        <i class="fal fa-edit"></i> Edit Folder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

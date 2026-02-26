@@ -1,0 +1,278 @@
+<div class="client-insights-widget-container widget-container">
+    <div class="client-insights-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-users"></i> Client Insights
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.clientInsights.period">
+                                Last {{ widgetData.clientInsights.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="client-insights-options-button button clear" 
+                            type="button"
+                            data-toggle="clientInsightsOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="client-insights-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="clientInsightsOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="client-insights-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('clientInsights', { period: widgetData.clientInsights.period, limit: widgetData.clientInsights.limit })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="clientInsightsRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="clientInsightsRange"
+                                        name="clientInsightsRange"
+                                        ng-model="widgetData.clientInsights.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="clientInsightsLimit">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="clientInsightsLimit"
+                                        name="clientInsightsLimit"
+                                        ng-model="widgetData.clientInsights.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="client-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.clientInsights.data.summary.activeClients }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Active Clients
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.clientInsights.data.summary.totalPotentialRevenue | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Potential Revenue
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.clientInsights.data.summary.totalRealizedRevenue | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Realized Revenue
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.clientInsights.data.summary.totalProfitability | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Net Profitability
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.clientInsights.data.topClients.length > 0"
+            >
+                <div class="client-insights-search-container list-search-container">
+                    <div class="client-insights-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="client-insights-search-input search-input"
+                                        id="clientInsightsSearchInput" 
+                                        type="text"
+                                        placeholder="Search clients..."
+                                        autocomplete="off"
+                                        ng-model="search.clientInsights"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto overflow-scroll" 
+                ng-if="widgetData.clientInsights.data.topClients.length > 0"
+            >
+                <div class="top-clients-section">
+                    <div class="golura-block">
+                        <div class="top-clients-list-container list-container">
+                            <ul class="top-clients-list list no-bullet">
+                                <li 
+                                    class="client-list-item list-item" 
+                                    ng-repeat="client in filteredClients = (widgetData.clientInsights.data.topClients | 
+                                    filter:search.clientInsights |
+                                    limitTo: widgetData.clientInsights.limit) | 
+                                    orderBy: '-totalValue' track by $index"
+                                >
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell auto">
+                                            <div class="grid-x align-middle">
+                                                <div class="cell auto">
+                                                    <h6 class="client-name">
+                                                        <a ng-href="clients/client/{{ client.id }}">
+                                                            <b>{{ client.name }}</b>
+                                                        </a>
+                                                        <span class="label white-text" ng-class="{
+                                                            'success': client.tier === 'Premium',
+                                                            'warning': client.tier === 'Gold',
+                                                            'secondary': client.tier === 'Silver',
+                                                            'alert': client.tier === 'Bronze'
+                                                        }">
+                                                            {{ client.tier }}
+                                                        </span>
+                                                    </h6>
+                                                    <div class="client-revenue-breakdown">
+                                                        <small class="text-muted">
+                                                            <i class="fal fa-chart-pie"></i>
+                                                            <span ng-if="client.potentialRevenue > 0">
+                                                                Potential: {{ client.potentialRevenue | currency }}
+                                                            </span>
+                                                            <span ng-if="client.realizedRevenue > 0">
+                                                                • Realized: {{ client.realizedRevenue | currency }}
+                                                            </span>
+                                                            <span ng-if="client.serviceInvestment > 0">
+                                                                • Investment: {{ client.serviceInvestment | currency }}
+                                                            </span>
+                                                        </small>
+                                                    </div>
+                                                    <div class="client-activity-summary">
+                                                        <small class="text-muted">
+                                                            <i class="fal fa-chart-line"></i>
+                                                            {{ client.estimatesCount }} estimates, 
+                                                            {{ client.invoicesCount }} invoices, 
+                                                            {{ client.workOrdersCount }} work orders
+                                                            <span ng-if="client.conversionRate > 0">
+                                                                • {{ client.conversionRate }}% conversion
+                                                            </span>
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink text-right">
+                                            <div class="client-value-container">
+                                                <span class="client-total-value">
+                                                    <b>{{ client.totalValue | currency }}</b>
+                                                </span>
+                                                <div class="client-profitability" ng-if="client.profitability !== 0">
+                                                    <small ng-class="{
+                                                        'success-text': client.profitability > 0,
+                                                        'alert-text': client.profitability < 0
+                                                    }">
+                                                        <i class="fal" ng-class="{
+                                                            'fa-arrow-up': client.profitability > 0,
+                                                            'fa-arrow-down': client.profitability < 0
+                                                        }"></i>
+                                                        {{ client.profitability | currency }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto text-center" ng-if="widgetData.clientInsights.data.topClients.length === 0">
+                <div class="empty-state">
+                    <i class="fal fa-users fa-3x text-muted"></i>
+                    <p class="text-muted">No client activity in this period</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,242 @@
+<div class="admin-labor-container admin-list-container">
+    <div class="admin-labor admin-list-details">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="labor-search-container list-search-container">
+                    <div class="labor-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="labor-search-input search-input"
+                                        id="laborSearchInput" 
+                                        type="text"
+                                        placeholder="Search labor roles..."
+                                        ng-model="search.labor.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="labor-search-create-button-container create-button-container">
+                                        <button 
+                                            class="labor-search-create-button submit-button create-button button success white-text" 
+                                            id="laborSearchCreateButton"
+                                            type="button"
+                                            ng-click="initLaborForm()"
+                                            data-open="laborFormReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span> 
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="labor-list-header-container list-header-container">
+                    <div class="labor-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-auto medium-auto large-auto">
+                                <h3>
+                                    <b>
+                                        Role/Position
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-3 medium-2 large-2">
+                                <h3>
+                                    <b>
+                                        Hourly Rate
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-3 medium-2 large-2">
+                                <h3>
+                                    <b>
+                                        Overtime Rate
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-3 medium-2 large-2">
+                                <h3>
+                                    <b>
+                                        Standard Hours
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-3 large-3">
+                                <h3 class="list-header-options">
+                                    <b>
+                                        Options
+                                    </b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+            >
+                <div class="labor-list-container list-container">
+                    <ul 
+                        class="labor-list list"
+                        id="laborList"
+                    >
+                        <li ng-if="!UI.laborLoaded">
+                            <div class="ssc labor-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(20) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="labor-list-item list-item position-relative"
+                            ng-repeat="l in filteredLabor = 
+                            (labor | filter:search.labor.value) |
+                            orderBy:'role'"
+                            ng-class="{'no-hover': !UI.laborLoaded}"
+                        >
+                            <div class="labor-list-item-details list-item-details">
+                                <div class="grid-x grid-padding-x align-middle align-left">
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <h4 class="labor-list-item-role">
+                                            <b>{{l.role}}</b>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-2 large-2">
+                                        <p class="labor-list-item-rate">
+                                            <b ng-if="$root.UI.isMobile">
+                                                Rate:
+                                            </b>
+                                            ${{l.rate | number:2}}
+                                        </p>
+                                    </div>
+                                    <div class="cell small-12 medium-2 large-2">
+                                        <p class="labor-list-item-overtime-rate">
+                                            <b ng-if="$root.UI.isMobile">
+                                                Overtime Rate:
+                                            </b>
+                                            ${{l.overtimeRate | number:2}}
+                                        </p>
+                                    </div>
+                                    <div class="cell small-12 medium-2 large-2">
+                                        <p class="labor-list-item-hours">
+                                            <b ng-if="$root.UI.isMobile">
+                                                Standard Hours Per Day:
+                                            </b>
+                                            {{l.standardHoursPerDay}} hrs/day
+                                        </p>
+                                    </div>
+                                    <div class="cell small-12 medium-3 large-3">
+                                        <div class="labor-list-item-options-container list-item-options-container">
+                                            <div 
+                                                class="labor-list-item-options list-item-options button-group"
+                                                ng-class="{'align-right': $root.UI.isMobile}"
+                                            >
+                                                <button
+                                                    class="labor-list-item-edit-button list-item-option button"
+                                                    type="button"
+                                                    ng-click="initLaborForm(l)"
+                                                    data-open="laborFormReveal"
+                                                    title="Edit Labor Role"
+                                                >
+                                                    <i class="fal fa-edit"></i> 
+                                                    <span ng-if="!$root.UI.isMobile">
+                                                        Edit
+                                                    </span>
+                                                </button>
+                                                <button
+                                                    class="labor-list-item-delete-button list-item-option button alert white-text"
+                                                    type="button"
+                                                    ng-click="deleteLabor(l)"
+                                                    title="Delete Labor Role"
+                                                >
+                                                    <i class="fal fa-archive"></i> 
+                                                    <span ng-if="!$root.UI.isMobile">
+                                                        Delete
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li ng-if="UI.laborLoaded && filteredLabor.length === 0">
+                            <div class="list-item-empty">
+                                <div class="grid-x align-center">
+                                    <div class="cell shrink text-center">
+                                        <h4>
+                                            <i class="fal fa-users"></i><br/>
+                                            No labor roles found.
+                                        </h4>
+                                        <p>
+                                            <span ng-if="search.labor.value">
+                                                Try adjusting your search criteria.
+                                            </span>
+                                            <span ng-if="!search.labor.value">
+                                                Start by creating your first labor role.
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <li 
+                            class="list-empty text-center"
+                            ng-if="!labor.length && UI.laborLoaded"
+                        >
+                            <h3>
+                                <b>Oh! </b>
+                                Click the Create button to add your first Labor.
+                            </h3>
+                            <button 
+                                class="submit-button create-button button success white-text" 
+                                id="laborCreateButton"
+                                type="button"
+                                data-open="laborFormReveal"
+                                ng-click="initLaborForm()"
+                            >
+                                <i class="fal fa-layer-plus"></i> Create
+                            </button>
+                        </li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="labor-form-reveal reveal"
+    id="laborFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserRolesFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/labor-form.html'"></div>
+</div>

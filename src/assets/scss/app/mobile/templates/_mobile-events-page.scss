@@ -1,0 +1,106 @@
+@include breakpoint(small only) {
+    .events-container {
+
+        .events {
+
+            .wx-event-calendar-toolbar_wrapper  {
+
+                .wx-event-calendar-wrapper {
+                    display: block;
+                    text-align: center;
+                    width: 100%;
+
+                    .wx-event-calendar-icon {
+                        font-size: 2.5rem;
+                        padding: .5rem 0.25rem;
+                        color: var(--primary-color);
+                    }
+                    .wxi-angle-left {
+                        position: absolute;
+                        left: 0px;
+                        top: 0px;
+                    }
+                    .wxi-angle-right {
+                        position: absolute;
+                        right: 0px;
+                        top: 0px;
+                        padding-right: 2.5rem;
+                    }
+                }
+                .wx-event-calendar-toolbar {
+                    border-bottom: none !important;
+
+                    .wx-event-calendar-right {
+                        gap: 0px;
+                    }
+                    .wx-event-calendar-left {
+
+                        .wx-event-calendar-btn-add {
+
+                            .wx-event-calendar-plus {
+
+                                &::before {
+                                    font-size: 1rem;
+                                    content: "\f055";
+                                    font-family: "Font Awesome 6 Pro" !important;
+                                    font-weight: 300 !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .wx-event-calendar-show {
+                width: 100%;
+
+                .calendar {
+                    display: none !important;
+                }
+            }
+            .events-calendar-container {
+
+                .events-calendar {
+
+                    .wx-event-calendar {
+
+                        .wx-event-calendar-weekdays {
+                            padding-top: 2rem;
+                        }
+                        .wx-event-calendar-table {
+
+                            .wx-event-calendar-calendar-week {
+                                min-height: 7rem;
+                                
+                                .wx-event-calendar-day {
+                                    border: none !important;
+
+                                    &.wx-event-calendar-inactive {
+
+                                        .wx-event-calendar-date-label {
+                                            color: $medium-gray !important;
+                                        }
+                                    }
+                                }
+                                &:last-child {
+                                    border-bottom: none !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .view-event-container {
+
+        .view-event {
+
+            .view-event-details-option-container {
+
+                .view-event-details-comments-container {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+    }
+}

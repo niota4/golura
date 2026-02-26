@@ -1,0 +1,56 @@
+<div
+    class="user-create-edit-container create-edit-container"
+    ng-init="initUserPreferenceForm()"
+>
+    <div class="user-create-edit create-edit grid-container">
+        <h1>
+            <b>
+                User Preferences
+            </b>
+        </h1>
+        <form 
+            class="user-form golura-form"
+            id="userForm"
+            name="userForm"
+            ng-submit="createUser($event, worker)"
+        >
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>General</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell shrink">
+                            <div class="switch">
+                                <input 
+                                    class="switch-input" 
+                                    id="darkModeToggle" 
+                                    type="checkbox" 
+                                    ng-click="updateDarkModeToggle()" 
+                                    ng-checked="savedTheme === 'light'"
+                                />
+                                <label 
+                                    class="switch-paddle" 
+                                    for="darkModeToggle"
+                                >
+                                    <span class="show-for-sr">
+                                        Dark Mode Toggle
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="cell auto">
+                            <span>
+                                <b>
+                                    Dark Mode?
+                                </b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

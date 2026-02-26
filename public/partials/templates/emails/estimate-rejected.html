@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimate Rejected - {{company.name}}</title>
+    <style>
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .estimate-details {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .rejection-reason {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .action-button {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .alert-icon {
+            font-size: 48px;
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>❌ Estimate Rejected</h1>
+        </div>
+        
+        <div class="content">
+            <div class="alert-icon">⚠️</div>
+            
+            <h2>Estimate Declined</h2>
+            <p>Your client has rejected estimate <strong>{{estimate.estimateNumber}}</strong>.</p>
+            
+            <div class="estimate-details">
+                <strong>Estimate Details:</strong><br>
+                <strong>Number:</strong> {{estimate.estimateNumber}}<br>
+                <strong>Client:</strong> {{client.firstName}} {{client.lastName}}<br>
+                <strong>Total Amount:</strong> ${{estimate.total}}<br>
+                <strong>Rejected By:</strong> {{feedback.clientName || 'Client'}}<br>
+                <strong>Rejected On:</strong> {{feedback.createdAt}}<br>
+            </div>
+            
+            <div class="rejection-reason">
+                <strong>Rejection Reason:</strong><br>
+                "{{feedback.message}}"
+            </div>
+            
+            <p><strong>Next Steps:</strong></p>
+            <ul>
+                <li>Review the client's feedback</li>
+                <li>Consider creating a revised estimate</li>
+                <li>Follow up with the client to discuss their concerns</li>
+                <li>Archive this estimate if no further action is needed</li>
+            </ul>
+            
+            <a href="{{baseUrl}}/estimates/{{estimate.id}}" class="action-button">View Estimate</a>
+            
+            <p>This rejection was automatically logged in your system for tracking purposes.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from {{company.name}}<br>
+            {{company.address}} | {{company.phone}} | {{company.email}}</p>
+        </div>
+    </div>
+</body>
+</html>

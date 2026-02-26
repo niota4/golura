@@ -1,0 +1,3 @@
+<!-- Use responsive mobile/desktop includes for reports dashboard -->
+<div ng-if="$root.UI.isMobile" ng-include="'/dist/partials/reports/mobile/dashboard.html'"></div>
+<div ng-if="!$root.UI.isMobile" ng-include="'/dist/partials/reports/desktop/dashboard.html'"></div>

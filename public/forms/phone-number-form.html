@@ -1,0 +1,171 @@
+<div class="phone-number-create-edit-container create-edit-container">
+    <div class="phone-number-create-edit create-edit grid-container"> 
+        <div 
+            class="callout sticky text-center fade"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+            ng-if="!UI.clientView"
+        >
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>       
+        <form
+            class="phone-number-form golura-form"
+            id="phoneNumberForm"
+            name="phoneNumberForm"
+            ng-submit="createPhoneNumber($event, phoneNumber)"
+            golura-form-validation
+        >
+            <h1 ng-if="!phoneNumber.id">
+                <b>
+                    New Phone Number
+                </b>
+            </h1>
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Title
+                            <span>
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="phoneNumberTitle"
+                            name="phone-numberTitle"
+                            placeholder="Johnny's Home Phone Number"
+                            ng-model="phoneNumber.title"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="input-container">
+                        <label>   
+                            Phone Number
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="primaryPhone"
+                            placeholder="(123) 456-7890"
+                            ng-model="phoneNumber.number"
+                            ui-mask="(999) 999-9999"
+                            ui-mask="99.99.9999"  
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="_"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Type
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            id="phoneNumberType"
+                            name="phoneNumberType"
+                            config="detailTypeOptions"
+                            options="phoneNumberTypes"
+                            ng-model="phoneNumber.type"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng
+                >
+                    <input
+                        type="hidden"
+                        name="isPrimary"
+                        ng-model="phoneNumber.isPrimary"
+                    />
+                    <div class="grid-x align-middle">
+                        <div class="cell small-6 medium-6 large-6">
+                            <div class="client-form-select-button-container select-container">
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="client-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="phoneNumber.isPrimary = !phoneNumber.isPrimary"
+                                            ng-class="{'selected': phoneNumber.isPrimary}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="phoneNumber.isPrimary"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label 
+                                            title="Updating this will override the current Primary Phone Number"
+                                        >
+                                            Primary? 
+                                            <span>
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="phone-number-form-submit-button submit-button success button white-text" 
+                        id="phoneNumberFormSubmitButton"
+                        type="submit"
+                        ng-disabled="phoneNumberForm.$invalid || UI.formSaving"
+                        ng-class="{'form-success-saving': UI.phoneNumberSaving}"
+                        ng-if="!phoneNumber.id"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="phone-number-form-save-button submit-button button white-text" 
+                        id="phoneNumberFormSaveButton"
+                        type="button"
+                        ng-disabled="phoneNumberForm.$invalid || UI.formSaving"
+                        ng-class="{'form-success-saving': UI.phoneNumberSaving}"
+                        ng-click="updatePhoneNumber(phoneNumber)"
+                        ng-if="phoneNumber.id"
+                    >
+                        <span ng-if="!phoneNumber.saving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="phoneNumber.saving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

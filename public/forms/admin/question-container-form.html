@@ -1,0 +1,114 @@
+<div class="admin-question-container-container admin-form-container create-edit-container">
+    <div 
+        class="admin-question-container admin-form-details create-edit grid-container"
+    >
+        <h1>
+            <b ng-if="UI.newQuestionContainer">
+                Create Question Container
+            </b>
+            <b ng-if="!UI.newQuestionContainer">
+                Edit Question Container
+            </b>
+        </h1>
+        <form 
+            class="question-container-form admin-form golura-form"
+            id="questionContainerForm"
+            name="questionContainerForm"
+            ng-submit="createQuestionContainer($event, questionContainer)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionContainerLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionContainerLoaded"
+                        ></div>
+                        <label for="questionContainerName">
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="questionContainerName"
+                            name="questionContainerName"
+                            placeholder="Question container name"
+                            ng-model="questionContainer.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="$root.UI.isMobile"
+                >
+                    <div class="button-group align-center expanded">
+                        <button
+                            class="list-item-options-button button success white-text"
+                            type="button"
+                            ng-click="moveQuestionContainer(container, 'up')"
+                            ng-disabled="container.displayOrder == 1"
+                            ng-if="estimator.QuestionContainers.length > 1"
+                        >
+                            <i class="fal fa-up"></i>
+                        </button>   
+                        <button
+                            class="list-item-options-button button success white-text"
+                            type="button"
+                            ng-click="moveQuestionContainer(container, 'down')"
+                            ng-disabled="container.displayOrder == estimator.QuestionContainers.length || 
+                            estimator.QuestionContainers.length <= container.displayOrder"
+                            ng-if="estimator.QuestionContainers.length > 1"
+                        >
+                            <i class="fal fa-down"></i>
+                        </button> 
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="question-container-form-submit-button submit-button button" 
+                        id="questionContainerFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.questionContainerLoaded && UI.newQuestionContainer"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="question-container-form-edit-submit-button submit-button button" 
+                        id="questionContainerFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateQuestionContainer(questionContainer)"
+                        ng-if="UI.questionContainerLoaded && !UI.newQuestionContainer"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

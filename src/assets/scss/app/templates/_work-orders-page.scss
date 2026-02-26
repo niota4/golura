@@ -1,0 +1,328 @@
+.work-orders-container,
+.work-order-container {
+    height: 100%;
+
+    .work-orders,
+    .work-order {
+        height: 100%;
+
+        .work-order-bord-callout {
+            position: relative;
+        }
+        .work-orders-options-container {
+            padding: 1rem 1rem 0px;
+            margin: 0px;
+        }
+        .work-order-board-container {
+            height: 100%;
+
+            .work-order-board {
+                height: 100%;
+
+                .kanban-container {
+                    height: 100%;
+                    width: 100% !important;
+                    padding: 0px;
+                    
+                    @extend .grid-margin-x;
+                    @extend .grid-x;
+
+                    .kanban-board {
+                        background: $transparent;
+                        padding: 1rem;
+                        height: 100%;
+
+                        @extend .cell;
+                        @extend .auto;
+                        @extend .grid-y;
+
+                        .kanban-board-header {
+                            background: var(--white);
+                            border: 1px solid var(--light-gray);
+                            border-radius: $container-radius;
+
+                            @extend .cell;
+                            @extend .shrink;
+
+                            .kanban-title-board {
+                                color: var(--alt-font-color-2);
+                            }
+                        }
+    
+                        .kanban-drag {
+                            padding: 0px;
+                            height: 100%;
+                            overflow: auto;
+
+                            @extend .cell;
+                            @extend .auto;
+                        }
+                    }
+                }
+            }
+        }
+        .work-order-form {
+            height: 100%;
+
+            h3 {
+                color: var(--font-color);
+            }
+
+            .work-order-form-sidebar {
+                border-radius: $container-radius;
+                height: 100%;
+                overflow: auto;
+
+                .work-order-form-sidebar-list {
+                    background: $transparent;
+
+                    .work-order-form-sidebar-list-item {
+                        margin-bottom: 1rem;
+                        border: 1px solid var(--light-gray);
+                        border-radius: $container-radius;
+                        background: var(--white);
+
+                        &.is-active {
+                            background: var(--light-gray);
+
+                            .work-order-form-sidebar-list-item-title {
+                                border-bottom: 1px solid var(--light-gray);
+                                color: var(--primary-color);
+                            }
+                        }
+                        &.work-order-form-sidebar-list-item-completed {
+                            background: $alert-color;
+                            color: $white;
+                            padding: 1rem;
+
+                            .work-order-form-sidebar-list-item-signed-icon {
+                                font-size: 2rem;
+                            }
+                            button {
+                                margin: 0px;
+                            }
+                        }
+                        .work-order-form-sidebar-list-item-title {
+                            color: var(--alt-font-color-2);
+                            font-size: 1rem;
+                            border: none;
+                            border-radius: 0px;
+                            padding: 2rem 1rem;
+                            background: $transparent;
+                        }
+
+                        .work-order-form-sidebar-list-item-content {
+                            border: none;
+                            border-bottom-right-radius: $container-radius;
+                            border-bottom-left-radius: $container-radius;
+                        }
+                    }
+                }
+            }
+            .work-order-form-items-container {
+                height: 100%;
+
+                .work-order-form-items {
+                    background: var(--white);
+                    border-radius: $container-radius;
+                    border: 1px solid var(--light-gray);
+                    padding: 1rem;
+                    height: 100%;
+
+                    .kanban-item {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
+.view-work-order-container,
+.view-purchase-order-container {
+    height: 100%;
+
+    .view-work-order,
+    .view-purchase-order {
+        height: 100%;
+
+        .view-work-order-details-container,
+        .view-purchase-order-details-container {
+            height: 100%;
+        }
+    }
+}
+.view-work-order-items-container,
+.view-purchase-order-items-container {
+    height: 100%;
+    
+    .view-work-order-items,
+    .view-purchase-order-items {
+        height: 100%;
+        padding: 0px;
+
+        h2 {
+            padding: 1rem;
+        }
+        .view-purchase-order-items-list {
+
+            .view-purchase-order-items-list-item  {
+
+                &.expanded {
+                    height: 15rem;
+                }
+            }
+        }
+        .view-purchase-order-items-list-item-add-line-item-container {
+            padding: 1rem 2rem;
+
+            .view-purchase-order-items-list-item-add-line-item-icon {
+                font-size: 2rem;
+            }
+            button,
+            a {
+                margin: 0px;
+            }
+            a {
+                margin-left: .25rem;
+                margin-right: .25rem;
+            }
+        }
+        .view-work-order-items-list-item-remove-container {
+            padding: 1rem;
+        }
+    }
+}
+.work-order-preview-container {
+    height: 100%;
+    overflow: auto;
+
+    .work-order-preview {
+        height: 100%;
+        padding: 0px;
+
+        .work-order-preview-tabs-container {
+
+            .work-order-preview-tabs {
+                padding: 2rem 1rem 1rem;
+
+                .work-order-preview-date-container {
+                    border-radius: $container-radius;
+                    background: var(--off-white);
+                    border: 1px solid var(--light-gray);
+                    padding: 2rem 1rem;
+                    margin-bottom: 1rem;
+        
+                    .work-order-preview-date {
+        
+                        span {
+                            display: block;
+                            padding: 1rem 0px;
+        
+                            &::before,
+                            &::after {
+                                content: '';
+                                width: .55rem;
+                                margin-bottom: .25rem;
+                                display: inline-block;
+                                border-bottom: 1px solid var(--font-color);
+                                position: relative;
+                            }
+                            &::before {
+                                left: -.25rem;
+                            }
+                            &::after {
+                                right: -.25rem;
+                            }
+                        }
+                    }
+                }
+                .work-order-preview-tabs-list {
+
+                    .work-order-preview-tabs-title  {
+
+                        &.is-active {
+                            opacity: $button-opacity-disabled;
+                            pointer-events: none;
+                        }
+                        a {
+                            width: 100%;
+    
+                            @extend .button;
+                        }
+                    }
+                }
+            }
+        }
+        .work-order-preview-tabs-content {
+            background: $transparent;
+            height: 100%;
+            overflow: auto;
+            padding: 2rem;
+
+
+            .work-order-preview-tabs-panel {
+
+                .work-order-preview-details-container {
+                    padding: 1rem;
+
+                    h3 {
+                        text-transform: capitalize;
+                    }
+                    h6 {
+                        font-size: .75rem;
+                        text-transform: capitalize;
+                    }
+                    p {
+                        font-size: .75rem;
+                    }
+                    .golura-user-icon-container {
+
+                        .golura-user-icon {
+                            width: 2.25rem;
+                            height: 2.25rem;
+                            cursor: pointer;
+
+                            h2 {
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                    .work-order-preview-work-order-details-container {
+                        padding-top: 1rem;
+                    }
+                    .work-order-preview-work-order-map-container {
+                        padding-top: 1rem;
+
+                        .view-map-container {
+                            padding: 4rem;
+                        }
+                    }
+                    .work-order-preview-work-order-details-option-container {
+                        padding-top: 1rem;
+
+                        .work-order-preview-work-order-details-comment-container {
+                            margin-bottom: 1rem;
+                        }
+                        .work-order-preview-work-order-details-comments-container {
+                            border: 1px solid var(--light-gray);
+                            border-radius: $container-radius;
+                            background: var(--white);
+                            padding: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.add-item-form-reveal {
+    width: 85vw;
+    max-width: 100%;
+}
+.view-purchase-order-reveal  {
+
+    .view-worker-order-purchase-orders-container {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+}

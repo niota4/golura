@@ -1,0 +1,190 @@
+<div class="admin-group-container admin-list-container">
+    <div class="admin-group admin-list-details">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="group-search-container list-search-container">
+                    <div class="group-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="group-search-input search-input"
+                                        id="groupsSearchInput" 
+                                        type="text"
+                                        placeholder="Search groups..."
+                                        ng-model="search.groups.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="groups-search-create-button-container create-button-container button-group" ng-class="{'align-right': $root.UI.isMobile}">
+                                        <button 
+                                            class="groups-search-create-button submit-button create-button button success white-text" 
+                                            id="groupSearchCreateButton"
+                                            type="button"
+                                            ng-click="initGroupForm()"
+                                            data-open="groupFormReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="group-list-header-container list-header-container">
+                    <div class="group-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-auto medium-auto large-auto">
+                                <h3>
+                                    <b>
+                                        Name
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <h3 class="list-header-options">
+                                    <b>
+                                        Options
+                                    </b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+            >
+                <div class="group-list-container list-container">
+                    <ul 
+                        class="group-list list"
+                        id="groupsList"
+                    >
+                        <li ng-if="!UI.groupsLoaded">
+                            <div class="ssc groups-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="groups-list-item list-item position-relative"
+                            ng-repeat="g in filteredGroups = 
+                            (groups | filter:search.groups.value) |
+                            orderBy: sort.groups.value track by $index"
+                        >
+
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-auto medium-auto large-auto">
+                                    <h6 class="list-item-name">
+                                        <b ng-if="$root.UI.isMobile">Name:</b>
+                                        {{g.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-auto medium-shrink large-shrink">
+                                    <div class="list-item-options-container">
+                                        <div class="button-group" ng-class="{'align-right': $root.UI.isMobile}">
+                                        <button 
+                                            class="list-item-options-button button white-text"
+                                            data-open="groupFormReveal"
+                                            ng-click="initGroupForm(g)"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Edit
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="g.delete = !g.delete"
+                                        >
+                                            <i class="fal fa-archive"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Delete
+                                            </span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="group-list-item-delete-container list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="g.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this Group?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto" ng-class="{'text-center': $root.UI.isMobile}">
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteGroup(g)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="g.delete = !g.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="group-form-reveal reveal"
+    id="groupFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeGroupFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/group-form.html'"></div>
+</div>

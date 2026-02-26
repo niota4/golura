@@ -1,0 +1,232 @@
+<div class="email-create-edit-container create-edit-container position-relative">
+    <div class="email-create-edit create-edit"> 
+        <div 
+            class="callout sticky text-center fade"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+            ng-if="!UI.clientView"
+        >
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>       
+        <form
+            class="email-form golura-form"
+            id="emailForm"
+            name="emailForm"
+            ng-submit="createEmail($event, email)"
+            golura-form-validation
+        >
+            <h1 ng-if="!email.id">
+                <b>
+                    New Email
+                </b>
+            </h1>
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Title
+                            <span>
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="emailTitle"
+                            name="emailTitle"
+                            placeholder="Johnny's Work Email"
+                            ng-model="email.title"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="input-container">
+                        <label>   
+                            Email
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="email"
+                            name="email"
+                            ng-model="email.email"
+                            placeholder="example@domain.com"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Type
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            id="emailType"
+                            name="emailType"
+                            config="detailTypeOptions"
+                            options="emailTypes"
+                            ng-model="email.type"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <input
+                        type="hidden"
+                        name="isPrimary"
+                        ng-model="email.isPrimary"
+                    />
+                    <div class="grid-x align-middle">
+                        <div class="cell small-6 medium-6 large-6">
+                            <div class="client-form-select-button-container select-container">
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="client-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="email.isPrimary = !email.isPrimary"
+                                            ng-class="{'selected': email.isPrimary}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="email.isPrimary"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label 
+                                            title="Updating this will override the current Primary Email"
+                                        >
+                                            Primary? 
+                                            <span>
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="email-form-submit-button submit-button success button white-text" 
+                        id="emailFormSubmitButton"
+                        type="submit"
+                        ng-disabled="emailForm.$invalid || UI.formSaving"
+                        ng-class="{'form-success-saving': UI.emailSaving}"
+                        ng-if="!email.id"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Create
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="email-form-save-button submit-button button white-text" 
+                        id="emailFormSaveButton"
+                        type="button"
+                        ng-disabled="emailForm.$invalid || email.saving"
+                        ng-class="{'form-success-saving': email.saving}"
+                        ng-click="updateEmail(email)"
+                        ng-if="email.id"
+                    >
+                        <span ng-if="!email.saving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="email.saving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="back-button button warning white-text"
+                        type="button"
+                        ng-click="UI.createEmail = !UI.createEmail"
+                        ng-if="UI.createEmail"
+                    >
+                        <i class="fal fa-times-circle"></i> Cancel
+                    </button>
+                    <button
+                        class="delete-button button alert white-text"
+                        type="button"
+                        ng-click="email.delete = !email.delete"
+                        ng-if="email.id"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div 
+            class="client-form-details-list-item-delete-container list-item-delete-container black-overlay"
+            ng-if="email.delete"
+        >
+            <div class="golura-block grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <span class="delete-icon">
+                        <i class="fal fa-circle-exclamation"></i>
+                    </span>
+                </div>
+                <div class="cell auto">
+                    <h4 ng-if="email.isPrimary">
+                        <span class="white-text">
+                            You can't delete a Primary Email until you replace it. Please make another contact 
+                            primary before deleting this.
+                        </span>
+                    </h4>
+                    <h4 ng-if="!email.isPrimary">
+                        <span class="white-text">Are you sure you want to delete 
+                            this Email?
+                        </span>
+                    </h4>
+                </div>
+                <div 
+                    class="cell small-12 medium-3 large-3"
+                    ng-class="{'text-center': $root.UI.isMobile || !$root.UI.isMobile}"
+                >
+                    <button
+                        class="delete-button button alert white-text"
+                        type="button"
+                        ng-class="{'form-alert': email.deleting}"
+                        ng-click="deleteClientEmail(email)"
+                        ng-if="!email.isPrimary"
+                    >
+                        <span ng-if="!e.deleting">
+                            <i class="fal fa-times-circle"></i> Confirm
+                        </span>
+                        <span ng-if="email.deleting">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="button warning white-text"
+                        type="button"
+                        ng-click="email.delete = !email.delete"
+                    >
+                        <i class="fal fa-times-circle"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,310 @@
+<div 
+    class="items-container inventory-container"
+    ng-init="initItems()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="items inventory">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="items-search-container list-search-container">
+                    <div class="items-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="items-search-create-button-container create-button-container">
+                                        <a 
+                                            class="items-create-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Back
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="items-search-input search-input"
+                                        id="itemsSearchInput" 
+                                        type="text"
+                                        placeholder="Search inventory items..."
+                                        ng-model="search.items.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="items-search-create-button-container create-button-container">
+                                        <a 
+                                            class="items-search-create-button create-button button success white-text" 
+                                            id="itemsSearchCreateButton"
+                                            ng-href="inventory/items/item"
+                                        >
+                                            <i class="fal fa-layer-plus"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span>
+                                        </a>
+                                        <importer-uploader 
+                                            sub-type="items"
+                                            class="inline-block"
+                                            ng-if="permissions.canCreate && !$root.UI.isMobile"
+                                        ></importer-uploader>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="items-list-header-container list-header-container">
+                    <div class="items-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Name</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Part Number</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Manufacturer Part Number</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="items-list-container list-container">
+                    <ul 
+                        class="items-list list"
+                        id="itemsList"
+                    >
+                        <li ng-if="!UI.itemsLoaded">
+                            <div class="ssc items-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="items-list-item list-item position-relative"
+                            ng-repeat="item in filteredItems = 
+                            (items | filter:search.items.value) |
+                            orderBy: sort.items.value |
+                            limitTo: UI.itemsDisplayed track by $index"
+                            ng-class="{'selected': item.selected}"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Name: 
+                                        </b>
+                                        {{item.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Part Number: 
+                                        </b>
+                                        {{item.partNumber}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Manufacturer Number:
+                                        </b>
+                                        {{item.manufacturerPartNumber}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Created: 
+                                        </b>
+                                        {{item.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="list-item-options-container"
+                                        ng-class="{'text-right': $root.UI.isMobile}"
+                                    >
+                                        <a 
+                                            class="list-item-options-button button white-text"
+                                            ng-href="inventory/items/item/{{item.id}}/edit"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Edit
+                                            </span>
+                                        </a>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="item.delete = !item.delete"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Archive
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="items-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="item.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this item?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            id="inventoryLabelFormSubmitButton"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteInventoryLabel(item)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="item.delete = !item.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="items-list-infinite-scroll text-center"
+                            id="itemssListInfiniteScroll"
+                            ng-init="initItemsInfiniteScroll()"
+                            ng-show="filteredItems.length > 20"
+                            ng-click="updateItemsDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredItems.length"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Item you're looking, 
+                                    try to double check your spelling!
+                                </h3>
+                            </div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredItems.length && UI.itemsLoaded"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oh! </b>
+                                    Click the Create button to add your first inventory item.
+                                </h3>
+                                <a 
+                                    class="items-search-create-button create-button submit-button button success white-text" 
+                                    id="itemsSearchCreateButton"
+                                    ng-href="inventory/items/item"
+                                >
+                                    <i class="fal fa-layer-plus"></i> Create
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="import-items-revel reveal"
+    id="importItemsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserPermissionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+</div>

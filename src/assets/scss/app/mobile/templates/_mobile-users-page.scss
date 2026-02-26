@@ -1,0 +1,51 @@
+@include breakpoint(small only) {
+    .view-user-container {
+
+        &.user-drive-container {
+
+            .user-drive {
+
+                .mobile-navigation-breadcrumbs {
+                    background: var(--white);
+                    padding: 1rem 1rem 0px;
+                }
+            }
+        }
+        .view-user {
+
+            &.view-user-events {
+
+                .view-user-events-details-container {
+
+                    .view-user-events-details {
+
+                        .view-user-events-container {
+
+                            .view-user-events-list {
+                                padding: 0px;
+                            }
+                        }
+                    }
+                }
+            }
+            .view-user-details-container,
+            .user-statistics-chart-container,
+            .user-statistics-container {
+                margin-bottom: 1rem;
+
+                .user-statistics {
+
+                    .user-statistics-parameters-form-container {
+
+                        .user-statistics-parameters-form {
+
+                            .input-container {
+                                margin-bottom: 1rem !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,504 @@
+<div class="admin-estimate-settings-container admin-form-container">
+    <div class="admin-estimate-settings admin-form-details">
+        <h1>
+            <b>
+                Estimate Settings
+            </b>
+        </h1>
+        <form 
+            class="estimate-settings-form admin-form golura-form"
+            id="estimateSettingsForm"
+            name="estimateSettingsForm"
+            ng-submit="updateEstimateSettings($event, estimate)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <a
+                        class="admin-button button alert white-text"
+                        ng-class="{'expanded': $root.UI.isMobile}"
+                        ng-href="admin-settings/archived/estimates"
+                    >
+                        <i class="fal fa-box-archive"></i> View Archived Estimates
+                    </a>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="button-group"
+                        ng-class="{'stacked': $root.UI.isMobile}"
+                    >
+                        <a 
+                            class="estimate-option-buton button"
+                            ng-href="estimates/line-items"
+                        >
+                            <i class="fal fa-search"></i> 
+                            View Line Items
+                        </a>
+                    </div>
+                    <h2>
+                        <b>Defaults</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateSettingsLoaded"
+                        ></div>
+                        <label for="defaultMarkup">
+                            Default Markup
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="defaultMarkup"
+                            name="defaultMarkup"
+                            placeholder="Enter default markup"
+                            ng-model="estimate.estimateDefaultMarkup"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateSettingsLoaded"
+                        ></div>
+                        <label for="defaultSalesTaxRate">
+                            Default Sales Tax Rate
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            step="0.01"
+                            id="defaultSalesTaxRate"
+                            name="defaultSalesTaxRate"
+                            placeholder="Enter default sales tax rate"
+                            ng-model="estimate.estimateDefaultSalesTaxRate"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateSettingsLoaded"
+                        ></div>
+                        <label for="estimateStatus">
+                            Estimate Status
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="statusOptions"
+                            options="estimateStatuses"
+                            id="estimateStatus"
+                            name="estimateStatus"
+                            ng-model="estimate.estimateDefaultStatusId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateSettingsLoaded"
+                        ></div>
+                        <label for="minimumEstimatePaymentPercentage">
+                            Minimum Estimate Payment Percentage
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            step="0.01"
+                            id="minimumEstimatePaymentPercentage"
+                            name="minimumEstimatePaymentPercentage"
+                            placeholder="Enter minimum estimate payment percentage"
+                            ng-model="estimate.minimumEstimatePaymentPercentage"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="estimate-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="estimate-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="estimate email button"
+                                    ng-click="estimate.lineItemPrice = !estimate.lineItemPrice"
+                                    ng-class="{'selected': estimate.lineItemPrice}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimate.lineItemPrice"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Show Line Item Price?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="estimate-settings-submit-button submit-button button" 
+                        id="estimateSettingsSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Preferences</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x align-muddle">
+                        <div class="cell auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <label for="estimateEmailTemplate">
+                                    Estimate Email Template
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="templateOptions"
+                                    options="emailTemplates"
+                                    id="estimateEmailTemplate"
+                                    name="estimateEmailTemplate"
+                                    ng-model="estimate.estimateEmailTemplateId"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell shrink">
+                            <button
+                                class="admin-templates-button admin-button success button white-text"
+                                type="button"
+                                ng-click="initEmailTemplatePreview(estimate.estimateEmailTemplateId)"
+                                data-open="emailTemplatePreviewReveal"
+                                ng-if="permissions.canView"
+                            >
+                                <i class="fal fa-file-magnifying-glass"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x align-muddle">
+                        <div class="cell auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <label for="estimatePdfTemplate">
+                                    Estimate PDF Template
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="templateOptions"
+                                    options="pdfTemplates"
+                                    id="estimatePdfTemplate"
+                                    name="estimatePdfTemplate"
+                                    ng-model="estimate.estimatePdfTemplateId"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell shrink">
+                            <button
+                                class="admin-templates-button admin-button success button white-text"
+                                type="button"
+                                ng-click="initEmailTemplatePreview(template)"
+                                data-open="emailTemplatePreviewReveal"
+                                ng-if="permissions.canView"
+                            >
+                                <i class="fal fa-file-magnifying-glass"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x align-muddle">
+                        <div class="cell auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <label for="estimateSmsTemplate">
+                                    Estimate SMS Template
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="templateOptions"
+                                    options="smsTemplates"
+                                    id="estimateSmsTemplate"
+                                    name="estimateSmsTemplate"
+                                    ng-model="estimate.estimateSmsTemplateId"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell shrink">
+                            <button
+                                class="admin-templates-button admin-button success button white-text"
+                                type="button"
+                                ng-click="initEmailTemplatePreview(estimate.estimateSmsTemplateId)"
+                                data-open="emailTemplatePreviewReveal"
+                                ng-if="permissions.canView"
+                            >
+                                <i class="fal fa-file-magnifying-glass"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="estimate-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="estimate-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="estimate email button"
+                                    ng-click="estimate.estimateEmailNotification = !estimate.estimateEmailNotification"
+                                    ng-class="{'selected': estimate.estimateEmailNotification}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimate.estimateEmailNotification"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    Email Notification
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="estimate-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="estimate-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="estimate email button"
+                                    ng-click="estimate.estimateCallNotification = !estimate.estimateCallNotification"
+                                    ng-class="{'selected': estimate.estimateCallNotification}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimate.estimateCallNotification"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    Call Notification
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="estimate.estimateEmailNotification"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-8 large-8">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <label for="emailDate">
+                                    Email Notification Delay
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="emailDate"
+                                    name="emailDate"
+                                    placeholder="e.g., 5 days"
+                                    ng-model="estimate.estimateCallNotificationDelay"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <label for="estimateEmailNotificationDelayTimeType">
+                                    Email Notification Delay
+                                </label>
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <selectize
+                                    class="form-input"
+                                    config="timeTypeOptions"
+                                    options="timeTypes"
+                                    id="estimateEmailNotificationDelayTimeType"
+                                    name="estimateEmailNotificationDelayTimeType"
+                                    ng-model="estimate.estimateEmailNotificationDelayTimeType"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                    </div>
+                </div>             
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="estimate.estimateCallNotification"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-8 large-8">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <label for="callDate">
+                                    Call Notification Delay
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="callDate"
+                                    name="callDate"
+                                    placeholder="e.g., 5 days"
+                                    ng-model="estimate.estimateCallNotificationDelay"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateSettingsLoaded}"
+                            >
+                                <label for="estimateCallNotificationDelayTimeType">
+                                    Call Notification Delay
+                                </label>
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateSettingsLoaded"
+                                ></div>
+                                <selectize
+                                    class="form-input"
+                                    config="timeTypeOptions"
+                                    options="timeTypes"
+                                    id="estimateCallNotificationDelayTimeType"
+                                    name="estimateCallNotificationDelayTimeType"
+                                    ng-model="estimate.estimateCallNotificationDelayTimeType"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="estimate-settings-submit-button submit-button button" 
+                        id="estimateSettingsSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Terms And Conditions</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="golura-rich-text-editor"
+                        id="estimateTermsAndConditions"
+                        rich-text-editor 
+                        ng-model="estimate.estimateTermsAndConditions"
+                    ></div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="estimate-settings-submit-button submit-button button" 
+                        id="estimateSettingsSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

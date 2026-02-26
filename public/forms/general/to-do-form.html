@@ -1,0 +1,344 @@
+<div class="todo-create-edit-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+        ng-if="!UI.clientView"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="todo-create-edit create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newToDo">Create To-Do List</b>
+            <b ng-if="!UI.newToDo">Edit To-Do List</b>
+        </h1>
+        <form 
+            class="todo-form golura-form" 
+            id="todoForm" 
+            name="todoForm" 
+            ng-submit="createToDo($event, toDo)"
+        >
+            <div 
+                class="grid-x grid-margin-x align-middle"
+                ng-if="UI.step == 1"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Details</b></h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Name
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="name" 
+                            placeholder="To-Do Name" 
+                            ng-model="toDo.name" 
+                            autocomplete="off"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Due Date
+                        </label>
+                        <input 
+                            class="form-input"
+                            type="text"
+                            name="toDoDueDate"
+                            ng-model="toDo.dueDate"
+                            flatpickr
+                            twelve-hour="true"
+                            placeholder="Select a Due Date"
+                            allow-past="false"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea 
+                                class="form-textarea" 
+                                name="description" 
+                                placeholder="To-Do Description" 
+                                ng-model="toDo.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Assign To (User)
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="userOptions"
+                            options="users"
+                            id="userId"
+                            name="userId"
+                            ng-model="toDo.assignedUserId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="todo-form-continue-button submit-button button" 
+                        id="todoFormContinueButton" 
+                        type="button" 
+                        ng-disabled="todoForm.$invalid || UI.formSaving" 
+                        ng-click="UI.step = 2" 
+                    >
+                        <i class="fal fa-check-circle"></i> Continue
+                    </button>
+                </div>
+            </div>
+            <div 
+                class="grid-x grid-margin-x align-middle"
+                ng-if="UI.step == 2"
+            >
+                <div class="cell small-12 medium-6 large-6">
+                    <button 
+                        class="todo-form-back-button button warning white-text" 
+                        id="todoFormBackButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-click="UI.step = 1"
+                    >
+                        <i class="fal fa-circle-arrow-left"></i> Back
+                    </button>
+                </div>
+                <div class="cell small-12 medium-6 large-6 text-right">
+                    <button 
+                        class="todo-form-add-button button success white-text"
+                        id="todoFormAddButton"
+                        type="button"  
+                        ng-click="addToDoItem(toDo)"
+                        ng-disabled="UI.formSaving"
+                    >
+                        <i class="fal fa-plus"></i> 
+                        Add Task
+                    </button>
+                    <button 
+                        class="todo-form-create-submit-button submit-button button" 
+                        id="todoFormCreateSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving || !toDo.data.length" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-if="UI.newToDo"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Create
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="todo-form-edit-submit-button submit-button button" 
+                        id="todoFormEditSubmitButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-click="updateToDo(toDo)" 
+                        ng-if="!UI.newToDo"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="todo-form-tasks-list-container list-container"
+                        id="todoFormTasksContainer"
+                    >
+                        <ul
+                            class="todo-task-list list"
+                            id="todoTaskList"
+                        >
+                            <li 
+                                class="todo-task-list-item list-item grid-x grid-margin-x align-middle"
+                                ng-repeat="item in toDo.data track by $index" 
+                            >
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell small-12 medium-12 large-12">
+                                            <div class="input-container">
+                                                <label>
+                                                    Task Title
+                                                    <span class="alert-text">*</span>
+                                                </label>
+                                                <input 
+                                                    class="form-input" 
+                                                    type="text" 
+                                                    name="name" 
+                                                    placeholder="To-Do Title" 
+                                                    ng-model="item.title" 
+                                                    autocomplete="off"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-12 large-12">
+                                            <div class="input-container">
+                                                <label>
+                                                    Due Date
+                                                </label>
+                                                <input 
+                                                    class="form-input"
+                                                    type="text"
+                                                    name="itemDueDate-{{$index}}"
+                                                    ng-model="item.dueDate"
+                                                    allow-past="false"
+                                                    flatpickr
+                                                    twelve-hour="true"
+                                                    placeholder="Select a Due Date"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-auto large-auto">
+                                            <div class="todo-task-list-item-select-button-container select-container">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="todo-task-list-item-select-button select-button button"
+                                                            type="button"
+                                                            ng-click="item.requireImages = !item.requireImages"
+                                                            ng-class="{'selected': item.requireImages}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="item.requireImages"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <label>
+                                                            Require Images? 
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-auto large-auto">
+                                            <div class="todo-task-list-item-select-button-container select-container">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="todo-task-list-item-select-button select-button button"
+                                                            type="button"
+                                                            ng-click="item.requiresVideos = !item.requiresVideos"
+                                                            ng-class="{'selected': item.requiresVideos}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="item.requiresVideos"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <label>
+                                                            Require Videos? 
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-auto large-auto">
+                                            <div class="todo-task-list-item-select-button-container select-container">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="todo-task-list-item-select-button select-button button"
+                                                            type="button"
+                                                            ng-click="item.requiresDocuments = !item.requiresDocuments"
+                                                            ng-class="{'selected': item.requiresDocuments}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="item.requiresDocuments"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <label>
+                                                            Require Documents? 
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell small-12 medium-shrink large-shrink">
+                                            <div class="button-group">
+                                                <button 
+                                                    class="todo-task-list-item-delete-button button alert white-text"
+                                                    type="button" 
+                                                    ng-click="toDo.data.splice($index, 1)"
+                                                >
+                                                    <i class="fal fa-archive"></i> 
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div class="button-group">
+                                        <button
+                                            class="list-item-options-button button success white-text"
+                                            type="button"
+                                            ng-click="moveToDoItem($index, 'up')"
+                                            ng-if="toDo.data.length > 1"
+                                            ng-disabled="$index === 0"
+                                        >
+                                            <i class="fal fa-up"></i>
+                                        </button>   
+                                        <button
+                                            class="list-item-options-button button success white-text"
+                                            type="button"
+                                            ng-click="moveToDoItem($index, 'down')"
+                                            ng-if="toDo.data.length > 1"
+                                            ng-disabled="$index === toDo.data.length - 1"
+                                        >
+                                            <i class="fal fa-down"></i>
+                                        </button> 
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

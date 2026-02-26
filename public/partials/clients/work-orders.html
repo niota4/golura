@@ -1,0 +1,266 @@
+<div 
+    class="view-client-work-orders-container view-client-container view-container"
+    ng-init="initClient()"
+>
+    <div format-clients client="client"></div>
+    <div class="view-client-work-orders view-client view">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile,
+                'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="button-group align-right">
+                    <button
+                        class="view-client-work-orders-create-work-order-button submit-button create-button button success white-text" 
+                        id="viewClientEstimatesCreateEstimateButton"
+                        type="button"
+                        data-open="workOrderCreationReveal"
+                        ng-if="subPermissions.workOrders.canCreate"
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Work Order
+                    </button>
+                    <button
+                        class="view-client-work-orders-create-work-order-button submit-button create-button button white-text"
+                        ng-class="{'alert': !UI.archiveWorkOrders}"
+                        id="viewClientWorkOrdersCreateWorkOrderButton"
+                        type="button"
+                        ng-if="subPermissions.workOrders.canArchive"
+                        ng-click="initWorkOrders(!UI.archiveWorkOrders)"
+                    >
+                        <span ng-if="!UI.archiveWorkOrders">
+                            <i class="fal fa-box-archive"></i> View Archived
+                        </span>
+                        <span ng-if="UI.archiveWorkOrders">
+                            <i class="fal fa-search"></i> View Active
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="view-client-work-orders-list-container list-item-details-container">
+                    <div class="golura-block list-item-details">
+                        <div 
+                            class="golura-block grid-y"
+                        >
+                            <div class="cell shrink">
+                                <div class="grid-x">
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <h3>
+                                            <b>
+                                                <span ng-if="UI.archiveWorkOrders">
+                                                    Archived 
+                                                </span>
+                                                Work Orders
+                                            </b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="list-search-container list-container">
+                                    <div class="list-search">
+                                        <div class="search-input-container">
+                                            <div class="grid-x align-middle">
+                                                <div class="cell auto align-self-bottom">
+                                                    <input
+                                                        class="view-client-work-orders-search-input search-input"
+                                                        id="viewClientWorkOrdersSearchInput" 
+                                                        type="text"
+                                                        placeholder="Search work orders..."
+                                                        ng-model="search.workOrders.value"
+                                                    />
+                                                </div>
+                                                <div class="cell shrink align-self-bottom">
+                                                    <span class="search-icon">
+                                                        <i class="fal fa-search"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>            
+                            <div 
+                                class="cell shrink"
+                                ng-if="!$root.UI.isMobile"
+                            >
+                                <div class="view-client-work-orders-header-container list-header-container">
+                                    <div class="view-client-work-orders-header list-header">
+                                        <div class="grid-x grid-padding-x align-middle align-left">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Work Order Number</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Cost</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Approval Status</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-1 large-1">
+                                                <h3>
+                                                    <b>Priority</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Created</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3 class="list-header-options">
+                                                    <b>Options</b>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+                            >
+                                <div class="list-container golura-form">
+                                    <ul class="view-client-work-orders-list list">
+                                        <li 
+                                            class="view-client-work-orders-list-item"
+                                            ng-if="!filteredWordOrders.length &&
+                                            UI.workOrdersLoaded"
+                                        >
+                                            <h5>
+                                                <b>
+                                                    No 
+                                                    <span ng-if="UI.archiveWorkOrders">
+                                                        Archived 
+                                                    </span>
+                                                    Work Orders Found
+                                                </b>
+                                            </h5>
+                                        </li>
+                                        <li 
+                                            class="view-client-work-orders-list-item list-item"
+                                            ng-repeat="workOrder in filteredWordOrders = 
+                                            (workOrders | filter: search.workOrders.value) |
+                                            orderBy: sort.default.value track by $index"
+                                        >
+                                            <div format-users user="workOrder.Creator"></div>
+                                            <div class="grid-x grid-margin-x align-middle">
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        {{workOrder.workOrderNumber}}
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">
+                                                            Cost:
+                                                        </b>
+                                                        ${{workOrder.cost | number}}
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">
+                                                            Approval Status:
+                                                        </b>
+                                                        <span ng-if="workOrder.WorkOrderStatus.name">
+                                                            {{workOrder.WorkOrderStatus.name}}
+                                                        </span>
+                                                        <span ng-if="!workOrder.WorkOrderStatus.name">
+                                                            Pending
+                                                        </span>
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-1 large-1">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">
+                                                            Priority:
+                                                        </b>
+                                                        <span ng-class="{'alert-text': workOrder.Priority.level == 'high'}">
+                                                            {{workOrder.Priority.level}}
+                                                        </span>
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <i>
+                                                            Created {{workOrder.createdAt | DateTimeFormat}}
+                                                        </i>
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <div 
+                                                        class="button-group"
+                                                        ng-class="{'align-right': $root.UI.isMobile}"
+                                                    >
+                                                        <a 
+                                                            class="list-item-options-button button"
+                                                            ng-href="work-orders/work-order/{{workOrder.id}}"
+                                                            ng-if="subPermissions.workOrders.canView"
+                                                            ng-cloak
+                                                        >
+                                                            <i class="fal fa-search"></i> 
+                                                            <span ng-if="!$root.UI.isMobile">
+                                                                View
+                                                            </span>
+                                                        </a>
+                                                        <a 
+                                                            class="list-item-options-button button success white-text"
+                                                            ng-href="work-orders/work-order/{{workOrder.id}}/edit"
+                                                            ng-if="subPermissions.workOrders.canEdit"
+                                                            ng-cloak
+                                                        >
+                                                            <i class="fal fa-edit"></i> 
+                                                            <span ng-if="!$root.UI.isMobile">
+                                                                Edit
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="invoice-creation-reveal reveal"
+    id="invoiceCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/invoices/ad-hoc-invoice-form.html'"></div>
+</div>

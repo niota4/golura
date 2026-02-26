@@ -1,0 +1,242 @@
+<div 
+    class="estimate-view-activity-container estimate-view-container view-container"
+    ng-init="initEstimate();"
+>
+    <div format-estimates estimate="estimate"></div>
+    <div class="estimate-view-activity estimate-view view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="estimate-view-activity-search-container list-search-container">
+                    <div class="view-estimate-activity-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="estimate-view-search-create-button-container create-button-container">
+                                        <a 
+                                            class="estimate-view-create-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Back
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="view-estimate-activity-search-input search-input"
+                                        id="viewEstimateActivitySearchInput" 
+                                        type="text"
+                                        placeholder="Search activities..."
+                                        ng-model="search.estimateActivity.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="view-estimate-activity-list-header-container list-header-container">
+                    <div class="view-estimate-activity-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Changed By</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Action</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Type</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Description</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Time changed</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-2 large-2"
+                                ng-if="permissions.canEdit"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="view-estimate-activity-list-container list-container">
+                    <ul 
+                        class="view-estimate-activity-list list"
+                        id="estimateActivitiesList"
+                    >
+                        <li ng-if="!UI.estimateActivitiesLoaded">
+                            <div class="ssc view-estimate-activity-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(20) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="view-estimate-activity-list-item list-item position-relative"
+                            ng-repeat="a in filteredEstimateActivities = 
+                            (activities | filter:search.estimateActivity.value) |
+                            orderBy: sort.estimateActivity.value |
+                            limitTo: UI.estimateActivitiesDisplayed track by $index"
+                            ng-class="{'selected': l.selected}"
+                        >
+                            <div format-users user="a.changedBy"></div>
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div 
+                                        class="view-estimate-activity-user-container"
+                                        ng-if="a.changedBy"
+                                    >
+                                        <div class="grid-x align-middle">
+                                            <div class="cell shrink">
+                                                <div class="user-container">
+                                                    <div class="golura-user-icon-container text-center frame-container">
+                                                        <div 
+                                                            class="golura-user-icon text-center" 
+                                                            ng-style="{'background-color': a.changedBy.Preferences.backgroundColor}"
+                                                        >
+                                                            <h2 class="flex-child-auto align-middle">
+                                                                <a 
+                                                                    class="white-text"
+                                                                    ng-href="users/user/{{a.changedBy.id}}"
+                                                                    ng-cloak
+                                                                >
+                                                                    {{a.changedBy.shortName}}
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">
+                                                <h6>
+                                                    {{a.changedBy.fullName || 'System'}}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Action: </b>
+                                        </span>
+                                        {{a.action}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Type: </b>
+                                        </span>
+                                        {{a.formattedName}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 ng-if="$root.UI.isMobile">
+                                        <b>Description: </b>
+                                        <div ng-bind-html="a.description">
+                                    </h6>
+                                    <h6 
+                                        ng-bind-html="a.description"
+                                        ng-if="!$root.UI.isMobile"
+                                    >
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Time changed: </b>
+                                        </span>
+                                        {{a.timestamp | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-2 large-2"
+                                    ng-if="permissions.canEdit"
+                                    ng-class="{'text-right': $root.UI.isMobile}"
+                                >
+                                    <div class="list-item-options-container">
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="a.revert = !a.revert"
+                                        >
+                                            <i class="fal fa-undo"></i> Undo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="a.revert"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to Undo
+                                                this Change??
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="revertEstimateActivity(a)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="a.revert = !a.revert"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

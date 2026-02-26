@@ -1,0 +1,22 @@
+<div 
+    class="report-view-container view-container"
+    ng-init="initReport()"
+>
+    <div class="report-view view">
+        <div 
+            class="golura-block"
+            ng-include="'dist/partials/reports/spreadsheet.html'"
+            ng-if="UI.type === 'spreadsheet'"
+        ></div>
+        <div 
+            class="golura-block"
+            ng-include="'dist/partials/reports/summary.html'"
+            ng-if="UI.type === 'summary'"
+        ></div>
+        <div 
+            class="golura-block"
+            ng-include="'dist/partials/reports/dashboard.html'"
+            ng-if="UI.type === 'dashboard'"
+        ></div>
+    </div>
+</div>

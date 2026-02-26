@@ -1,0 +1,111 @@
+<div class="admin-payment-method-container create-edit-container">
+    <div 
+        class="callout success success-text sticky text-center fade" 
+        ng-if="UI.modalFormSaved" 
+        data-sticky
+    >
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="admin-payment-method create-edit grid-container">
+        <h1>
+            <b>
+                Add Payment Method
+            </b>
+        </h1>
+        <form 
+            class="admin-payment-method-form golura-form" 
+            id="adminPaymentMethodForm" 
+            name="adminPaymentMethodForm" 
+            ng-submit="createPaymentMethod($event, paymentMethod)"
+            golura-form-validation
+        >
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12">
+                    <div class="input-container">
+                        <label>
+                            Payment Method Name
+                            <span class="text-alert">*</span>
+                            <i 
+                                class="fal fa-question-circle help-text-icon" 
+                                title="Enter a name for this payment method (e.g., Credit Card, Bank Transfer, Cash)"
+                            ></i>
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            ng-model="paymentMethod.name"
+                            placeholder="Enter payment method name"
+                            required
+                            golura-validate
+                        >
+                        <div class="form-error" ng-show="adminPaymentMethodForm.name.$invalid">
+                            Payment method name is required
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cell small-12">
+                    <div class="input-container">
+                        <label>
+                            Description
+                            <i 
+                                class="fal fa-question-circle help-text-icon" 
+                                title="Optional description for this payment method"
+                            ></i>
+                        </label>
+                        <textarea 
+                            name="description"
+                            ng-model="paymentMethod.description"
+                            placeholder="Enter description (optional)"
+                            rows="3"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="cell small-12">
+                    <div class="input-container">
+                        <label>
+                            <input 
+                                type="checkbox"
+                                ng-model="paymentMethod.removable"
+                                ng-init="paymentMethod.removable = true"
+                            >
+                            Allow users to remove this payment method
+                            <i 
+                                class="fal fa-question-circle help-text-icon" 
+                                title="If checked, users can remove this payment method. Uncheck for system-required methods."
+                            ></i>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="cell small-12">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell shrink">
+                            <button 
+                                class="button success white-text" 
+                                type="submit"
+                                ng-disabled="UI.formSaving || adminPaymentMethodForm.$invalid"
+                            >
+                                <i class="fal fa-save" ng-if="!UI.formSaving"></i>
+                                <i class="fal fa-spinner fa-spin" ng-if="UI.formSaving"></i>
+                                {{UI.formSaving ? 'Saving...' : 'Add Payment Method'}}
+                            </button>
+                        </div>
+                        <div class="cell shrink">
+                            <button 
+                                class="button secondary" 
+                                type="button"
+                                data-close
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

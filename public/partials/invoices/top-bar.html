@@ -1,0 +1,56 @@
+<div class="view-invoice-top-bar-container top-bar-container">
+    <div class="button-group"
+        ng-class="{'align-right': !$root.UI.isMobile,
+        'stacked': $root.UI.isMobile}"
+    >
+        <a
+            class="invoice-view-button button"
+            ng-href="invoices/invoice/{{invoice.id}}"
+            ng-if="!UI.invoiceView || page.name != 'invoices'"
+        >
+            <i class="fal fa-expand"></i> Full Screen
+        </a>
+        <button 
+            class="button"
+            ng-click="editInvoice(invoice.id)"
+            ng-if="UI.invoiceView || page.name != 'invoices' ||
+            UI.userInvoices"
+        >
+            <i class="fal fa-edit"></i> Edit
+        </button>
+        <button
+            class="invoice-pay-button button warning white-text"
+            id="invoicePay"
+            type="button"
+            ng-if="invoice.total > 0 &&
+            UI.invoiceView"
+            ng-click="initPaymentForm()"
+            data-open="invoicePaymentReveal"
+        >
+            <i class="fal fa-cash-register"></i> Pay
+        </button>
+        <button
+            class="invoice-print-button button success white-text"
+            id="invoiceSend"
+            type="button"
+            ng-if="!UI.invoiceView && page.name != 'invoices'"
+        >
+            <i class="fal fa-paper-plane"></i> Send
+        </button>
+        <button
+            class="invoice-print-button button warning white-text"
+            id="invoicePrint"
+            type="button"
+            ng-if="UI.invoiceView && page.name == 'invoices'"
+            ng-click="printInvoice(invoice)"
+        >
+            <i class="fal fa-print"></i> Print
+        </button>
+        <button 
+            class="button alert white-text"
+            ng-click="deleteInvoice(invoice.id)"
+        >
+            <i class="fal fa-archive"></i> Delete
+        </button>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+<div class="admin-payroll-container admin-form-container">
+    <div class="admin-payroll admin-form-details">
+        <h1>
+            <b>
+                Payroll Settings
+            </b>
+        </h1>
+        <form 
+            class="payroll-form admin-form golura-form"
+            id="payrollForm"
+            name="payrollForm"
+            ng-submit="updatePayrollSettings($event, payrollSettings)"
+        >
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="payroll-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="payroll-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="payroll enable button"
+                                    ng-click="payrollSettings.enablePayroll = !payrollSettings.enablePayroll"
+                                    ng-class="{'selected': payrollSettings.enablePayroll}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="payrollSettings.enablePayroll"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Enable Payroll?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="payrollSettings.enablePayroll"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="input-container">
+                                <label>
+                                    Default Pay Period (in days)
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="number"
+                                    name="defaultPayPeriod"
+                                    placeholder="14"
+                                    ng-model="payrollSettings.defaultPayPeriod"
+                                />
+                            </div>
+                        </div>
+                        <div 
+                            class="cell small-12 medium-12 large-12"
+                            ng-if="payrollSettings.defaultPayPeriod"
+                        >
+                            <div class="input-container">
+                                <label>
+                                    Pay Period Start Date
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-input"
+                                    id="startDate"
+                                    name="startDate"
+                                    ng-model="payrollSettings.payrollStartDate"
+                                    flatpickr
+                                    date-only="true"
+                                    allow-past="true"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-8 large-8">
+                            <div class="input-container">
+                                <label>
+                                    Overtime Threshold (in hours)
+                                </label>
+                                <input 
+                                    class="form-input"
+                                    type="text"
+                                    name="overtimeThreshold"
+                                    placeholder="40"
+                                    ng-model="payrollSettings.payrollOvertimeThreshold"
+                                    ui-mask="99"
+                                    ui-mask-placeholder
+                                    ui-mask-placeholder-char="·"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="input-container">
+                                <label>
+                                    Overtime Multiplier
+                                </label>
+                                <input
+                                    class="form-input" 
+                                    type="number"
+                                    id="overtimeMultiplier"
+                                    name="overtimeMultiplier"
+                                    placeholder="0%" 
+                                    ng-model="payrollSettings.payrollOvertimeMultiplier"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="input-container">
+                                <label>
+                                    Default Pay Rate
+                                </label>
+                                <input
+                                    class="form-input" 
+                                    type="text"
+                                    id="defaultPayRate"
+                                    name="defaultPayRate"
+                                    placeholder="0.00" 
+                                    ng-model="payrollSettings.payrollDefaultPayRate" 
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="payroll-form-select-button-container select-container">
+                                <div class="grid-x align-middle">
+                                    <div class="cell shrink text-right">
+                                        <button 
+                                            class="payroll-form-select-button select-button button"
+                                            type="button"
+                                            aria-label="payroll auto-generate button"
+                                            ng-click="payrollSettings.autoGenerate = !payrollSettings.autoGenerate"
+                                            ng-class="{'selected': payrollSettings.autoGeneratePayroll}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="payrollSettings.autoGenerate"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="cell auto">
+                                        <label>
+                                            Auto-generate Payroll?
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

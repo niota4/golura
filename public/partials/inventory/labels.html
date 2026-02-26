@@ -1,0 +1,252 @@
+<div 
+    class="inventory-labels-container"
+    ng-init="initInventoryLabels()"
+>
+    <div class="inventory-labels">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="inventory-labels-search-container list-search-container">
+                    <div class="inventory-labels-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="inventory-labels-search-create-button-container create-button-container">
+                                        <a 
+                                            class="inventory-labels-create-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> Back
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="inventory-labels-search-input search-input"
+                                        id="inventoryLabelsSearchInput" 
+                                        type="text"
+                                        placeholder="Search inventory labels..."
+                                        ng-model="search.inventoryLabels.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="cell shrink">
+                                        <div class="sort-input-container">
+                                            <div class="grid-x">
+                                                <div class="cell auto">
+                                                    <selectize
+                                                        class="inventory-labels-search-sort-input form-input sort-input"
+                                                        id="inventoryLabelsSearchSortInput"
+                                                        config="sortOptions"
+                                                        options="inventoryLabelsOptions"
+                                                        ng-model="sort.inventoryLabels.id"
+                                                        ng-change="orderBy(sort.inventoryLabels.id)"
+                                                        ng-cloak
+                                                    >
+                                                    </selectize>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <span class="sort-icon">
+                                                        <i class="fal fa-sort"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="inventory-labels-search-create-button-container create-button-container">
+                                        <a 
+                                            class="inventory-labels-search-create-button submit-button create-button button success white-text" 
+                                            id="inventoryLabelsSearchCreateButton"
+                                            type="button"
+                                            ng-href="inventory/labels/label"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="inventory-labels-list-header-container list-header-container">
+                    <div class="inventory-labels-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>ID</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-4 large-4">
+                                <h3>
+                                    <b>Label</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-4 large-4">
+                                <h3>
+                                    <b>Location</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-4 large-4">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-shrink large-shrink"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="inventory-labels-list-container list-container">
+                    <ul 
+                        class="inventory-labels-list list"
+                        id="inventoryLabelsList"
+                    >
+                        <li ng-if="!UI.inventoryLabelsLoaded">
+                            <div class="ssc inventory-labels-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="inventory-labels-list-item list-item position-relative"
+                            ng-repeat="label in filteredInventoryLabels = 
+                            (inventoryLabels | filter:search.inventoryLabels.value) |
+                            orderBy: sort.inventoryLabels.value |
+                            limitTo: UI.inventoryLabelsDisplayed track by $index"
+                            ng-class="{'selected': label.selected}"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        #{{label.id}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <h6 class="inventory-labels-list-item-role text-capitalize">
+                                        {{label.label}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <h6>
+                                        {{label.location}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <h6>
+                                        {{label.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div class="list-item-options-container">
+                                        <a 
+                                            class="list-item-options-button button white-text"
+                                            ng-href="inventory/labels/label/{{label.id}}"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="label.delete = !label.delete"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="inventory-labels-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="label.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this label?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            id="inventoryLabelFormSubmitButton"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteInventoryLabel(label)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="label.delete = !label.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="inventory-labels-list-infinite-scroll text-center"
+                            id="inventoryLabelsListInfiniteScroll"
+                            ng-init="initInventoryLabelInfiniteScroll()"
+                            ng-show="filteredInventoryLabels.length > 20"
+                            ng-click="updateInventoryLabelsDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredInventoryLabels.length"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Label you're looking, 
+                                    try to double check your spelling!
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

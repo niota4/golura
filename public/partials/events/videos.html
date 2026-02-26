@@ -1,0 +1,49 @@
+<div 
+    class="view-event-photos-container view-event-container view-container"
+    ng-init="initEvent();"
+>
+    <div format-events event="event"></div>
+    <div class="view-event-photos view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-4 large-4">
+                        <div ng-include="'dist/partials/events/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/event-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="call small-12 medium-auto large-auto">
+                <div class="view-client-photos-images-container">
+                    <div 
+                        class="grid-x grid-margin-x videos-ssc ssc"
+                        ng-if="!UI.videosLoaded"
+                    >
+                        <div 
+                            class="cell small-12 medium-4 large-3 ssc-square"
+                            ng-repeat="x in [].constructor(20) track by $index"
+                        ></div>
+                    </div>
+                    <video-uploader 
+                        event-id="{{event.id}}"
+                        client-id="{{event.clientId}}"
+                        ng-if="event.clientId"
+                    ></video-uploader>
+                    <video-uploader 
+                        event-id="{{event.id}}"
+                        ng-if="!event.clientId"
+                    ></video-uploader>
+                    <format-videos 
+                        class="container" 
+                        videos="eventVideos" 
+                    ></format-videos>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

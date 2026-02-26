@@ -1,0 +1,390 @@
+<div class="admin-rule-condition-container admin-form-container create-edit-container">
+    <div class="admin-rule-condition admin-form-details create-edit grid-container">
+        <h5>
+            <b>Add Rule Condition</b>
+        </h5>
+        <form 
+            class="rule-condition-form admin-form golura-form"
+            id="ruleConditionForm"
+            name="ruleConditionForm"
+            ng-submit="addRuleCondition($event, ruleCondition)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-auto large-auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateProgressLoaded"
+                                ></div>
+                                <label for="addEstimateProgressQuestions">
+                                    Question
+                                    <span class="alert-text">
+                                        *
+                                    </span>
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="questionOptions"
+                                    options="estimateProgress.EstimateProgressQuestions"
+                                    id="addEstimateProfeessRuleQuestions"
+                                    name="addEstimateProfeessRuleQuestions"
+                                    ng-model="ruleCondition.questionId"
+                                    required
+                                >
+                                </selectize>
+                            </div>  
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateProgressLoaded"
+                                ></div>
+                                <label for="addEstimateProgressOperator">
+                                    Operator
+                                    <span class="alert-text">
+                                        *
+                                    </span>
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="operatorOptions"
+                                    options="operators"
+                                    id="addEstimateProgressRuleOperator"
+                                    name="addEstimateProgressRuleOperator"
+                                    ng-model="ruleCondition.operator"
+                                    required
+                                >
+                                </selectize>
+                            </div>  
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.estimateProgressLoaded"
+                                ></div>
+                                <label for="addEstimateProgressQuestionsValue">
+                                    Value
+                                    <span class="alert-text">
+                                        *
+                                    </span>
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="addEstimateProgressQuestionsRuleValue"
+                                    name="addEstimateProgressQuestionsRuleValue"
+                                    placeholder="Enter a value"
+                                    ng-model="ruleCondition.value"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="grid-x grid-margin-x align-middle" 
+                ng-repeat="action in ruleCondition.actions"
+            >
+                <div class="cell small-12 medium-2 large-2">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateProgressLoaded"
+                        ></div>
+                        <label for="addEstimateProgressOperator">
+                            Action
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="actionOptions"
+                            options="actions"
+                            id="addEstimateProgressRuleAction-{{$index}}"
+                            name="addEstimateProgressRuleAction-{{$index}}"
+                            ng-model="action.action"
+                            required
+                        >
+                        </selectize>
+                    </div> 
+                </div>
+                <div 
+                    class="cell small-12 medium-auto large-auto"
+                    ng-if="action.action != 'formula'"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateProgressLoaded"
+                        ></div>
+                        <label for="addEstimateProgressOperator">
+                            Line Item
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="lineItemOptions"
+                            options="estimateProgress.EstimateProgressLineItems"
+                            id="addEstimateProgressRuleLineItem-{{$index}}"
+                            name="addEstimateProgressRuleLineItem-{{$index}}"
+                            ng-model="action.lineItemId"
+                            required
+                        >
+                        </selectize>
+                    </div> 
+                </div>
+                <div 
+                    class="cell small-12 medium-auto large-auto"
+                    ng-if="action.action == 'update'"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateProgressLoaded"
+                        ></div>
+                        <label for="addEstimateProgressOperator">
+                            Item
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="itemOptions"
+                            options="estimateProgress.EstimateProgressItems"
+                            id="addEstimateProgressRuleItem-{{$index}}"
+                            name="addEstimateProgressRuleItem-{{$index}}"
+                            ng-model="action.itemId"
+                            required
+                        >
+                        </selectize>
+                    </div> 
+                </div>
+                <div 
+                    class="cell small-12 medium-auto large-auto"
+                    ng-if="action.action == 'formula'"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateProgressLoaded"
+                        ></div>
+                        <label for="addEstimateProgressOperator">
+                            Formula
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <div
+                            class="form-input mathquill-editable"
+                            id="addEstimateProgressRuleActionFormula-{{ruleCondition.id}}{{$index}}"
+                            ng-model="action.formula"
+                            ng-init="initFormulaInput('addEstimateProgressRuleActionFormula-' + ruleCondition.id + $index, ruleCondition.id, $index)"
+                            name="addEstimateProgressRuleActionFormula"
+                            placeholder="Enter a formula"
+                            required
+                        ></div>
+                    </div> 
+                </div>
+                <div 
+                    class="cell small-12 medium-2 large-2"
+                    ng-if="action.action == 'update'"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.estimateProgressLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.estimateProgressLoaded"
+                        ></div>
+                        <label for="itemQuantity-{{$index}}">
+                            Quantity
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            step="0.01"
+                            id="itemQuantity-{{$index}}"
+                            name="itemQuantity-{{$index}}"
+                            placeholder="Enter a quantity"
+                            ng-model="action.quantity"
+                            required
+                        />
+                    </div> 
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <button 
+                        class="remove-rule-action-button button alert white-text"
+                        type="button" 
+                        ng-click="removeRuleActionFromForm($index)"
+                    >
+                        <i class="fal fa-times-circle"></i> Remove
+                    </button>
+                </div>
+            </div>
+            <div class="button-group align-right">
+                <button 
+                    class="add-rule-action-button button success white-text"
+                    type="button" 
+                    ng-click="addRuleActionToForm()">
+                    <i class="fal fa-plus-circle"></i> Add Action
+                </button>
+                <button 
+                    class="rule-condition-form-submit-button submit-button button" 
+                    id="ruleConditionFormSubmitButton"
+                    type="submit"
+                    ng-disabled="UI.formSaving"
+                    ng-if="!ruleCondition.id"
+                    ng-class="{'form-saving': UI.formSaving}"
+                >
+                    <span ng-if="!UI.formSaving">
+                        <i class="fal fa-plus-circle"></i> 
+                        Add
+                    </span>
+                    <span ng-if="UI.formSaving">
+                        Please Wait...
+                    </span>
+                </button>
+                <button 
+                    class="rule-condition-form-edit-button submit-button button" 
+                    id="ruleConditionFormEditButton"
+                    type="button"
+                    ng-disabled="UI.formSaving"
+                    ng-click="updateRuleCondition(ruleCondition, rule)"
+                    ng-if="ruleCondition.id"
+                    ng-class="{'form-saving': UI.formSaving}"
+                >
+                    <span ng-if="!UI.formSaving">
+                        <i class="fal fa-check-circle"></i> 
+                        Update
+                    </span>
+                    <span ng-if="UI.formSaving">
+                        Please Wait...
+                    </span>
+                </button>
+            </div>
+            <div class="rule-condition-form-variables-container">
+                <div class="variables-search-container list-search-container">
+                    <div class="variables-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="variables-search-input search-input"
+                                        id="variablesSearchInput" 
+                                        type="text"
+                                        placeholder="Search Variables..."
+                                        ng-model="search.variables.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="variables-list-container list-container">
+                    <ul 
+                        class="variables-list list"
+                        id="variablesList"
+                    >
+                        <li ng-show="!UI.variablesLoaded">
+                            <div class="ssc variables-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="variables-list-item list-item position-relative"
+                            ng-repeat="v in filteredVariables = 
+                            (variables | filter:search.variables.value) |
+                            orderBy: sort.progress.value track by $index"
+                            ng-click="insertVariable(v.name, 'addEstimateProgressRuleActionFormula')"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-3 large-3">
+                                    <h6 class="variables-list-item-name">
+                                        {{v.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <i ng-if="!v.item &&
+                                            !v.ruleAction &&
+                                            !v.lineItem &&
+                                            !v.estimatorQuestion
+                                        ">
+                                            {{v.value}}
+                                        </i>
+                                        <b ng-if="v.item">
+                                            Item
+                                        </b>
+                                        <span ng-if="v.item">
+                                            #{{v.item.id}}
+                                        </span>
+                                        <b ng-if="v.ruleAction">
+                                            Rule Action
+                                        </b>
+                                        <span ng-if="v.ruleAction">
+                                            #{{v.ruleAction.id}}
+                                        </span>
+                                        <b ng-if="v.lineItem">
+                                            Line item
+                                        </b>
+                                        <span ng-if="v.lineItem">
+                                            #{{v.lineItem.id}}
+                                        </span>
+                                        <b ng-if="v.estimatorQuestion">
+                                            Question
+                                        </b>
+                                        <span ng-if="v.estimatorQuestion">
+                                            #{{v.estimatorQuestion.id}}
+                                        </span>
+                                    </h6>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

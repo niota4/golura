@@ -1,0 +1,177 @@
+<div class="estimate-add-line-item-form-container estimate-form-container form-container">
+    <div class="golura-block estimate-add-line-item estimate-form-details">
+        <form 
+            class="add-line-item-form estimate-form golura-form form"
+            id="addLineItemForm"
+            name="addLineItemForm"
+        >
+            <div class="golura-block grid-x">
+                <div class="golura-block cell small-12 medium-3 large-3">
+                    <div class="add-line-item-form-sidebar form-sidebar grid-y">
+                        <div class="cell shrink">
+                            <h4 class="medium-gray-text text-center">
+                                <b>Line Item: </b>
+                                #{{lineItem.id}}
+                                <hr/>
+                            </h4>
+                        </div>
+                        <div class="cell auto overflow-scroll">
+                            <div class="list-container">
+                                <ul class="view-line-item-list-item-details-list list-item-details-list list">
+                                    <li 
+                                        class="line-item-list-item-details-list-item list-item-details-list-item list-item position-relative"
+                                        ng-repeat="item in filteredItems = 
+                                        (lineItem.Items | filter: search.lineItems.value) |
+                                        orderBy: -createdAt track by $index"
+                                    >   
+                                        <h6>
+                                            <b>Name: </b>
+                                            {{item.name}}
+                                        </h6>
+                                        <h6>
+                                            <b>Rate: </b>
+                                            {{item.rate}}
+                                        </h6>
+                                        <h6>
+                                            <b>Part Number: </b>
+                                            {{item.partNumber}}
+                                        </h6>
+                                        <h6>
+                                            <b>Parent Part Number: </b>
+                                            {{item.parentManufacturerPartNumber}}
+                                        </h6>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="golura-block cell small-12 medium-auto large-auto position-relative">
+                    <div 
+                        class="callout sticky success success-text text-center fade"
+                        ng-hide="!UI.modalFormSaved"
+                        data-sticky 
+                        data-options="marginTop:0;"
+                    >
+                        <button 
+                            class="close-button success button clear"
+                            type="button"
+                            ng-click="UI.modalFormSaved = !UI.modalFormSaved"
+                        >
+                            <i class="fal fa-times-circle"></i>
+                        </button>
+                        <p>
+                            {{UI.message}}
+                        </p>
+                    </div>
+                    <div class="golura-block add-line-item-form-progressions form-list grid-y">
+                        <div class="cell shrink">
+                            <div class="line-item-search-container list-search-container">
+                                <div class="line-item-search list-search">
+                                    <div class="search-input-container">
+                                        <div class="grid-x align-middle">
+                                            <div class="cell auto align-self-bottom">
+                                                <input
+                                                    class="line-item-search-input search-input"
+                                                    id="itemSearchInput" 
+                                                    type="text"
+                                                    placeholder="Search items..."
+                                                    ng-model="search.items.value"
+                                                />
+                                            </div>
+                                            <div class="cell shrink align-self-bottom">
+                                                <span class="search-icon">
+                                                    <i class="fal fa-search"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell auto overflow-scroll position-relative">
+                            <div class="line-item-list-container list-container">
+                                <ul 
+                                    class="line-item-list list"
+                                    id="itemsList"
+                                >
+                                    <li ng-show="!UI.itemsLoaded">
+                                        <div class="ssc line-item-ssc">
+                                            <div 
+                                                class="ssc-square"
+                                                ng-repeat="x in [].constructor(40) track by $index"
+                                            ></div>
+                                        </div>
+                                    </li>
+                                    <li
+                                        class="line-item-list-item list-item position-relative"
+                                        ng-repeat="item in filteredItems = 
+                                        (items | filter:search.items.value) 
+                                        track by $index"
+                                    >
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h6>
+                                                    {{item.name}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h6>
+                                                    <b>Vendors: </b>
+                                                </h6>
+                                                <h6 ng-repeat="vendorItem in item.VendorItems">
+                                                    <span ng-if="vendorItem.Vendor">
+                                                        {{vendorItem.Vendor.name}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <button
+                                                    class="add-line-item-form-add-button button"
+                                                    ng-click="addItemToLineItems(item)"
+                                                    ng-class="{'form-saving': item.adding}"
+                                                >
+                                                    <span ng-if="!item.adding">
+                                                        <i class="fal fa-plus-circle"></i> 
+                                                        Add
+                                                    </span>
+                                                    <span ng-if="item.adding">
+                                                        Please Wait...
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li 
+                                        class="clients-list-infinite-scroll text-center"
+                                        id="clientsListInfiniteScroll"
+                                        ng-init="initInfiniteScroll()"
+                                        ng-show="filteredClients.length > 20"
+                                        ng-click="updateUsersDisplayed()"
+                                    >
+                                        <div class="dispatch-loader"></div>
+                                    </li>
+                                    <li 
+                                        class="list-empty text-center"
+                                        ng-if="filteredClients.length == 0 &&
+                                        UI.clientsLoaded"
+                                    >
+                                        <div class="grid-container">
+                                            <h3>
+                                                <b>Oops! </b>
+                                                Looks like we can't find them!
+                                                <br/>
+                                                if you still can't find the User you're looking, 
+                                                try to double check your spelling!
+                                                
+                                            </h3>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

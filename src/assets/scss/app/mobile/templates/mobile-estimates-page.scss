@@ -1,0 +1,38 @@
+@include breakpoint(small only) {
+    .estimate-follow-up-form-container {
+
+        .estimate-follow-up {
+
+            .estimate-follow-up-form {
+
+                h1 {
+                    text-align: center;
+                }
+
+                .estimate-follow-up-type-list-container {
+
+                    .estimate-follow-up-type-list {
+
+                        .estimate-follow-up-type-list-item {
+                            margin-bottom: 1rem; 
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .estimate-view-container {
+
+        .estimate-view {
+
+            &.estimate-view-activity {
+
+                .mobile-navigation-breadcrumbs {
+                    background: var(--white);
+                    border-bottom: 1px solid var(--light-gray);
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+}

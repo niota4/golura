@@ -1,0 +1,573 @@
+<div 
+    class="payment-form-container create-edit-container"
+    ng-init="initACHPayment()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = null;
+            UI.message = null"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="payment">
+        <button 
+            class="back-button button warning white-text" 
+            type="button"
+            ng-click="$root.goBack()"
+        >
+            <i class="fal fa-circle-arrow-left"></i> 
+            <span ng-if="!$root.UI.isMobile">
+                Back
+            </span>
+        </button>
+        
+        <!-- Step Indicator -->
+        <div class="ach-steps-container grid-container" ng-if="!UI.payProcessed">
+            <div class="ach-steps grid-x align-center">
+                <div class="step cell shrink" ng-class="{'is-active': UI.currentStep === 1, 'completed': UI.currentStep > 1}">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Bank Details</div>
+                </div>
+                <div class="step-line cell auto" ng-if="UI.achVerificationRequired !== false"></div>
+                <div class="step cell shrink" ng-class="{'is-active': UI.currentStep === 2, 'completed': UI.currentStep > 2}" ng-if="UI.achVerificationRequired !== false">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Verify Account</div>
+                </div>
+                <div class="step-line cell auto"></div>
+                <div class="step cell shrink" ng-class="{'is-active': UI.currentStep === 3}">
+                    <div class="step-number" ng-if="UI.achVerificationRequired !== false">3</div>
+                    <div class="step-number" ng-if="UI.achVerificationRequired === false">2</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACH Payment Form -->
+        <form 
+            class="payment-form golura-form create-edit grid-container" 
+            id="achPaymentForm" 
+            name="achPaymentForm"
+            ng-submit="submitACHPayment($event)"
+            golura-form-validation
+        >
+            <div 
+                class="payment-form-estimate-view-container view-details-container create-edit"
+                ng-if="estimate.id &&
+                !UI.payProcessed"
+            >
+                <h1>
+                    <b>
+                        {{estimate.estimateNumber}}
+                    </b>
+                </h1>
+                <h2>
+                    <b ng-if="!estimate.won">
+                        Due Now: ${{estimate.dueNow || achPayment.amount}}
+                    </b>
+                    <b 
+                        class="success-text"
+                        ng-if="estimate.won"
+                    >
+                        Paid
+                    </b>
+                </h2>
+                <h6>
+                    Sub Total: 
+                    <span ng-if="estimate.subTotal">
+                        ${{estimate.subTotal}}
+                    </span>
+                    <span ng-if="!estimate.subTotal">
+                        0.00
+                    </span>
+                </h6>
+                <h6>
+                    Discounts Total: 
+                    <span ng-if="estimate.discountTotal">
+                        -{{estimate.discountTotal}}
+                    </span>
+                    <span ng-if="!estimate.discountTotal">
+                        -0.00
+                    </span>
+                </h6>
+                <h6>
+                    Total: 
+                    <span ng-if="estimate.total">
+                        ${{estimate.total}}
+                    </span>
+                    <span ng-if="!estimate.total">
+                        0.00
+                    </span>
+                </h6>
+                <h6>
+                    Billing Address: 
+                    <span ng-if="estimate.billingAddress">
+                        {{estimate.billingAddress.street1}} {{estimate.billingAddress.street2}} <br/>
+                        {{estimate.billingAddress.city}}, {{estimate.billingAddress.State.abbreviation}}
+                        {{estimate.billingAddress.zipCode}}
+                    </span>
+                    <span ng-if="!estimate.billingAddress">
+                        No billing address on file
+                    </span>
+                </h6>
+            </div>
+            <div 
+                class="payment-form-invoice-view-container view-details-container create-edit grid-container"
+                ng-if="invoice.id &&
+                !UI.payProcessed"
+            >
+                <h1>
+                    <b>
+                        {{invoice.invoiceNumber}}
+                    </b>
+                </h1>
+                <h2>
+                    <b ng-if="!invoice.paid">
+                        Amount: ${{achPayment.amount}}
+                    </b>
+                    <b 
+                        class="success-text"
+                        ng-if="invoice.paid"
+                    >
+                        Paid
+                    </b>
+                </h2>
+                <h6>
+                    Sub Total: 
+                    <span ng-if="invoice.subTotal">
+                        ${{invoice.subTotal}}
+                    </span>
+                    <span ng-if="!invoice.subTotal">
+                        $0.00
+                    </span>
+                </h6>
+                <h6>
+                    Sales Tax Total: 
+                    <span ng-if="invoice.salesTaxTotal">
+                        ${{invoice.salesTaxTotal}}
+                    </span>
+                    <span ng-if="!invoice.salesTaxTotal">
+                        $0.00
+                    </span>
+                </h6>
+                <h6>
+                    Markup: 
+                    <span ng-if="invoice.markUp">
+                        ${{invoice.markUp}}
+                    </span>
+                    <span ng-if="!invoice.markUp">
+                        $0.00
+                    </span>
+                </h6>
+                <h6>
+                    Total: 
+                    <span ng-if="invoice.total">
+                        ${{invoice.total}}
+                    </span>
+                    <span ng-if="!invoice.total">
+                        $0.00
+                    </span>
+                </h6>
+                <h6 ng-if="invoice.Client && invoice.Client.billingAddress">
+                    Billing Address: 
+                    <span>
+                        {{invoice.Client.billingAddress.street1}} {{invoice.Client.billingAddress.street2}} <br/>
+                        {{invoice.Client.billingAddress.city}}, {{invoice.Client.billingAddress.State.abbreviation}}
+                        {{invoice.Client.billingAddress.zipCode}}
+                    </span>
+                </h6>
+            </div>
+            <div 
+                class="grid-x grid-margin-x align-middle"
+                ng-if="UI.currentStep === 1 && !UI.payProcessed"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b>
+                            Bank Transfer Payment
+                        </b>
+                    </h1>
+                    <p class="help-text">
+                        ACH bank transfers typically take 3-5 business days to process. 
+                        Your bank account will be verified with small deposits before processing the payment.
+                        <br><br>
+                        <em>Note: In test mode, bank accounts are automatically verified for faster testing.</em>
+                    </p>
+                </div>
+
+                <!-- Customer Information -->
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            First Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="achFirstName"
+                            placeholder="Johnny"
+                            ng-model="achPayment.firstName"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            Last Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="achLastName"
+                            placeholder="Appleseed"
+                            ng-model="achPayment.lastName"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Email
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="email"
+                            name="achEmail"
+                            placeholder="johnnyappleseed@golura.net"
+                            ng-model="achPayment.email"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Phone Number
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="achPhoneNumber"
+                            placeholder="(123) 456-7890"
+                            ng-model="achPayment.phoneNumber"
+                            ui-mask="(999) 999-9999"
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="_"
+                        />
+                    </div>
+                </div>
+
+                <!-- Bank Account Information -->
+                <div class="cell small-12 medium-12 large-12">
+                    <hr>
+                    <h3>
+                        <b>
+                            Bank Account Information
+                        </b>
+                    </h3>
+                </div>
+                
+                <!-- Routing Number -->
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Routing Number
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="routingNumber"
+                            placeholder="123456789"
+                            ng-model="achPayment.routingNumber"
+                            maxlength="9"
+                            pattern="[0-9]{9}"
+                            autocomplete="off"
+                            ng-keypress="($event.charCode >= 48 && $event.charCode <= 57) || $event.preventDefault()"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <!-- Account Number -->
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Account Number
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="accountNumber"
+                            placeholder="Account Number"
+                            ng-model="achPayment.accountNumber"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Account Type
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <select 
+                            class="form-input"
+                            name="achAccountType"
+                            ng-model="achPayment.accountType"
+                            required
+                        >
+                            <option value="">Select Account Type</option>
+                            <option value="checking">Checking</option>
+                            <option value="savings">Savings</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="payment-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="payment-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="achPayment.termsAccepted = !achPayment.termsAccepted"
+                                    ng-class="{'selected': achPayment.termsAccepted}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="achPayment.termsAccepted"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    I authorize this ACH payment and agree to the terms of service. 
+                                    By clicking "Set up Bank Transfer", I authorize the company to electronically debit my account.
+                                    <span class="alert-text">
+                                        *
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="ach-payment-submit-button submit-button button" 
+                        id="achPaymentSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving || UI.autoVerifying ||
+                        !achPayment.termsAccepted ||
+                        !UI.isACHFormValid" 
+                        ng-class="{'form-saving': UI.formSaving || UI.autoVerifying}"
+                    >
+                        <span ng-if="!UI.formSaving && !UI.autoVerifying">
+                            <i class="fal fa-university"></i> Set up Bank Transfer
+                        </span>
+                        <span ng-if="UI.formSaving && !UI.autoVerifying">
+                            Processing...
+                        </span>
+                        <span ng-if="UI.autoVerifying">
+                            Auto-verifying...
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bank Account Verification Step -->
+            <div 
+                class="grid-x grid-margin-x align-middle"
+                ng-if="UI.currentStep === 2 && UI.achVerificationRequired && !UI.payProcessed"
+            >
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b>
+                            Verify Your Bank Account
+                        </b>
+                    </h1>
+                    <p class="help-text">
+                        We've sent two small deposits (usually less than $1.00 each) to your bank account. 
+                        This typically takes 1-2 business days. Please enter the exact amounts below to verify your account.
+                    </p>
+                </div>
+                
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            First Deposit Amount (cents)
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            name="verifyAmount1"
+                            placeholder="32"
+                            ng-model="achPayment.verifyAmount1"
+                            min="1"
+                            max="99"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>   
+                            Second Deposit Amount (cents)
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            name="verifyAmount2"
+                            placeholder="45"
+                            ng-model="achPayment.verifyAmount2"
+                            min="1"
+                            max="99"
+                            required
+                        />
+                    </div>
+                </div>
+                
+                <!-- Test Button for Development -->
+                <div class="cell small-12 medium-12 large-12 text-center" ng-if="window.location.hostname === 'localhost'">
+                    <p class="help-text">
+                        <strong>Development Mode:</strong> For testing, you can use the common test amounts: 32 and 45 cents
+                    </p>
+                    <button 
+                        class="test-button button warning" 
+                        type="button"
+                        ng-click="simulateVerification()"
+                        ng-disabled="UI.formSaving"
+                    >
+                        <i class="fal fa-flask"></i> Use Test Amounts (32, 45)
+                    </button>
+                </div>
+                
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="verify-button button secondary" 
+                        type="button"
+                        ng-click="verifyBankAccount()"
+                        ng-disabled="!achPayment.verifyAmount1 || !achPayment.verifyAmount2 || UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Verify Account
+                        </span>
+                        <span ng-if="UI.formSaving">Verifying...</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div 
+                class="payment-form-success-container text-center"
+                ng-if="UI.currentStep === 3 && !UI.payProcessed"
+            >
+                <div ng-if="UI.achPaymentProcessing">
+                    <h2 class="primary-text">
+                        <b>
+                            <i class="fal fa-spin fa-spinner"></i> Processing Bank Transfer
+                        </b>
+                    </h2>
+                    <p>
+                        Please wait while we process your bank transfer payment...
+                    </p>
+                </div>
+                <div ng-if="!UI.achPaymentProcessing">
+                    <h2 class="success-text">
+                        <b>
+                            Bank Transfer Set Up Successfully
+                        </b>
+                    </h2>
+                    <p>
+                        Your bank transfer has been initiated successfully. 
+                        <span ng-if="estimate">Your estimate payment will be processed within 3-5 business days.</span>
+                        <span ng-if="invoice">Your invoice payment will be processed within 3-5 business days.</span>
+                        <span ng-if="!estimate && !invoice">The payment will be processed within 3-5 business days.</span>
+                        You will receive email notifications about the payment status.
+                    </p>
+                    <button 
+                        class="back-button button success white-text" 
+                        type="button"
+                        ng-click="$root.goBack()"
+                    >
+                        <i class="fal fa-check-circle"></i> Return
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Final Success Message -->
+            <div 
+                class="payment-form-success-container text-center"
+                ng-if="UI.payProcessed"
+            >
+                <h2 class="success-text">
+                    <b>
+                        Bank Transfer Set Up Successfully
+                    </b>
+                </h2>
+                <p>
+                    Your bank transfer has been initiated successfully. 
+                    <span ng-if="estimate">Your estimate payment will be processed within 3-5 business days.</span>
+                    <span ng-if="invoice">Your invoice payment will be processed within 3-5 business days.</span>
+                    <span ng-if="!estimate && !invoice">The payment will be processed within 3-5 business days.</span>
+                    You will receive email notifications about the payment status.
+                </p>
+                <button 
+                    class="back-button button success white-text" 
+                    type="button"
+                    ng-click="$root.goBack()"
+                >
+                    <i class="fal fa-check-circle"></i> Return
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

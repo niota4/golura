@@ -1,0 +1,246 @@
+<div class="upcoming-events-widget-container widget-container">
+    <div class="upcoming-events-widget widget">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-calendar-alt"></i> Upcoming Events
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.upcomingEvents.period">
+                                {{ widgetData.upcomingEvents.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="upcoming-events-options-button button clear" 
+                            type="button"
+                            data-toggle="upcomingEventsOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="upcoming-events-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="upcomingEventsOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="activity-timelines-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('upcomingEvents', { period: widgetData.upcomingEvents.period, limit: widgetData.upcomingEvents.limit, includeAllUsers: widgetData.upcomingEvents.includeAllUsers })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="upcomingEventsTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="upcomingEventsTimeRange"
+                                        name="upcomingEventsTimeRange"
+                                        ng-model="widgetData.upcomingEvents.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="activityTimelineRange">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="upcomingEventsLimit"
+                                        name="upcomingEventsLimit"
+                                        ng-model="widgetData.upcomingEvents.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="upcoming-events-select-button-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="upcoming-events-select-button select-button button"
+                                                type="button"
+                                                ng-click="widgetData.upcomingEvents.includeAllUsers = !widgetData.upcomingEvents.includeAllUsers"
+                                                ng-class="{'selected': widgetData.upcomingEvents.includeAllUsers}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widgetData.upcomingEvents.includeAllUsers"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include all Users?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="events-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.upcomingEvents.data.summary.total }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Events
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.upcomingEvents.data.summary.today }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Today
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center" ng-class="{'alert-text': widgetData.upcomingEvents.data.summary.urgent > 0}">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.upcomingEvents.data.summary.urgent }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Urgent
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.upcomingEvents.data.events.length > 0"
+            >
+                <div class="upcoming-events-search-container list-search-container">
+                    <div class="upcoming-events-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="upcoming-events-search-input search-input"
+                                        id="upcomingEventsSearchInput" 
+                                        type="text"
+                                        placeholder="Search upcoming events..."
+                                        autocomplete="off"
+                                        ng-model="search.upcomingEvents"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto overflow-scroll" 
+                ng-if="widgetData.upcomingEvents.data.events.length > 0"
+            >
+                <div class="events-list-section">
+                    <div class="golura-block">
+                        <div class="events-list-container list-container">
+                            <ul class="events-list list no-bullet">
+                                <li 
+                                    class="event-list-item list-item" 
+                                    ng-repeat="event in filteredEvents = (widgetData.upcomingEvents.data.events | 
+                                    filter:search.upcomingEvents |
+                                    limitTo: widgetData.upcomingEvents.limit) | 
+                                    orderBy: '-createdAt' track by $index"
+                                >
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell auto">
+                                            <h6 class="event-title">
+                                                <a ng-href="events/event/{{ event.id }}">
+                                                    <b>{{ event.title }}</b>
+                                                </a>
+                                            </h6>
+                                            <div class="event-date">
+                                                <small class="text-muted">
+                                                    <i class="fal fa-calendar"></i>
+                                                    {{ event.startDate | EventDateFormat }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <span class="label white-text" 
+                                                ng-class="{'alert': event.urgency === 'urgent', 
+                                                'warning': event.urgency === 'soon',
+                                                'secondary': event.urgency === 'normal'}"
+                                            >
+                                                {{ event.urgency }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small12 medium-auto large-auto text-center" ng-if="widgetData.upcomingEvents.data.events.length === 0">
+                <div class="empty-state">
+                    <i class="fal fa-calendar-alt fa-3x text-muted"></i>
+                    <p class="text-muted">No upcoming events</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,423 @@
+<div 
+    class="estimate-progressions-container admin-container"
+    ng-init="initEstimateProgressions()"
+>
+    <div class="estimate-progressions admin">
+        <div 
+            class="callout sticky success success-text text-center fade"
+            ng-hide="!UI.formSaved"
+            data-sticky 
+            data-options="marginTop:0;"
+        >
+            <button 
+                class="close-button success button clear"
+                type="button"
+                ng-click="UI.formSaved = !UI.formSaved"
+            >
+                <i class="fal fa-times-circle"></i>
+            </button>
+            <p>
+                {{UI.message}}
+            </p>
+        </div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="estimate-progressions-search-container list-search-container">
+                    <div class="estimate-progressions-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="estimate-progressions-search-create-button-container create-button-container">
+                                        <a 
+                                            class="estimate-progression-create-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Back
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="estimate-progressions-search-input search-input"
+                                        id="estimate-progressionsSearchInput" 
+                                        type="text"
+                                        placeholder="Search estimator progressions..."
+                                        ng-model="search.estimateProgressions.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="estimate-progressions-search-create-button-container create-button-container">
+                                        <button 
+                                            class="estimate-progression-create-button create-button submit-button button success white-text" 
+                                            id="estimateProgressionCreateButton"
+                                            type="button"
+                                            ng-click="initEstimateProgressForm()"
+                                            data-open="estimateProgressionFormReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="estimate-progressions-list-header-container list-header-container">
+                    <div class="estimate-progressions-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-3 large-3">
+                                <h3>
+                                    <b>
+                                        Name 
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Questions</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Line Items</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3 class="estimate-progressions-list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+            >
+                <div class="estimate-progressions-list-container list-container">
+                    <ul 
+                        class="estimate-progressions-list list"
+                        id="estimateProgressionsList"
+                    >
+                        <li ng-show="!UI.estimateProgressionsLoaded">
+                            <div class="ssc estimate-progressions-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="estimate-progressions-list-item list-item position-relative"
+                            ng-repeat="e in filteredEstimatorQuestionss = 
+                            (estimateProgressions | filter:search.estimateProgressions.value) |
+                            orderBy: sort.progress.value track by $index"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-3 large-3">
+                                    <h6 
+                                        class="estimate-progressions-list-item-name"
+                                        title="{{e.progressDetail}}"
+                                    >
+                                        <b ng-if="$root.UI.isMobile">
+                                            Name:
+                                        </b>
+                                        <a ng-href="admin-settings/estimators/progressions/{{e.id}}">
+                                            {{e.progressDetail}}
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 ng-if="$root.UI.isMobile">
+                                        <b>Questions:</b>
+                                    </h6>
+                                    <button
+                                        class="view-more-button button clear"
+                                        type="button"
+                                        ng-click="toggleEstimateProgressDetails(e, 'questions')"
+                                        ng-if="e.EstimateProgressQuestions.length"
+                                    >
+                                        view ({{e.EstimateProgressQuestions.length}}) questions
+                                    </button>
+                                    <h6 ng-if="!e.EstimateProgressQuestions.length">
+                                        No associated questions
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 ng-if="$root.UI.isMobile">
+                                        <b>Line Items:</b>
+                                    </h6>
+                                    <button
+                                        class="view-more-button button clear"
+                                        type="button"
+                                        ng-click="toggleEstimateProgressDetails(e, 'lineItems')"
+                                        ng-if="e.EstimateProgressLineItems.length"
+                                    >
+                                        view ({{e.EstimateProgressLineItems.length}}) line items
+                                    </button>
+                                    <h6 ng-if="!e.EstimateProgressLineItems.length">
+                                        No associated line items
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Created:
+                                        </b>
+                                        {{e.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="list-item-options-container">
+                                        <div 
+                                            class="button-group"
+                                            ng-class="{'align-right': $root.UI.isMobile}"
+                                        >
+                                            <a 
+                                                class="list-item-options-button button white-text"
+                                                ng-click="initEstimateProgressForm(e)"
+                                                data-open="estimateProgressionFormReveal"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-edit"></i>
+                                                <span ng-if="!$root.UI.isMobile">
+                                                    Edit
+                                                </span>
+                                            </a>
+                                            <button 
+                                                class="list-item-options-button button alert white-text"
+                                                type="button"
+                                                ng-click="e.delete = !e.delete"
+                                            >
+                                                <i class="fal fa-archive"></i>
+                                                <span ng-if="!$root.UI.isMobile">
+                                                    Delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-12 large-12"
+                                    ng-if="e.showQuestions ||
+                                    e.showLineItems"
+                                >
+                                    <div class="estimate-progressions-list-item-details-container list-item-details-container">
+                                        <button 
+                                            class="close-button button clear dark-gray-text text-right" 
+                                            type="button" 
+                                            ng-click="toggleEstimateProgressDetails(e)"
+                                        >
+                                            <span aria-hidden="true">
+                                                <i class="fal fa-times-circle"></i>
+                                            </span>
+                                        </button>
+                                        <h4 class="text-capitalize">
+                                            <b ng-if="e.showQuestions">
+                                                Questions
+                                            </b>
+                                            <b ng-if="e.showLineItems">
+                                                Line Items
+                                            </b>
+                                        </h4>
+                                        <div class="estimate-progressions-list-item-details-search-container list-search-container">
+                                            <div class="list-search search-input-container">
+                                                <div class="grid-x align-middle">
+                                                    <div class="cell auto">
+                                                        <input
+                                                            class="estimate-progressions-search-input search-input"
+                                                            type="text"
+                                                            placeholder="Search details..."
+                                                            ng-model="e.value"
+                                                        />
+                                                    </div>
+                                                    <div class="cell shrink">
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul 
+                                            class="estimate-progressions-list-item-details-list list-item-details-list"
+                                            ng-if="e.showQuestions"
+                                        >
+                                            <li 
+                                                class="estimate-progressions-list-item-details-list-item list-item-details-list-item"
+                                                ng-repeat="question in filteredQuestions = 
+                                                (e.EstimateProgressQuestions | filter: e.value) |
+                                                orderBy: createdAt track by $index"
+                                            >   
+                                                <h6>
+                                                    <b>ID: </b>
+                                                    {{question.id}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Question Test: </b>
+                                                    {{question.questionText}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Type: </b>
+                                                    {{question.inputType}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Step: </b>
+                                                    <span ng-if="question.step">
+                                                        {{question.step}}
+                                                    </span>
+                                                    <span
+                                                        class="alert-text" 
+                                                        ng-if="!question.step"
+                                                    >
+                                                        <b>
+                                                            (Not Set)
+                                                        </b> 
+                                                        Defaulted to {{$index + 1}}
+                                                    </span>
+                                                </h6>
+                                            </li>
+                                        </ul>
+                                        <ul 
+                                            class="estimate-progressions-list-item-details-list list-item-details-list"
+                                            ng-if="e.showLineItems"
+                                        >
+                                            <li 
+                                                class="estimate-progressions-list-item-details-list-item list-item-details-list-item"
+                                                ng-repeat="item in filteredLineItems = 
+                                                (e.EstimateProgressLineItems | filter: e.value) |
+                                                orderBy: createdAt track by $index"
+                                            >   
+                                                <h6>
+                                                    <b>ID: </b>
+                                                    {{item.id}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Name: </b>
+                                                    {{item.name}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Unit: </b>
+                                                    {{item.unit}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Description: </b>
+                                                    {{item.moduleDescription}}
+                                                </h6>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="estimate-progressions-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="e.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this question?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="estimate-progressions-list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteEstimatorQuestion(e)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="estimate-progressions-list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="e.delete = !e.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="estimate-progressions-list-infinite-scroll text-center"
+                            id="estimate-progressionsListInfiniteScroll"
+                            ng-init="initInfiniteScroll()"
+                            ng-show="filteredEstimatorQuestionss.length > 20"
+                            ng-click="updateEstimatorQuestionsDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-if="filteredEstimatorQuestionss.length == 0 &&
+                            UI.estimateProgressionsLoaded"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Estimator Progressions you're looking, 
+                                    try to double check your spelling!
+                                    
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="estimate-progression-form-reveal reveal"
+    id="estimateProgressionFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimatorQuestionFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/estimate-progress-form.html'"></div>
+</div>

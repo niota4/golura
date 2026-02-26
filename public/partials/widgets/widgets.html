@@ -1,0 +1,96 @@
+<div class="widgets-container list-container">
+    <div class="widgets list-details">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink position-relative">
+                <div class="widget-search-container list-search-container">
+                    <div class="widget-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="widget-search-input search-input"
+                                        id="widgetsSearchInput" 
+                                        type="text"
+                                        placeholder="Search widgets..."
+                                        ng-model="search.widgets.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="widgets-list-container">
+                    <ul 
+                        class="widgets-list list grid-x grid-margin-x align-middle"
+                        id="widgetsList"
+                    >
+                        <li 
+                            class="cell small-12 medium-4 large-4"
+                            ng-if="!UI.widgetsLoaded"
+                        >
+                            <div class="ssc widgets-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="cell small-12 medium-4 large-4 widgets-list-item list-item position-relative"
+                            ng-repeat="widget in filteredWidgets = 
+                            (availableWidgets | filter:search.widgets) |
+                            orderBy: 'name' track by $index"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-12 large-12">
+                                    <div class="widget-list-select-button-container select-container">
+                                        <button 
+                                            class="widget-form-select-button select-button button"
+                                            type="button"
+                                            ng-click="toggleWidget(widget)"
+                                            ng-class="{'selected': widget.selected}"
+                                        >
+                                            <div 
+                                                class="check-icon"
+                                                ng-if="widget.selected"
+                                            >
+                                                <i class="fal fa-check"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12 text-center">
+                                    <div class="list-item-icon">
+                                        <i 
+                                            class="widget-icon fal"
+                                            ng-class="getWidgetIcon(widget.type)"
+                                        ></i>
+                                    </div>
+                                </div>
+                                <div class="cell small-auto medium-12 large-12 text-center">
+                                    <h3 class="widget-name">
+                                        <b>{{widget.name}}</b>
+                                        <span class="widget-type">({{widget.type}})</span>
+                                    </h3>
+                                    <p class="widget-description">
+                                        {{widget.description}}
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

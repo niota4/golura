@@ -1,0 +1,431 @@
+<div 
+    class="main-admin-container admin-container"
+    ng-init="initAdmin()"
+>
+    <div class="main-admin admin">
+        <div 
+            class="callout sticky text-center fade"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+        >
+            <button 
+                class="close-button button clear"
+                ng-class="{'success': UI.message,
+                'alert': UI.errMessage}"
+                type="button"
+                ng-click="UI.errMessage = !UI.errMessage;
+                UI.message = !UI.message"
+            >
+                <i class="fal fa-times-circle"></i>
+            </button>
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>
+        <div class="golura-block grid-x align-top">
+            <div class="golura-block cell small-12 medium-shrink large-shrink">
+                <div class="admin-tabs-container tabs-container">
+                    <div class="admin-tabs tabs-list-container">
+                        <ul 
+                            class="admin-tabs-list tabs tabs-list vertical" 
+                            id="adminTabs"
+                            data-responsive-accordion-tabs="tabs small-accordion medium-tabs large-tabs"
+                            data-deep-link="false"
+                            data-allow-all-closed="true"
+                        >
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-class="{'is-active': !$root.UI.isMobile}"
+                            >
+                                <a  
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="general"
+                                    ng-click="initGeneralSettings()"
+                                >
+                                    <i class="fal fa-info-circle"></i> General
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('events')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="groups"
+                                    ng-click="initGroupSettings()"
+                                >
+                                    <i class="fal fa-user-group-crown"></i> Groups
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('events')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="events"
+                                    ng-click="initEventSettings()"
+                                >
+                                    <i class="fal fa-calendar-check"></i> Events
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('estimates')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="estimates"
+                                    ng-click="initEstimateSettings()"
+                                >
+                                    <i class="fal fa-memo-circle-info"></i> Estimates
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('estimators')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="estimators"
+                                    ng-click="initEstimatorsSettings()"
+                                >
+                                    <i class="fal fa-sign-hanging"></i> Estimators
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="labor"
+                                    ng-click="initLaborSettings()"
+                                >
+                                    <i class="fal fa-users-gear"></i> Labor
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('work orders')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="workOrders"
+                                    ng-click="initWorkOrderSettings()"
+                                >
+                                    <i class="fal fa-file-word"></i> Work Orders
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('invoices')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="invoices"
+                                    ng-click="initInvoiceSettings()"
+                                >
+                                    <i class="fal fa-file-invoice-dollar"></i> Invoices
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="users"
+                                    ng-click="initUserSettings()"
+                                >
+                                    <i class="fal fa-user"></i> Users
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="forms"
+                                    ng-click="initForms()"
+                                >
+                                    <i class="fal fa-file-pen"></i> Forms
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="subscriptions"
+                                    ng-click="initSubscriptions()"
+                                >
+                                    <i class="fal fa-money-bill-transfer"></i> Subscriptions
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="templates"
+                                    ng-click="initTemplates()"
+                                >
+                                    <i class="fal fa-candy-bar"></i> Templates
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="communications"
+                                    ng-click="initCommunications()"
+                                >
+                                    <i class="fal fa-comments"></i> Communications
+                                </a>
+                            </li>
+                            <li class="admin-tabs-title tabs-title">
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="stripe"
+                                    ng-click="initStripeSettings()"
+                                >
+                                    <i class="fab fa-cc-stripe"></i> Stripe
+                                </a>
+                            </li>
+                            <li 
+                                class="admin-tabs-title tabs-title"
+                                ng-show="$root.isSubscribed('payroll')"
+                            >
+                                <a 
+                                    class="admin-tabs-title-link"
+                                    data-tabs-target="payroll"
+                                    ng-click="initPayrollSettings()"
+                                >
+                                    <i class="fal fa-money-check-dollar-pen"></i> Payroll
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="golura-block cell small-12 medium-auto large-auto position-relative">
+                <div 
+                    class="admin-tabs-content tabs-content" 
+                    data-tabs-content="adminTabs"
+                >
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="general"
+                        ng-class="{'is-active': !$root.UI.isMobile}"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/general-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="groups"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/groups.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="events"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/event-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="estimates"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/estimate-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="estimators"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/estimators.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="labor"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/labor.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="workOrders"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/work-order-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="invoices"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/invoice-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="users"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/user-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="forms"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/forms.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="subscriptions"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/subscriptions.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="templates"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/templates.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="communications"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/communications.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="stripe"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/stripe.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="payroll"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/payroll-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="integrations"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/integrations.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="twilio"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/twilio-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="statistics"
+                    >
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="help"
+                    >
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="integrations"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/admin/integrations.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="twilio"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/forms/admin/twilio-form.html'"
+                        ></div>
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="statistics"
+                    >
+                    </div>
+                    <div 
+                        class="admin-tabs-panel tabs-panel" 
+                        id="help"
+                    >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="email-template-preview-reveal reveal large"
+    id="emailTemplatePreviewReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEmailTemplatePreviewReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="email-template-preview-container">
+        <iframe 
+            class="email-template-preview-iframe"
+            name="emailTemplatePreviewIframe"
+            id="emailTemplatePreviewIframe"
+            frameborder="0" 
+            cellspacing="0"
+        ></iframe>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div 
+    class="view-event-invoice-container view-event-container view-container"
+    ng-init="initEvent();"
+>
+    <div format-events event="event"></div>
+    <div class="view-event-invoice view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-4 large-4">
+                        <div ng-include="'dist/partials/events/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/event-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

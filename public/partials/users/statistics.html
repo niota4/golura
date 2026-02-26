@@ -1,0 +1,136 @@
+<div class="user-statistics-container">
+    <div class="user-statistics">
+        <div class="grid-x grid-margin-x align-top">
+            <div class="cell small-12 medium-12 large-12">
+                <div class="user-statistics-parameters-form-container">
+                    <form
+                        class="user-statistics-parameters-form golura-form"
+                        id="userStatisticsParametersForm"
+                        name="userStatisticsParametersForm"
+                        ng-submit="initStatistics($event, userStatistics.startDate, userStatistics.endDate)"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="input-container">
+                                    <label for="userStatisticStartDateParam">
+                                        Start Date
+                                    </label>
+                                    <input 
+                                        class="user-statistics-parameters-start-date-input form-input"
+                                        type="text"
+                                        id="userStatisticStartDateParam"
+                                        name="userStatisticStartDateParam"
+                                        ng-model="UI.startDate" 
+                                        autocomplete="off"
+                                        flatpickr
+                                        twelve-hour="true"
+                                        allow-past="true"
+                                        placeholder="Select a Start Date and time"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="input-container">
+                                    <label for="userStatisticEndDateParam">
+                                        End Date
+                                    </label>
+                                    <input 
+                                        class="user-statistics-parameters-end-date-input form-input"
+                                        type="text"
+                                        id="userStatisticEndDateParam"
+                                        name="userStatisticEndDateParam"
+                                        ng-model="UI.endDate" 
+                                        autocomplete="off"
+                                        flatpickr
+                                        twelve-hour="true"
+                                        allow-past="true"
+                                        placeholder="Select a End Date and time"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <button 
+                                    class="user-statistics-parameters-form-submit-button submit-button button" 
+                                    id="userStatisticsParametersFormSubmitButton"
+                                    type="submit"
+                                    ng-disabled="UI.formSaving || !UI.startDate && !UI.endDate"
+                                    ng-class="{'form-saving': UI.formSaving}"
+                                >
+                                    <span ng-if="!UI.formSaving">
+                                        <i class="far fa-search"></i> Search
+                                    </span>
+                                    <span ng-if="UI.formSaving">
+                                        Please Wait...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="user-statistics-estimates user-statistics-chart-container">
+                    <div class="user-statistics-chart-title">
+                        <h4>
+                            <b>
+                                Estimate Conversions
+                            </b>
+                        </h4>
+                    </div>
+                    <div 
+                        class="user-statistics-chart user-statistics-estimates-chart"
+                        id="userStatisticsEstimatesChart"
+                    ></div>
+                    <div 
+                        class="user-statistics-estimates-chart-empty"
+                        ng-if="userStatistics.totalEstimates == 0 ||
+                        $scope.userStatistics.convertedPercentage == 0" 
+                    >
+                        <h6>
+                            <b>
+                                No estimates to display
+                            </b>
+                        </h6>
+                        <div class="user-statistics-estimates-chart-empty-icon">
+                            <i class="far fa-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="user-statistics-estimates user-statistics-chart-container">
+                    <div class="user-statistics-chart-title">
+                        <h4>
+                            <b>
+                                Events Completed
+                            </b>
+                        </h4>
+                    </div>
+                    <div 
+                        class="user-statistics-chart user-statistics-events-chart"
+                        id="userStatisticsEventsChart"
+                    >
+                        <div 
+                            class="progress" 
+                            role="progressbar" 
+                            aria-valuenow="{{userStatistics.eventsPercentage}}" 
+                            aria-valuemin="0" 
+                            aria-valuetext="{{userStatistics.eventsPercentage}} percent" 
+                            aria-valuemax="100"
+                        >
+                            <div 
+                                class="progress-meter" 
+                                ng-style="{
+                                    width: userStatistics.eventsPercentage + '%',
+                                    padding: user.userStatistics.eventsPercentage > '0%' ? '' : '0px 1rem'
+                                }"
+                            >
+                                <span class="progress-meter-text">{{userStatistics.eventsPercentage + '%'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,333 @@
+<div 
+    class="view-client-contact-history-container view-client-container view-container"
+    ng-init="initClient()"
+>
+    <div format-clients client="client"></div>
+    <div format-phone-numbers phone-numbers="client.ClientPhoneNumbers"></div>
+    <div format-phone-numbers phone-number="selectedPhoneNumber"></div>
+    <div class="view-client-contact-history view-client view">
+        <div class="view-client-details-option-container">
+            <div 
+                class="grid-y"
+                ng-class="{'golura-block': !$root.UI.isMobile,
+                'golura-mobile-block': $root.UI.isMobile}"
+            >
+                <div class="cell shrink">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-4">
+                            <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-auto">
+                            <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell auto">
+                    <div class="grid-x grid-margin-x align-middle"
+                        ng-class="{'golura-block': !$root.UI.isMobile,
+                        'golura-mobile-block': $root.UI.isMobile}"
+                    >
+                        <div 
+                            class="cell small-12 medium-3 large-3"
+                            ng-class="{'golura-block': !$root.UI.isMobile,
+                            'golura-mobile-block': $root.UI.isMobile}"
+                        >
+                            <div class="client-contact-history-sidebar-container">
+                                <div class="client-contact-history-sidebar grid-y">
+                                    <div class="cell shrink">
+                                        <div class="client-contact-history-sidebar-header">
+                                            <h3 class="client-contact-history-sidebar-title">
+                                                <b>
+                                                    Contact History
+                                                </b>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <div class="client-contact-history-sidebar-buttons">
+                                            <button
+                                                class="client-contact-history-button button"
+                                                type="button"
+                                                ng-click="initTextMessages()"
+                                                data-open="textMessagesReveal"
+                                            >
+                                                <i class="fal fa-sms"></i> Text Messages
+                                            </button>
+                                            <button
+                                                class="client-contact-history-button button"
+                                                type="button"
+                                                ng-click="initPhoneCalls()"
+                                                data-open="phoneCallsReveal"
+                                            >
+                                                <i class="fal fa-phone"></i> Calls
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <div class="list-search-container list-container">
+                                            <div class="list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="view-client-estimates-search-input search-input"
+                                                                id="viewClientEstimatesSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search Emails..."
+                                                                ng-model="search.Emails.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                    <div class="cell auto">
+                                        <div class="client-contact-history-sidebar-list-container list-container">
+                                            <ul class="client-contact-history-sidebar-list list">
+                                                <li 
+                                                    class="view-client-contact-history-list-item"
+                                                    ng-if="!filteredEmails.length &&
+                                                    UI.emailsLoaded"
+                                                >
+                                                    <h5>
+                                                        <b>No Emails Found</b>
+                                                    </h5>
+                                                </li>
+                                                <li 
+                                                    class="view-client-contact-history-list-item list-item position-relative"
+                                                    ng-repeat="e in filteredEmails = 
+                                                    (emails | filter: search.Emails.value) track by $index"
+                                                >
+                                                    <div format-clients client="e.Client"></div>
+                                                    <div class="grid-x">
+                                                        <div class="small-12 medium-auto large-auto">
+                                                            <h6>
+                                                                <b>
+                                                                    {{e.ClientEmail.email || 'N/A'}}
+                                                                </b>
+                                                            </h6>
+                                                        </div>
+                                                        <div class="small-12 medium-shrink large-shrink">
+                                                            <h6 class="text-right">
+                                                                <i>
+                                                                    Sent {{e.sentAt | DateTimeFormat}}
+                                                                </i>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    <h6>
+                                                        <b>
+                                                            Subject: 
+                                                        </b>
+                                                        {{e.subject}}
+                                                    </h6>
+                                                    <div class="text-right">
+                                                        <button
+                                                            class="view-client-contact-history-button button"
+                                                            type="button"
+                                                            ng-click="initEmail(e)"
+                                                            data-open="emailReveal"
+                                                        >
+                                                            <i class="fal fa-search"></i>
+                                                            <span ng-if="!$root.UI.isMobile">
+                                                                View
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </li> 
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="golura-block cell small-12 medium-auto large-auto"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <div 
+                                class="golura-block"
+                                ng-if="!UI.emailLoaded || !email"
+                                ng-include="'/dist/partials/general/email-preview.html'"
+                            ></div>
+                            <iframe 
+                                class="view-client-contact-history-email-iframe"
+                                name="viewClientContactHistoryEmailIframe"
+                                id="viewClientContactHistoryEmailIframe"
+                                frameborder="0" 
+                                cellspacing="0"
+                                ng-show="UI.emailLoaded && email"
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="email-reveal reveal large"
+    id="emailReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEmailReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <iframe 
+        class="view-client-contact-history-email-iframe"
+        name="viewClientContactHistoryEmailIframe"
+        id="viewClientContactHistoryEmailIframe"
+        frameborder="0" 
+        cellspacing="0"
+        ng-show="UI.emailLoaded && email"
+    ></iframe>
+</div>
+<div
+    class="email-form-reveal reveal large"
+    id="emailFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEmailFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/general/email-form.html'"></div>
+</div>
+<div
+    class="phone-calls-reveal reveal large"
+    id="phoneCallsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closePhoneCallsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="golura-block grid-y overflow-scroll">
+        <div class="cell shrink">
+            <h3>
+                <b>
+                    Client Phone Calls
+                </b>
+            </h3>
+        </div>
+        <div class="cell auto">
+            <div 
+                class="golura-block"
+                ng-include="'dist/partials/general/phone-calls.html'"
+            ></div>
+        </div>
+    </div>
+</div>
+<div 
+    class="text-messages-reveal reveal large"
+    id="textMessagesReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeTextMessagesReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="golura-block grid-y">
+        <div class="cell auto">
+            <div 
+                class="golura-block"
+                ng-include="'dist/partials/general/text-messages.html'"
+            >
+            </div>
+        </div>
+        <div class="cell shrink">
+            <div class="text-message-phone-number-container golura-form">
+                <div 
+                    class="input-container"
+                    ng-class="{'disabled': !client.ClientPhoneNumbers.length}"
+                >
+                    <label>
+                        Selected Phone Number
+                    </label>
+                    <selectize
+                        class="client-input form-input"
+                        id="clientPhoneNumber"
+                        name="clientPhoneNumber"
+                        config="phoneNumberOptions"
+                        options="client.ClientPhoneNumbers"
+                        ng-model="selectedPhoneNumber.id"
+                        ng-disabled="!client.ClientPhoneNumbers.length"
+                    >
+                    </selectize>
+                </div>
+            </div>
+        </div>
+        <div class="cell shrink">
+            <full-text-area 
+                placeholder="Write a message..."
+                ng-model="textMessage.message" 
+                client-id="{{client.id}}"
+                phone-number-id="{{selectedPhoneNumber.id}}"
+                event-id="{{event.id || ''}}" 
+                estimate-id="{{estimate.id || ''}}"
+                work-order-id="{{workOrder.id || ''}}" 
+                invoice-id="{{invoice.id || ''}}" 
+                text-message="{{textMessage.id || ''}}"
+                user="{{user.id}}"
+                users="users"
+            >
+            </full-text-area>
+        </div>
+    </div>
+</div>
+<div
+    class="invoice-creation-reveal reveal"
+    id="invoiceCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/invoices/ad-hoc-invoice-form.html'"></div>
+</div>

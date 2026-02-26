@@ -1,0 +1,246 @@
+<div 
+    class="view-event-container view-event-container view-container"
+    ng-init="initArchivedEvents()"
+>
+    <div format-events events="events"></div>
+    <div class="view-event-activity view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="view-event-search-container list-search-container">
+                    <div class="view-event-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink">
+                                    <div class="view-events-back-button-button-container create-button-container">
+                                        <button 
+                                            class="view-events-back-button create-button submit-button button warning white-text" 
+                                            ng-click="$root.goBack()"
+                                        >
+                                            <i class="fal fa-circle-arrow-left"></i> Back
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="view-event-search-input search-input"
+                                        id="viewEventActivitySearchInput" 
+                                        type="text"
+                                        placeholder="Search Archived Events..."
+                                        ng-model="search.event.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="view-event-list-header-container list-header-container">
+                    <div class="view-event-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-3 large-3">
+                                <h3>
+                                    <b>Title</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Type</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Group</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Recurring</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Created by</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="view-event-list-container list-container">
+                    <ul 
+                        class="view-event-list list"
+                        id="eventList"
+                    >
+                        <li ng-if="!UI.eventsLoaded">
+                            <div class="ssc view-event-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(20) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="view-event-list-item list-item position-relative"
+                            ng-repeat="e in filteredEvents = 
+                            (events | filter:search.event.value) |
+                            orderBy: sort.event.value |
+                            limitTo: UI.eventsDisplayed track by $index"
+                            ng-class="{'selected': l.selected}"
+                        >
+                            <div format-users user="e.Creator"></div>
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-3 large-3">
+                                    <h6>
+                                        {{e.title}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        {{e.EventType.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <span ng-if="e.groupId">
+                                            {{e.Group.name}}
+                                        </span>
+                                        <span ng-if="!e.groupId">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        <span ng-if="e.recurring">
+                                            Yes
+                                        </span>
+                                        <span ng-if="!e.recurring">
+                                            No
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="view-event-user-container">
+                                        <div class="grid-x align-middle">
+                                            <div class="cell shrink">
+                                                <div class="comment-user-container">
+                                                    <div class="golura-user-icon-container text-center frame-container">
+                                                        <div 
+                                                            class="golura-user-icon text-center" 
+                                                            ng-style="{'background-color': e.Creator.Preferences.backgroundColor}"
+                                                        >
+                                                            <h2 class="flex-child-auto align-middle">
+                                                                <a 
+                                                                    class="white-text"
+                                                                    ng-href="users/user/{{e.Creator.id}}"
+                                                                    ng-cloak
+                                                                >
+                                                                    {{e.Creator.shortName}}
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">
+                                                <h6>
+                                                    {{e.Creator.fullName}}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        {{e.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="list-item-options-container">
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="e.restore = !e.restore"
+                                        >
+                                            <i class="fal fa-undo"></i> Restore
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="e.restore"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to restore
+                                                this Event?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="restoreEvent(e)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="e.restore = !e.restore"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="text-center"
+                            ng-if="UI.eventsLoaded && !filteredEvents.length" 
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

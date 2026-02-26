@@ -1,0 +1,365 @@
+<div class="purchase-orders-container inventory-container">
+    <div class="purchase-orders inventory">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="purchase-orders-search-container list-search-container">
+                    <div class="purchase-orders-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="purchase-orders-search-input search-input"
+                                        id="purchaseOrdersSearchInput"
+                                        type="text"
+                                        placeholder="Search purchase orders..."
+                                        ng-model="search.purchaseOrders.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="purchase-orders-search-create-button-container create-button-container">
+                                        <button 
+                                            class="purchase-orders-search-create-button submit-button create-button button success white-text" 
+                                            id="purchaseOrdersSearchCreateButton"
+                                            type="button"
+                                            data-open="purchaseOrderCreateFormReveal"
+                                            ng-click="initPurchaseOrderForm()"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="purchase-orders-list-header-container list-header-container">
+                    <div class="purchase-orders-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>PO Number</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Vendor</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Status</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Order Date</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Delivery Date</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created By</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-3 large-3"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto overflow-scroll">
+                <div class="purchase-orders-list-container list-container">
+                    <ul 
+                        class="purchase-orders-list list"
+                        id="purchaseOrdersList"
+                    >
+                        <li ng-if="!UI.purchaseOrdersLoaded">
+                            <div class="ssc purchase-orders-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="purchase-orders-list-item list-item position-relative"
+                            ng-repeat="purchaseOrder in filteredPurchaseOrders = 
+                            (purchaseOrders | filter:search.purchaseOrders.value) |
+                            orderBy: sort.purchaseOrders.value |
+                            limitTo: UI.purchaseOrdersDisplayed track by $index"
+                            ng-class="{'selected': purchaseOrder.selected}"
+                        >
+                            <div format-clients client="purchaseOrder.Client"></div>
+                            <div format-users user="purchaseOrder.Creator"></div>
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6 class="purchase-orders-list-item-number text-capitalize">
+                                        <b ng-if="$root.UI.isMobile">
+                                            PO Number:
+                                        </b>
+                                        #{{purchaseOrder.purchaseOrderNumber}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Vendor:
+                                        </b>
+                                        <a 
+                                            ng-href="inventory/vendors/vendor/{{purchaseOrder.vendorId}}"
+                                            ng-if="purchaseOrder.Vendor.name"
+                                        >
+                                            {{purchaseOrder.Vendor.name}}
+                                        </a>
+                                        <span ng-if="!purchaseOrder.Vendor.name">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Status:
+                                        </b>
+                                        <span 
+                                            class="label white-text small"
+                                            ng-class="{
+                                                'success': purchaseOrder.PurchaseOrderStatus.name == 'fulfilled',
+                                                'warning': purchaseOrder.PurchaseOrderStatus.name == 'pending',
+                                                'alert': purchaseOrder.PurchaseOrderStatus.name == 'rejected'
+                                            }"
+                                            ng-if="purchaseOrder.PurchaseOrderStatus.name"
+                                        >
+                                            {{purchaseOrder.PurchaseOrderStatus.name}}
+                                        </span>
+                                        <span ng-if="!purchaseOrder.PurchaseOrderStatus.name">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Order Date:
+                                        </b>
+                                        {{ purchaseOrder.orderDate ? (purchaseOrder.orderDate | DateTimeFormat) : 'N/A' }}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Delivery Date:
+                                        </b>
+                                        {{ purchaseOrder.deliveryDate ? (purchaseOrder.deliveryDate | DateTimeFormat) : 'N/A' }}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Created By:
+                                        </b>
+                                        <a ng-href="users/user/{{purchaseOrder.creatorId}}">
+                                            {{purchaseOrder.Creator.fullName}}
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="list-item-options-container">
+                                        <div 
+                                            class="button-group"
+                                            ng-class="{'align-right': $root.UI.isMobile}"
+                                        >
+                                            <a 
+                                                class="list-item-options-button button white-text"
+                                                ng-href="inventory/purchase-orders/purchase-order/{{purchaseOrder.id}}"
+                                                ng-if="permissions.canView"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-search"></i>
+                                                <span ng-if="!$root.UI.isMobile">
+                                                    View
+                                                </span>
+                                            </a>
+                                            <button 
+                                                class="list-item-options-button button success white-text"
+                                                type="button"
+                                                data-open="purchaseOrderCreateFormReveal"
+                                                ng-click="initPurchaseOrderForm(purchaseOrder)"
+                                                ng-if="permissions.canEdit"
+                                            >
+                                                <i class="fal fa-edit"></i>
+                                                <span ng-if="!$root.UI.isMobile">
+                                                    Edit
+                                                </span>
+                                            </button>
+                                            <button 
+                                                class="list-item-options-button button alert white-text"
+                                                type="button"
+                                                ng-click="purchaseOrder.delete = !purchaseOrder.delete"
+                                                ng-if="permissions.canArchive"
+                                            >
+                                                <i class="fal fa-archive"></i>
+                                                <span ng-if="!$root.UI.isMobile">
+                                                    Delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Purchase Order Status Progress Steps -->
+                            <div class="cell small-12 medium-12 large-12" ng-if="purchaseOrder.filteredStatuses">
+                                <div class="purchase-order-step-container step-container grid-x align-center text-center">
+                                    <div 
+                                        class="step-item cell auto"
+                                        ng-repeat="status in purchaseOrder.filteredStatuses track by $index"
+                                        ng-show="!validateStopperStatus(status.name)"
+                                        ng-class="{
+                                            'first': $index === 0,
+                                            'last': $index === purchaseOrder.filteredStatuses.length - 1,
+                                            'active': $index === purchaseOrder.currentStatusIndex,
+                                            'completed': status.completed,
+                                            'canceled': status.fenced
+                                        }"
+                                    >
+                                        <div class="step-counter">
+                                            {{$index + 1}}
+                                        </div>
+                                        <div class="step-name">
+                                            {{status.name}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Delete Confirmation Overlay -->
+                            <div 
+                                class="purchase-orders-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="purchaseOrder.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this purchase order?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            id="purchaseOrderFormSubmitButton"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deletePurchaseOrder(purchaseOrder)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="purchaseOrder.delete = !purchaseOrder.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="purchase-orders-list-infinite-scroll text-center"
+                            id="purchaseOrdersListInfiniteScroll"
+                            ng-init="initPurchaseOrdersInfiniteScroll()"
+                            ng-show="filteredPurchaseOrders.length > 20"
+                            ng-click="updatePurchaseOrdersDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredPurchaseOrders.length && UI.purchaseOrdersLoaded"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Purchase Order you're looking for, 
+                                    try to double check your spelling!
+                                </h3>
+                            </div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-if="!purchaseOrders.length && UI.purchaseOrdersLoaded"
+                        >
+                            <h3>
+                                <b>Oh! </b>
+                                Click the Create button to add your first purchase order.
+                            </h3>
+                            <button 
+                                class="purchase-order submit-button create-button button success white-text" 
+                                id="purchaseOrdersSearchCreateButton"
+                                type="button"
+                                data-open="purchaseOrderCreateFormReveal"
+                                ng-click="initPurchaseOrderForm()"
+                            >
+                                <i class="fal fa-layer-plus"></i> Create
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="purchase-order-create-form-reveal reveal large"
+    id="purchaseOrderCreateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closePurchaseOrderCreateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/work-orders/purchase-order-create-form.html'"></div>
+</div>

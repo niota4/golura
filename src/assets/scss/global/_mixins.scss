@@ -1,0 +1,61 @@
+@mixin crystallize() {
+    border: 1px solid color-mix(in srgb, var(--white) 10%, transparent 90%);
+}
+@mixin blurred($class,$color,$opacity) {
+    @if $color == $white {
+        #{$class} {
+            background: $white;
+        }
+    }
+    @supports (-webkit-backdrop-filter: saturate(180%) blur(20px)) or (backdrop-filter: saturate(180%) blur(20px)) {
+        #{$class} {
+            background: color-mix(in srgb, $color calc((1 - $opacity) * 100%), transparent calc($opacity * 100%)) !important;
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+    }
+}
+@mixin gradiantbg($top,$bottom) {
+    background: $bottom;
+    background: -moz-linear-gradient(350deg, $bottom 20%, $top 100%);
+    background: -webkit-linear-gradient(350deg, $bottom 20%, $top 100%);
+    background: linear-gradient(350deg, $bottom 20%, $top 100%);
+}
+@mixin textwrap() {
+    padding-right: 30px;
+    padding-left: 30px;
+}
+@mixin standardrow() {
+    padding-top: 7.5625rem;
+    padding-bottom: rem-calc(20);
+
+    @media screen and (max-width: 39.9375em) {
+        padding-top: 3.5rem;
+        padding-bottom: rem-calc(20);
+    }
+}
+@mixin standardreveal($height) {
+    top: 0px !important;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    position: absolute;
+    margin: auto;
+    height: $height;
+    border: none;
+
+}
+@mixin standardblock() {
+    padding-bottom: rem-calc(50);
+}
+
+@mixin borderboxshadow() {
+    -webkit-box-shadow: 1px 2px 12px 4px rgba(0,0,0,0.1) !important;
+    -moz-box-shadow: 1px 2px 12px 4px rgba(0,0,0,0.1) !important;
+    box-shadow: 1px 2px 12px 4px rgba(0,0,0,0.1) !important;
+}
+@mixin borderboxshadowreset() {
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0) !important;
+    -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0) !important;
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0) !important;
+}

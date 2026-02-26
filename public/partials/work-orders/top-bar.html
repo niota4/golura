@@ -1,0 +1,41 @@
+<div class="view-work-order-top-bar-container top-bar-container">
+    <div class="button-group"
+        ng-class="{'align-right': !$root.UI.isMobile,
+        'stacked': $root.UI.isMobile}"
+    >
+        <a 
+            class="button"
+            ng-href="/work-orders/work-order/{{workOrder.id}}/edit"
+            ng-if="permissions.canEdit"
+        >
+            <i class="fal fa-edit"></i> 
+            Edit
+        </a>
+        <button 
+            class="button warning white-text"
+            ng-click="cloneWorkOrder(workOrder.id)"
+            ng-if="permissions.canCreate"
+        >
+            <i class="fal fa-clone"></i> 
+            Clone
+        </button>
+        <button
+            class="button success white-text" 
+            id="viewClientWorkOrderCreatePurchasOrderButton"
+            type="button"
+            ng-click="initPurchaseOrderForm()"
+            ng-if="permissions.canCreate"
+            data-open="createPurchaseOrderReveal"
+        >
+            <i class="fal fa-layer-plus"></i> Create Purchase Order
+        </button>
+        <button 
+            class="button alert white-text"
+            ng-click="deleteWorkOrder(workOrder.id)"
+            ng-if="permissions.canArchive"
+        >
+            <i class="fal fa-archive"></i>
+            Delete
+        </button>
+    </div>
+</div>

@@ -1,0 +1,252 @@
+<div class="admin-event-container admin-form-container create-edit-container">
+    <div class="admin-event admin-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newEventType">
+                Create Event Type
+            </b>
+            <b ng-if="!UI.newEventType">
+                Edit Event Type
+            </b>
+        </h1>
+        <form 
+            class="event-type-form admin-form golura-form"
+            id="eventTypeForm"
+            name="eventTypeForm"
+            ng-submit="createEventType($event, eventType)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>
+                            Details
+                        </b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.eventTypeLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.eventTypeLoaded"
+                        ></div>
+                        <label for="eventTypeName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="eventTypeName"
+                            name="eventTypeName"
+                            placeholder="Event Type name"
+                            ng-model="eventType.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-3 large-3">
+                    <div class="event-type-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="event-type-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="eventType.map = !eventType.map"
+                                    ng-class="{'selected': eventType.map}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="eventType.map"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Needs Map?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-9 large-9">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.eventTypeLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.eventTypeLoaded"
+                        ></div>
+                        <label>
+                            Color
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <div
+                            class="color-picker-sample"
+                            ng-style="{'background': eventType.backgroundColor}"
+                            ng-model="eventType.backgroundColor"
+                            color-picker 
+                            color-picker-model="eventType.backgroundColor"
+                            color-picker-output-format="'hex'"
+                            ng-if="UI.eventTypeLoaded"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="event-type-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="event-type-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="eventType.requireCheckIn = !eventType.requireCheckIn"
+                                    ng-class="{'selected': eventType.requireCheckIn}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="eventType.requireCheckIn"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Require Check In?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="event-type-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="event-type-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="eventType.requireCheckOut = !eventType.requireCheckOut"
+                                    ng-class="{'selected': eventType.requireCheckOut}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="eventType.requireCheckOut"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Require Check Out?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.eventTypeLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.eventTypeLoaded"
+                        ></div>
+                        <label>
+                            Tags
+                        </label>
+                        <selectize
+                            class="event-type-tags-input form-input"
+                            config="eventTypeTagOptions"
+                            options="eventType.tags"
+                            id="eventTypeTags"
+                            name="eventTypeTags"
+                            ng-model="eventType.tags"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2 title="These will be the groups that can use this Event Type.">
+                        <b>
+                            Groups 
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.eventTypeLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.eventTypeLoaded"
+                        ></div>
+                        <label>
+                            Groups
+                        </label>
+                        <selectize
+                            class="event-type-roles-input form-input"
+                            config="eventTypeGroupOptions"
+                            options="groups"
+                            id="eventTypeGroups"
+                            name="eventTypeGroups"
+                            ng-model="eventType.groupIds"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="event-form-submit-button submit-button button" 
+                        id="eventTypeFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.eventTypeLoaded && UI.newEventType"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-form-edit-submit-button submit-button button" 
+                        id="eventTypeFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateEventType(eventType)"
+                        ng-if="UI.eventTypeLoaded && !UI.newEventType"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

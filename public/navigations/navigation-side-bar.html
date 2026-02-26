@@ -1,0 +1,110 @@
+<div class="navigation-side-bar-container">
+    <div class="navigation-side-bar">
+        <ul class="navigation-side-bar-list grid-y">
+            <li 
+                class="navigation-side-bar-list-item cell shrink"
+                ng-class="{'minimized': $root.preferences.minimizeSidebar}"
+            >
+                <a
+                    class="navigation-side-bar-list-item-link clear expanded"
+                    title="My Dashboard"
+                    ng-class="{ 'is-active': isActive('/dashboard') }"
+                    ng-href="/dashboard"
+                    data-close
+                >
+                    <i class="fal fa-house"></i>
+                    <span ng-if="!$root.preferences.minimizeSidebar || $root.UI.isMobile">
+                        Dashboard
+                    </span>
+                </a>
+            </li>
+            <li 
+                class="navigation-side-bar-list-item cell shrink"
+                ng-class="{'minimized': $root.preferences.minimizeSidebar}"
+                ng-repeat="page in $root.subscribedPages | orderBy: 'order' track by $index"
+                ng-if="page.name != 'work orders' &&
+                page.name != 'invoices' &&
+                !(page.name == 'reports' && $root.UI.isMobile)"
+            >
+                <a
+                    class="navigation-side-bar-list-item-link clear expanded"
+                    ng-class="{'is-active': isActive('/' + page.url)}"
+                    title="{{page.name}}"
+                    ng-href="/{{page.url}}"
+                    ng-if="page.name != 'notifications' &&
+                    page.name != 'chats'"
+                    data-close
+                >
+                    <i class="fal {{page.icon}}"></i>
+                    <span ng-if="!$root.preferences.minimizeSidebar || $root.UI.isMobile">
+                        {{page.name}}
+                    </span>
+                </a>
+                <a 
+                    class="navigation-side-bar-list-item-link clear expanded"
+                    title="{{page.name}}"
+                    data-toggle="notificationsOffCanvas"
+                    ng-if="page.name == 'notifications'"
+                    ng-click="$root.UI.sideBar = !$root.UI.sideBar; initNotifications()"
+                >
+                    <i class="fal {{page.icon}}"></i>
+                    <span ng-if="!$root.preferences.minimizeSidebar || $root.UI.isMobile">
+                        {{page.name}}
+                    </span>
+                    <span 
+                        class="badge alert white-text"
+                        ng-if="page.name == 'notifications' &&
+                        $root.counts.notificationCount > 0"
+                    >
+                        {{$root.counts.notificationCount}}
+                    </span>
+                </a>
+                <a 
+                    class="navigation-side-bar-list-item-link clear expanded"
+                    title="{{page.name}}"
+                    ng-class="{'is-active': isActive('/' + page.url)}"
+                    ng-href="/chats"
+                    ng-if="page.name == 'chats'"
+                    data-close
+                >
+                    <i class="fal {{page.icon}}"></i>
+                    <span ng-if="!$root.preferences.minimizeSidebar || $root.UI.isMobile">
+                        {{page.name}}
+                    </span>
+                    <span 
+                        class="badge alert white-text"
+                        ng-if="page.name == 'chats' &&
+                        $root.counts.unreadMessagesCount > 0"
+                    >
+                        {{$root.counts.unreadMessagesCount}}
+                    </span>
+                </a>
+            </li>
+            <li 
+                class="navigation-side-bar-list-item cell auto"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="golura-block grid-x">
+                    <div class="cell align-self-bottom text-right">
+                        <button
+                            class="collapse-navigation-side-bar-button button clear"
+                            id="collapseNavigationSideBarButton"
+                            type="button"
+                            aria-label="collapseNavigationSideBarButton" 
+                            ng-click="updateNavigationSideBarToggle()"
+                        >
+                            <i 
+                                class="fal fa-chevron-double-left"
+                                ng-if="!$root.preferences.minimizeSidebar"
+                            ></i>
+                            <i 
+                                class="fal fa-chevron-double-right"
+                                ng-if="$root.preferences.minimizeSidebar"
+                            ></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

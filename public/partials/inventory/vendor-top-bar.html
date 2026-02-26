@@ -1,0 +1,16 @@
+<div class="view-invoice-top-bar-container top-bar-container">
+    <div class="button-group align-right">
+        <a 
+            class="vendor-button button"
+            ng-href="inventory/vendors/vendor/{{vendor.id}}/edit"
+        >
+            <i class="fal fa-edit"></i> Edit
+        </a>
+        <button 
+            class="vendor-button success button white-text"
+            ng-click="importItems(vandor.id)"
+        >
+            <i class="fal fa-file-import"></i> Import Items
+        </button>
+    </div>
+</div>

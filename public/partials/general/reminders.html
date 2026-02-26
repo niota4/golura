@@ -1,0 +1,50 @@
+<div class="reminders-container list-container">
+    <ul 
+        class="reminders-list list"
+        ng-class="{'ssc': !UI.remindersLoaded}"
+    >
+        <li 
+            class="ssc-square"
+            ng-repeat="x in [].constructor(10) track by $index"
+            ng-if="!UI.remindersLoaded"
+        ></li>
+        <div>
+        <li 
+            class="reminders-list-item-container list-item position-relative"
+            ng-repeat="reminder in reminders | orderBy: 'date'
+            track by reminder.id"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div ng-include="'dist/partials/general/reminder.html'"></div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="reminder-list-item-view-button button"
+                        type="button"
+                        ng-click="viewReminder(reminder)"
+                    >
+                        <i class="fal fa-search"></i> View
+                    </button>
+                    <button 
+                        class="reminder-list-item-delete-button button alert white-text"
+                        type="button"
+                        ng-click="reminder.delete = !reminder.delete"
+                    >
+                        <i class="fal fa-times-circle"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div 
+        class="reminders-empty-container text-center"
+        ng-if="UI.remindersLoaded && !reminders.length"
+    >
+        <h4>
+            <b>Wow!</b> There are no Reminders. 
+            <br/>
+            Check back later!
+        </h4>
+    </div>
+</div>

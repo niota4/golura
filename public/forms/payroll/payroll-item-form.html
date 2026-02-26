@@ -1,0 +1,348 @@
+<div 
+    class="payroll-item-form-container create-edit-container"
+    ng-init="initPayrollItemForm()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="payroll-item create-edit">
+        <div format-users users="users"></div>
+        <form 
+            class="payroll-item-form golura-form"
+            id="payrollItemForm"
+            name="payrollItemForm"
+            ng-submit="createPayrollItem($event, payrollItem)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b>
+                            {{UI.newPayrollItem ? 'Create Payroll Item' : 'Edit Payroll Item'}}
+                        </b>
+                    </h1>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="UI.userHoursLoaded && payrollItem.totalHours === 0"
+                >
+                    <h5 class="warning-text text-center">
+                        No hours found for this employee in this payroll's selected period.
+                    </h5>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.usersLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.usersLoaded"
+                        ></div>
+                        <label for="employee">
+                            Employee
+                            <span class="required">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="userOptions"
+                            options="users"
+                            id="employee"
+                            name="employee"
+                            ng-model="payrollItem.employeeId"
+                            ng-change="initUserPayroll(payrollItem)"
+                            required
+                        >
+                        </selectize>
+                    </div> 
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="payroll-item-employee-pay-rates-container"
+                        ng-if="UI.userHoursLoaded"
+                    >
+                        <div class="payroll-item-employee-pay-rates">
+                            <h4>
+                                <b>
+                                    Pay Rates
+                                </b>
+                            </h4>
+                            <div class="payroll-item-employee-pay-rates-list-container list-container">
+                                <ul class="payroll-item-employee-pay-rates-list list">
+                                    <li 
+                                        class="payroll-item-employee-pay-rate"
+                                        ng-if="!payrollItem.payRates || payrollItem.payRates.length === 0"
+                                    >
+                                        <h5 class="text-center">
+                                            <b>
+                                                No pay rates found for this employee.
+                                            </b>
+                                        </h5>
+                                    </li>
+                                    <li 
+                                        class="payroll-item-employee-pay-rate-list-item list-item"
+                                        ng-repeat="payRate in payrollItem.payRates track by $index"
+                                    >
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h5 
+                                                    class="text-capitalize"
+                                                    title="{{payRate.notes}}"
+                                                >
+                                                    <span 
+                                                        class="label success white-text"
+                                                        ng-if="payRate.isPrimary"
+                                                    >
+                                                        Primary
+                                                    </span>
+                                                    <b>
+                                                        {{payRate.rateType || 'N/A'}} 
+                                                    </b>
+                                                </h5>
+                                                <h6>
+                                                    <b>
+                                                        Rate: 
+                                                    </b>
+                                                    {{payRate.rate | currency}}
+                                                </h6>
+                                                <h6>
+                                                    <b>
+                                                        Overtime Rate: 
+                                                    </b>
+                                                    {{payRate.overtimeRate | currency}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <div class="pay-rate-selected-select-button-container select-container">
+                                                    <button 
+                                                        class="pay-rate-selected-select-button select-button button"
+                                                        type="button"
+                                                        ng-click="payRate.selected = !payRate.selected"
+                                                        ng-class="{'selected': payRate.selected}"
+                                                        ng-click="updateSelectedPayRate(payRate)"
+                                                    >
+                                                        <div 
+                                                            class="check-icon"
+                                                            ng-if="payRate.selected"
+                                                        >
+                                                            <i class="fal fa-check"></i>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="UI.userHoursLoaded"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-8 large-8">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userHoursLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userHoursLoaded"
+                                ></div>
+                                <label for="regularHours">
+                                    Regular Hours
+                                    <span class="required">
+                                        *
+                                    </span>
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="regularHours"
+                                    name="regularHours"
+                                    ng-model="payrollItem.regularHours"
+                                    ng-change="calculatePayrollItemTotals(payrollItem)"
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userHoursLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userHoursLoaded"
+                                ></div>
+                                <label for="overtimeHours">
+                                    Overtime Hours
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="overtimeHours"
+                                    name="overtimeHours"
+                                    ng-model="payrollItem.overtimeHours"
+                                    ng-change="calculatePayrollItemTotals(payrollItem)"
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userHoursLoaded,
+                                'disabled': payRate.selected}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userHoursLoaded"
+                                ></div>
+                                <label for="rate">
+                                    Rate
+                                    <span class="required">
+                                        *
+                                    </span>
+                                </label>
+                                <input
+                                    class="form-input" 
+                                    type="text"
+                                    id="rate"
+                                    name="rate"
+                                    placeholder="0.00" 
+                                    ng-model="payrollItem.rate" 
+                                    ng-change="calculatePayrollItemTotals(payrollItem)"
+                                    ng-disabled="payRate.selected"
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                    required 
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userHoursLoaded,
+                                'disabled': payRate.selected}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userHoursLoaded"
+                                ></div>
+                                <label for="overtimeRate">
+                                    Overtime Rate
+                                </label>
+                                <input
+                                    class="form-input" 
+                                    type="text"
+                                    id="overtimeRate"
+                                    name="overtimeRate"
+                                    placeholder="0.00" 
+                                    ng-model="payrollItem.overtimeRate" 
+                                    ng-change="calculatePayrollItemTotals(payrollItem)"
+                                    ng-disabled="payRate.selected"
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="payroll-item-form-details-container">
+                                <div class="payroll-item-form-details">
+                                    <h4>
+                                        <b>
+                                            Details
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Gross Pay: 
+                                        </b>
+                                        {{payrollItem.grossPay | currency}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Deductions: 
+                                        </b>
+                                        {{payrollItem.deductionsTotal | currency}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Net Pay: 
+                                        </b>
+                                        {{payrollItem.netPay | currency}}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12 text-right">
+                            <button 
+                                class="payroll-item-form-submit-button submit-button button success white-text" 
+                                type="submit" 
+                                ng-disabled="UI.formSaving || 
+                                !payrollItem.regularHours ||
+                                !payrollItem.rate"
+                                ng-class="{'form-saving': UI.formSaving}"
+                                ng-if="UI.newPayrollItem"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-save"></i> 
+                                    Save
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                            <button 
+                                class="payroll-deduction-form-update-button submit-button button" 
+                                id="payrollDeductionFormUpdateButton"
+                                type="button"
+                                ng-disabled="UI.formSaving"
+                                ng-class="{'form-saving': UI.formSaving}"
+                                ng-click="updatePayrollItem(payrollItem)"
+                                ng-if="!UI.newPayrollItem"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-check-circle"></i> Update
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

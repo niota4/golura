@@ -1,0 +1,27 @@
+<div class="estimator-deletion-screen-container deletion-screen-container black-overlay">
+    <div class="estimator-deletion-screen deletion-screen text-center">        
+        <h2>
+            <b>
+                Are You Sure?
+            </b>
+            <br>
+        </h2>
+        <h6>
+            You want to delete this Estimator?
+        </h6>
+        <button 
+            class="delete-button button alert white-text" 
+            type="button"
+            ng-click="deleteEstimator(estimator)"
+        >
+            <i class="fal fa-check-circle"></i> Confirm
+        </button>
+        <button 
+            class="cancel-button button warning white-text" 
+            type="button"
+            ng-click="UI.estimatorDeleteConfirmation = !UI.estimatorDeleteConfirmation"
+        >
+            <i class="fal fa-times-circle"></i> Cancel
+        </button>
+    </div>
+</div>

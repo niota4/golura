@@ -1,0 +1,175 @@
+<div class="message-container">
+    <div 
+        format-messages 
+        message="message"
+    ></div>
+    <div 
+        format-users 
+        user="message.User"
+    ></div>
+    <div class="grid-x grid-margin-x align-bottom">
+        <div 
+            class="cell shrink"
+            ng-if="message.User.id !== user.id"
+        >
+            <div class="message-user-container">
+                <user-icon user="message.User"></user-icon>
+            </div>
+        </div>
+        <div class="cell auto">
+            <h6>
+                <span>
+                    {{message.User.fullName}}
+                </span>
+                <i 
+                    class="message-edited"
+                    ng-if="message.edited"
+                >
+                    (edited)
+                </i>
+            </h6>
+            <div 
+                class="message"
+                data-toggle="messageDropDown-{{message.id}}"
+            >
+                <div class="grid-x">
+                    <div 
+                        class="cell small-12 medium-12 large-12"
+                        ng-show="!message.edit && !message.delete"
+                    >
+                        <div class="message-images-container">
+                            <div 
+                                class="grid-x grid-margin-x"
+                                ng-if="message.imageUrls.length"
+                            >
+                                <div 
+                                    class="cell medium-3 large-3"
+                                    ng-class="{'small-12': message.imageUrls.length == 1,
+                                    'small-6': message.imageUrls.length == 2,
+                                    'small-4': message.imageUrls.length >= 3}"
+                                    ng-repeat="image in message.imageUrls track by $index"
+                                >
+                                
+                                    <div 
+                                        class="message-image-container"
+                                        ng-click="initImage(image)"
+                                        data-open="messageImageViewReveal"
+                                    >
+                                        <div class="message-image">
+                                            <div 
+                                                class="message-image-background"
+                                                style="background-image: url('{{image.url}}');"
+                                                ng-style="{'height': (message.imageUrls.length == 1 ? '15rem' : (message.imageUrls.length == 2 ? '7.5rem' : '5rem'))}"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div 
+                            class="message-content"
+                            ng-bind-html="message.formattedMessage"
+                        >
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12"
+                        ng-if="message.likeUserIds.length && !message.delete"
+                    >
+                        <p class="message-like-users">
+                            <i>
+                                {{message.likesText}}
+                            </i>
+                        </p>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <span class="message-time">
+                            <i>
+                                {{message.createdAt | TimeAgoFormat}}
+                            </i>
+                        </span>
+                    </div>
+                </div>
+                <div 
+                    class="message-drop-down-pane dropdown-pane top float-right" 
+                    id="messageDropDown-{{message.id}}" 
+                    data-dropdown 
+                    data-hover="true" 
+                    data-hover-pane="true"
+                    data-v-offset="10"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell shrink">
+                            <button
+                                class="like-button message-button button clear"
+                                type="button"
+                                title="Like Message"
+                                ng-click="toggleChatMessageLike(message)"
+                                ng-disabled="message.likeLoading"
+                            >
+                                <i 
+                                    class="fa-thumbs-up"
+                                    ng-class="{'far': !message.liked,
+                                    'fas': message.liked}"
+                                ></i>
+                            </button>
+                            <button
+                                class="reply-button message-button button clear"
+                                type="button"
+                                title="Reply to Message"
+                                ng-click="initChatMessageReply(message)"
+                            >
+                                <i class="fal fa-message"></i>
+                            </button>
+                            <button
+                                class="more-button message-button button clear"
+                                type="button"
+                                title="More Options"
+                                ng-click="message.moreOptions = !message.moreOptions"
+                            >
+                                <i class="fas fa-ellipsis"></i>
+                            </button>
+                            <div 
+                                ng-if="message.moreOptions"
+                                ng-mouseleave="message.moreOptions = false">
+                                <button
+                                    class="edit-button more-dropdown-pane-button button clear expanded"
+                                    type="button"
+                                    ng-if="$root.user.id == message.User.id ||
+                                    subPermissions.adminSettings.canEdit"
+                                    ng-click="message.edit = !message.edit; message.reply = false;"
+                                >
+                                    <i class="fal fa-edit"></i> Edit
+                                </button>
+                                <button
+                                    class="edit-button more-dropdown-pane-button button clear expanded warning"
+                                    type="button"
+                                >
+                                    <i class="fal fa-flag"></i> Report
+                                </button>
+                                <button
+                                    class="delete-button more-dropdown-pane-button button clear expanded alert"
+                                    type="button"
+                                    ng-if="subPermissions.adminSettings.canArchive"
+                                    ng-click="message.delete = !message.delete"
+                                >
+                                    <i class="fal fa-archive"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div 
+            class="cell shrink"
+            ng-if="message.User.id === user.id"
+        >
+            <div class="message-user-container">
+                <user-icon user="message.User"></user-icon>
+            </div>
+        </div>
+    </div>
+</div>

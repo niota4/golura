@@ -1,0 +1,72 @@
+<div class="company-verify-container">
+    <div class="company-verify">
+        <div class="login">
+            <form 
+                class="company-verify-form golura-form"
+                id="companyVerifyForm"
+                name="companyVerificationForm"
+                ng-submit="verifyCompany($event, company)"
+            >
+                <span 
+                    class="alert-text text-center" 
+                    ng-show="companyVerificationForm.companyCode.$dirty &&
+                    companyVerificationForm.companyCode.$invalid"
+                >
+                    <span ng-show="companyVerificationForm.companyCode.$error.required">
+                        Copmany Code is required.
+                    </span>
+                </span>
+                <div
+                    class="alert-text text-center"
+                    ng-if="UI.companyCodeError"
+                >
+                    <span
+                        class="golura-login-error"
+                        id="careCenterLoginError"
+                    >
+                        {{UI.companyVerificationMessage}}
+                    </span>
+                </div>
+                <div class="grid-x">
+                    <div class="cell">
+                        <div 
+                            class="input-container"
+                            ng-class="{'alert': companyVerificationForm.$submitted && 
+                            companyVerificationForm.companyCode.$error && 
+                            !UI.companyVerificationAttempt}"
+                        >
+                            <label for="companyCodeFormInput">
+                                Company Code
+                            </label>
+                            <input
+                                class="company-code-form-input login-form-input form-input"
+                                id="companyCodeFormInput"
+                                name="companyCode"
+                                type="number"
+                                placeholder="Enter your Company Code..."
+                                ng-model="company.code"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell text-right">
+                        <button 
+                            class="company-code-form-submit-button submit-button button" 
+                            id="companyCodeFormSubmitButton"
+                            type="submit"
+                            ng-disabled="UI.companyVerificationAttempt"
+                            ng-class="{'form-saving': UI.companyVerificationAttempt}"
+                        >
+                            <span ng-if="!UI.companyVerificationAttempt">
+                                <i class="fal fa-check-circle"></i> Verify
+                            </span>
+                            <span ng-if="UI.companyVerificationAttempt">
+                                Please Wait...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

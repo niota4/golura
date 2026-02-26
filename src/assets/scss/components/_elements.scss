@@ -1,0 +1,203 @@
+.golura-loading-spinner {
+    background: url('/dist/assets/img/default-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.golura-secondary-loading-spinner {
+    background: url('/dist/assets/img/default-secondary-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.golura-white-loading-spinner {
+    background: url('/dist/assets/img/default-white-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.golura-success-loading-spinner {
+    background: url('/dist/assets/img/default-white-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.golura-warning-loading-spinner {
+    background: url('/dist/assets/img/default-warning-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.golura-alert-loading-spinner {
+    background: url('/dist/assets/img/default-alert-spinner.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%); 
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+.dispatch-white-loader {
+    background: url('/dist/assets/img/default-white-loader.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+
+}
+.dispatch-loader {
+    background: url('/dist/assets/img/default-loader.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    min-height: 2rem;
+    display: inline-block;
+    cursor: progress;
+    user-select: none;
+
+}
+.primary-background {
+    background: var(--primary-color) !important;
+}
+.success-background {
+    background: $success-color !important;
+}
+.warning-background {
+    background: $warning-color !important;
+}
+.alert-background {
+    background: $alert-color !important;
+}
+.white-background {
+    background: var(--white) !important;
+}
+.light-gray-background {
+    background: var(--light-gray) !important;
+}
+.medium-gray-background {
+    background: $medium-gray !important;
+}
+.dark-gray-background {
+    background: $dark-gray !important;
+}
+.teal-background {
+    background: $teal;
+}
+.black-background {
+    background: $black;
+}
+.clear-overlay {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    z-index: 3; 
+    width: 100%;
+    height: 100%;  
+    background: $transparent;
+}
+.white-overlay {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    z-index: 3; 
+    width: 100%;
+    height: 100%;  
+    background: var(--white);
+}
+.black-overlay {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    z-index: 3; 
+    width: 100%;
+    height: 100%; 
+    background: $black;
+}
+.primary-overlay {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    z-index: 3; 
+    width: 100%;
+    height: 100%; 
+    background: var(--primary-color);
+}
+@include blurred('.reveal-overlay', $black, 0.1);
+@include blurred('.white-overlay', var(--white),0.5);
+@include blurred('.black-overlay', $black, 0.5);
+@include blurred('.primary-overlay',var(--primary-color),0.5);

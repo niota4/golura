@@ -1,0 +1,253 @@
+<div class="activity-timeline-widget-container widget-container">
+    <div class="activity-timeline-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-history"></i> Activity Timeline
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.activityTimeline.summary">
+                                Last {{ widgetData.activityTimeline.summary.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="activity-timelines-options-button button clear" 
+                            type="button"
+                            data-toggle="activityTimelineOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="activity-timelines-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="activityTimelineOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="activity-timelines-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="initActivityTimeline(widgetData.activityTimeline.period, widgetData.activityTimeline.limit)"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="activityTimelineRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="activityTimelineRange"
+                                        name="activityTimelineRange"
+                                        ng-model="widgetData.activityTimeline.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="activityTimelineRange">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="activityTimelineLimit"
+                                        name="activityTimelineLimit"
+                                        ng-model="widgetData.activityTimeline.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="grid-x grid-margin-x">
+                                    <div class="cell shrink">
+                                        <div class="switch">
+                                            <input 
+                                                class="switch-input" 
+                                                id="realTimeActivityUpdatesToggle" 
+                                                type="checkbox" 
+                                                ng-click="toggleActivityTimelineRealTime()" 
+                                                ng-checked="$root.preferences.realTimeActivityUpdates"
+                                            />
+                                            <label 
+                                                class="switch-paddle" 
+                                                for="realTimeActivityUpdatesToggle"
+                                            >
+                                                <span class="show-for-sr">
+                                                    Real Time Activity Updates Toggle
+                                                </span>
+                                                <span 
+                                                    class="switch-active warning-text" 
+                                                    aria-hidden="true"
+                                                >
+                                                    <i class="fal fa-bolt"></i>
+                                                </span>
+                                                <span 
+                                                    class="switch-inactive white-text" 
+                                                    aria-hidden="true"
+                                                >
+                                                    <i class="fal fa-times-circle"></i>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <span>
+                                            <b>
+                                                Real Time?
+                                            </b>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.activityTimeline.timeline.length > 0"
+            >
+                <div class="timeline-search-container list-search-container">
+                    <div class="timeline-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="timeline-search-input search-input"
+                                        id="timelineSearchInput" 
+                                        type="text"
+                                        placeholder="Search timeline..."
+                                        autocomplete="off"
+                                        ng-model="search.activityTimeline"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="activity-timeline-list-container">
+                    <div class="timeline-list-container list-container">
+                        <ul class="timeline-list list no-bullet">
+                            <li ng-show="!UI.activityTimelineLoaded">
+                                <div class="ssc timeline-ssc">
+                                    <div 
+                                        class="ssc-square"
+                                        ng-repeat="x in [].constructor(10) track by $index"
+                                    ></div>
+                                </div>
+                            </li>
+                            <li 
+                                class="timeline-list-item list-item" 
+                                ng-repeat="activity in filteredActivities = 
+                                (widgetData.activityTimeline.timeline | 
+                                filter:search.activityTimeline) | 
+                                orderBy: '-createdAt' track by $index"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-2 medium-1 large-1 text-center">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-circle" 
+                                                ng-class="{'success-text': activity.severity === 'low',
+                                                'warning-text': activity.severity === 'medium', 
+                                                'alert-text': activity.severity === 'high'}
+                                            "></i>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <div class="timeline-content-item">
+                                            <div class="activity-header">
+                                                <h6>
+                                                    <div class="grid-x grid-margin-x align-middle">
+                                                        <div class="cell shrink">
+                                                            <div class="activity-icon">
+                                                                <user-icon user="activity.User"></user-icon>
+                                                            </div> 
+                                                        </div>
+                                                        <div class="cell auto">      
+                                                            <a 
+                                                                class="activity-user-link"
+                                                                href="users/user/{{ activity.userId }}"
+                                                            >
+                                                                <b class="activity-user">
+                                                                    {{ activity.userName }}
+                                                                </b>
+                                                            </a>                                 
+                                                            <span class="activity-action">
+                                                                {{ activity.action }}
+                                                            </span>
+                                                            <a 
+                                                                class="activity-type text-capitalize"
+                                                                ng-href="{{ activity.activityType === 'client' ? '/clients/client/' + activity.entityId : 
+                                                                        activity.activityType === 'estimate' ? '/estimates/estimate/' + activity.entityId :
+                                                                        activity.activityType === 'event' ? '/events/event/' + activity.entityId :
+                                                                        activity.activityType === 'invoice' ? '/invoices/invoice/' + activity.entityId :
+                                                                        activity.activityType === 'workOrder' ? '/work-orders/work-order/' + activity.entityId : '' }}"
+                                                                title="{{ activity.description }}"
+                                                            >
+                                                                <b>{{ activity.activityType }}</b>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell small-12 medium-3 large-3">
+                                        <div class="activity-time text-right">
+                                            <small class="text-muted">
+                                                <i class="fal fa-clock"></i>
+                                                {{ activity.createdAt | date:'MMM d, h:mm a' }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li ng-if="filteredActivities.length === 0" class="timeline-list-item text-center">
+                                <div class="empty-state">
+                                    <i class="fal fa-history fa-3x text-muted"></i>
+                                    <h5 class="text-muted">
+                                        No activities found for the selected time range.
+                                    </h5>
+                                    <p class="text-muted">
+                                        Try changing the time range or search criteria.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-list-item" ng-if="filteredActivities.length >= 0">
+                                <div class="text-center">                
+                                    <div class="timeline-footer">
+                                        <a
+                                            class="activity-timelines-view-all-button button"
+                                            ng-href="/activities"
+                                        >
+                                            <i class="fal fa-wave-pulse"></i> View all activities
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

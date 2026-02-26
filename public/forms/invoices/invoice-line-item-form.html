@@ -1,0 +1,366 @@
+<div 
+    class="invoice-line-item-create-edit-container create-edit-container" 
+    ng-init="initInvoiceLineItemForm()"
+>
+    <div 
+        class="callout success success-text sticky text-center fade"
+        ng-if="UI.formSaved"
+        data-sticky 
+    >
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="invoice-line-item-create-edit create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInvoiceLineItem">Create Invoice Line Item</b>
+            <b ng-if="!UI.newInvoiceLineItem">Edit Invoice Line Item</b>
+        </h1>
+        <form 
+            class="invoice-line-item-form golura-form" 
+            id="invoiceLineItemForm" 
+            name="invoiceLineItemForm" 
+            ng-submit="UI.newInvoiceLineItem ? createInvoiceLineItem($event, invoiceLineItem) : updateInvoiceLineItem(invoiceLineItem)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Details</b></h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Name
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="name" 
+                            placeholder="Item Name" 
+                            ng-model="invoiceLineItem.name" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container amount-container">
+                        <label>
+                            Total
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text"
+                            name="totalPrice"
+                            placeholder="0.0" 
+                            ng-model="invoiceLineItem.totalPrice" 
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Rate
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            step="0.01"
+                            name="rate"
+                            placeholder="0.0" 
+                            ng-model="invoiceLineItem.rate" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Unit
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="unitOptions"
+                            options="units"
+                            id="invoiceLineItemUnit"
+                            name="invoiceLineItemUnit"
+                            ng-model="invoiceLineItem.unit"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Markup
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            step="0.01"
+                            name="markup" 
+                            placeholder="0.00" 
+                            ng-model="invoiceLineItem.markup" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <div class="line-item-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="line-item-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="line-item taxable button"
+                                    ng-click="invoiceLineItem.taxable = !invoiceLineItem.taxable"
+                                    ng-class="{'selected': invoiceLineItem.taxable}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="invoiceLineItem.taxable"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Taxable?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-auto large-auto"
+                    ng-if="invoiceLineItem.taxable"
+                >
+                    <div class="input-container">
+                        <label>
+                            Sales Tax Rate
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text"
+                            name="salesTaxRate" 
+                            placeholder="0.00" 
+                            ng-model="invoiceLineItem.salesTaxRate"
+                            ui-mask="9?999.99" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea 
+                                class="form-textarea" 
+                                name="description" 
+                                placeholder="Item Description" 
+                                ng-model="invoiceLineItem.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="invoice-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="invoice-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="invoice email button"
+                                    ng-click="invoiceLineItem.lineItemPrice = !invoiceLineItem.lineItemPrice"
+                                    ng-class="{'selected': invoiceLineItem.lineItemPrice}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="invoiceLineItem.lineItemPrice"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Show Line Item Price?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Labor Assignment</b></h2>
+                </div>
+                <div class="cell small-12 medium-612large-12">
+                    <div class="input-container">
+                        <label>
+                            Category
+                            <span class="alert-text">*</span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="categoryOptions"
+                            options="laborAssignmentOptions"
+                            id="invoiceLineItemCategory"
+                            name="invoiceLineItemCategory"
+                            ng-model="invoiceLineItem.category"
+                            ng-change="onCategoryChange()"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12" ng-if="invoiceLineItem.category === 'Labor'">
+                    <div class="input-container">
+                        <label>
+                            Labor Role
+                            <span class="alert-text">*</span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="laborOptions"
+                            options="labor"
+                            id="invoiceLineItemLabor"
+                            name="invoiceLineItemLabor"
+                            ng-model="invoiceLineItem.laborId"
+                            ng-change="onLaborChange()"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12" ng-if="invoiceLineItem.category === 'Labor' && selectedLabor">
+                    <div class="invoice-line-item-form-labor-details">
+                        <h6><strong>{{selectedLabor.role}}</strong></h6>
+                        <p><strong>Rate:</strong> ${{selectedLabor.rate}}/hour</p>
+                        <p><strong>Overtime Rate:</strong> ${{selectedLabor.overtimeRate}}/hour</p>
+                        <p><strong>Standard Hours:</strong> {{selectedLabor.standardHoursPerDay}}/day</p>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="invoiceLineItem.category === 'Labor'">
+                    <div class="input-container">
+                        <label>
+                            Hours
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="laborHours"
+                            placeholder="8" 
+                            ng-model="invoiceLineItem.quantity" 
+                            ng-change="calculateLaborTotal()"
+                            min="0"
+                            step="0.5"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="invoiceLineItem.category === 'Labor'">
+                    <div class="invoice-line-item-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="invoice-line-item-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="invoice line item form button"
+                                    ng-click="invoiceLineItem.useOvertimeRate = !invoiceLineItem.useOvertimeRate; calculateLaborTotal()"
+                                    ng-class="{'selected': invoiceLineItem.useOvertimeRate}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="invoiceLineItem.useOvertimeRate"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    Use Overtime Rate
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="invoiceLineItem.category === 'Labor' && invoiceLineItem.useOvertimeRate">
+                    <div class="input-container">
+                        <label>
+                            Standard Hours
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="standardHours"
+                            placeholder="8" 
+                            ng-model="invoiceLineItem.standardHours" 
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="invoiceLineItem.category === 'Labor' && invoiceLineItem.useOvertimeRate">
+                    <div class="input-container">
+                        <label>
+                            Overtime Hours
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="overtimeHours"
+                            placeholder="0" 
+                            ng-model="invoiceLineItem.overtimeHours" 
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="line-item-form-submit-button submit-button button" 
+                        id="lineItemFormSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newInvoiceLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="line-item-form-edit-submit-button submit-button button" 
+                        id="lineItemFormEditSubmitButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-click="updateInvoiceLineItem(invoiceLineItem)" 
+                        ng-if="!UI.newInvoiceLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

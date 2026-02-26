@@ -1,0 +1,29 @@
+.estimator-container {
+    padding: 2rem;
+    height: 100%;
+    overflow: auto;
+
+    .estimator {
+        max-width: 60rem;
+        margin: 0 auto;
+
+        .estimator-run-form-container {
+
+            .estimator-run-form {
+                padding: 4rem 0;
+            }
+        }
+    }
+}
+.estimators-list-container {
+    height: 100%;
+
+    .estimators-container {
+        height: 100%;
+
+        .estimators {
+            height: 100%;
+
+        }
+    }
+}

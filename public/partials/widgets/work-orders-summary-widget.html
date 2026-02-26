@@ -1,0 +1,194 @@
+<div class="work-orders-summary-widget-container widget-container">
+    <div class="work-orders-summary-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-clipboard-list"></i> Work Orders Summary
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.workOrdersSummary.period">
+                                Last {{ widgetData.workOrdersSummary.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="work-orders-options-button button clear" 
+                            type="button"
+                            data-toggle="workOrdersOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="work-orders-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="workOrdersOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="work-orders-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('workOrdersSummary', { period: widgetData.workOrdersSummary.period, includeAllUsers: widgetData.workOrdersSummary.includeAllUsers })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="workOrdersTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="workOrdersTimeRange"
+                                        name="workOrdersTimeRange"
+                                        ng-model="widgetData.workOrdersSummary.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="work-orders-summary-select-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="work-orders-summary-select-button select-button button"
+                                                type="button"
+                                                ng-click="widgetData.workOrdersSummary.includeAllUsers = !widgetData.workOrdersSummary.includeAllUsers"
+                                                ng-class="{'selected': widgetData.workOrdersSummary.includeAllUsers}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widgetData.workOrdersSummary.includeAllUsers"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include all Users?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="work-orders-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.workOrdersSummary.data.total }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Orders
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.workOrdersSummary.data.totalCost | currency }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Cost
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div 
+                                class="golura-block stat-card text-center" 
+                                ng-class="{'callout alert': widgetData.workOrdersSummary.data.overdue > 0}"
+                            >
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.workOrdersSummary.data.overdue }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Overdue
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div 
+                                class="golura-block stat-card text-center" 
+                                ng-class="{'callout warning': widgetData.workOrdersSummary.data.dueSoon > 0}"
+                            >
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.workOrdersSummary.data.dueSoon }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Due Soon
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto" ng-if="widgetData.workOrdersSummary.data.efficiencyRatio">
+                <div class="efficiency-section">
+                    <div class="golura-block">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-6 large-6">
+                                <h5>
+                                    <b class="efficiency-label">Efficiency Ratio</b>
+                                </h5>
+                            </div>
+                            <div class="cell small-12 medium-6 large-6 text-right">
+                                <h4 class="efficiency-value" 
+                                      ng-class="{'success-text': widgetData.workOrdersSummary.data.efficiencyRatio <= 100, 
+                                                 'alert-text': widgetData.workOrdersSummary.data.efficiencyRatio > 100}">
+                                    <b>{{ widgetData.workOrdersSummary.data.efficiencyRatio }}%</b>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

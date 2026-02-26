@@ -1,0 +1,77 @@
+<div class="estimators-list-container">
+    <h2>
+        <b>Estimators</b>
+    </h2>
+    <div class="estimators-container list-container">
+        <div class="estimators list-details">
+            <div class="golura-block grid-y">
+                <div class="cell shrink position-relative">
+                    <div class="estimators-search-container list-search-container">
+                        <div class="estimators-search list-search">
+                            <div class="search-input-container">
+                                <div class="grid-x align-middle">
+                                    <div class="cell auto align-self-bottom">
+                                        <input
+                                            class="estimators-search-input search-input"
+                                            id="estimatorSearchInput" 
+                                            type="text"
+                                            placeholder="Search estimators..."
+                                            ng-model="search.estimator.value"
+                                        />
+                                    </div>
+                                    <div class="cell shrink align-self-bottom">
+                                        <span class="search-icon">
+                                            <i class="fal fa-search"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 estimators-list-container overflow-scroll">
+                    <div class="list-container">
+                        <ul 
+                            class="estimators-list list"
+                            id="estimatorList"
+                        >
+                            <li ng-if="!UI.estimatorsLoaded">
+                                <div class="ssc estimators-ssc">
+                                    <div 
+                                        class="ssc-square"
+                                        ng-repeat="x in [].constructor(40) track by $index"
+                                    ></div>
+                                </div>
+                            </li>
+                            <li
+                                class="estimators-list-item list-item position-relative"
+                                ng-repeat="estimator in filteredEstimators = 
+                                (estimators | filter:search.estimator.value) |
+                                orderBy: 'id' track by $index"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-auto medium-auto large-auto">
+                                        <h6 class="list-item-name">
+                                            {{estimator.title}}
+                                        </h6>
+                                    </div>
+                                    <div class="cell small-auto medium-shrink large-shrink">
+                                        <div class="list-item-options-container">
+                                            <a 
+                                                class="list-item-options-button button success white-text"
+                                                ng-href="/estimates/estimator/{{estimator.id}}?clientId={{client.id}}&eventId={{event.id}}"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-play"></i> Run
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

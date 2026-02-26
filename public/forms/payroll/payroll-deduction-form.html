@@ -1,0 +1,429 @@
+<div 
+    class="payroll-deduction-form-container create-edit-container"
+    ng-init="initPayrollDeductionForm()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="payroll-deduction create-edit">
+        <div format-users users="users"></div>
+        <form 
+            class="payroll-deduction-form golura-form"
+            id="payrollDeductionForm"
+            name="payrollDeductionForm"
+            ng-submit="createPayrollDeduction($event, payrollDeduction)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h1>
+                        <b>
+                            {{UI.newPayrollDeduction ? 'Create Payroll Deduction' : 'Edit Payroll Deduction'}}
+                        </b>
+                    </h1>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.usersLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.usersLoaded"
+                        ></div>
+                        <label for="employee">
+                            Employee
+                            <span class="required">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="userOptions"
+                            options="users"
+                            id="employee"
+                            name="employee"
+                            ng-model="payrollDeduction.employeeId"
+                            ng-change="initUserDeductions(payrollDeduction)"
+                            required
+                        >
+                        </selectize>
+                    </div> 
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="payroll-deduction-employee-deductions-container"
+                        ng-if="UI.userDeductionsLoaded"
+                    >
+                        <div class="payroll-deduction-employee-deductions">
+                            <h4>
+                                <b>
+                                    Existing Deductions
+                                </b>
+                            </h4>
+                            <div class="payroll-deduction-employee-deductions-list-container list-container">
+                                <ul class="payroll-deduction-employee-deductions-list list">
+                                    <li 
+                                        class="payroll-deduction-employee-deduction"
+                                        ng-if="!payrollDeduction.existingDeductions || payrollDeduction.existingDeductions.length === 0"
+                                    >
+                                        <h5 class="text-center">
+                                            <b>
+                                                No existing deductions found for this employee.
+                                            </b>
+                                        </h5>
+                                    </li>
+                                    <li 
+                                        class="payroll-deduction-employee-deduction-list-item list-item position-relative"
+                                        ng-repeat="deduction in payrollDeduction.existingDeductions track by $index"
+                                    >
+                                        <div class="grid-x grid-margin-x align-middle">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h5 
+                                                    class="text-capitalize"
+                                                    title="{{deduction.notes}}"
+                                                >
+                                                    <span 
+                                                        class="label alert white-text"
+                                                        ng-if="deduction.appliesTo === 'employer'"
+                                                    >
+                                                        Employer
+                                                    </span>
+                                                    <span 
+                                                        class="label warning white-text"
+                                                        ng-if="deduction.appliesTo === 'both'"
+                                                    >
+                                                        Both
+                                                    </span>
+                                                    <b>
+                                                        {{deduction.name || 'N/A'}} 
+                                                    </b>
+                                                </h5>
+                                                <h6 class="text-capitalize">
+                                                    <b>
+                                                        Type: 
+                                                    </b>
+                                                    {{deduction.type}}
+                                                </h6>
+                                                <h6>
+                                                    <b>
+                                                        Amount: 
+                                                    </b>
+                                                    <span ng-if="deduction.type === 'percentage'">
+                                                        {{deduction.value}}%
+                                                    </span>
+                                                    <span ng-if="deduction.type === 'fixed'">
+                                                        {{deduction.value | currency}}
+                                                    </span>
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink text-right">
+                                                <button 
+                                                    class="payroll-deduction-employee-deduction-edit-button button primary white-text"
+                                                    type="button"
+                                                    ng-click="initPayrollDeductionForm(deduction)"
+                                                >
+                                                    <i class="fal fa-edit"></i> Edit
+                                                </button>
+                                                <button 
+                                                    class="payroll-deduction-employee-deduction-remove-button button alert white-text"
+                                                    type="button"
+                                                    ng-click="deduction.remove = !deduction.remove"
+                                                >
+                                                    <i class="fal fa-archive"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div 
+                                            class="payroll-deduction-delete-container delete-container black-overlay"
+                                            ng-if="deduction.remove"
+                                        >
+                                            <div class="grid-x grid-padding-x align-middle">
+                                                <div class="cell small-12 medium-auto large-auto text-center">
+                                                    <h4>
+                                                        <b class="alert-text">Warning: </b>
+                                                        <span class="white-text">Are you sure you want to delete 
+                                                            this Deduction?
+                                                        </span>
+                                                    </h4>
+                                                </div>
+                                                <div class="cell small-12 medium-shrink large-shrink">
+                                                    <button 
+                                                        class="payroll-deduction-options-button button alert white-text"
+                                                        type="button"
+                                                        ng-disabled="UI.formSaving"
+                                                        ng-class="{'form-alert': UI.formSaving}"
+                                                        ng-click="removePayrollDeduction(deduction)"
+                                                    >
+                                                        <span ng-if="!UI.formSaving">
+                                                            <i class="fal fa-check-circle"></i> Confirm
+                                                        </span>
+                                                        <span ng-if="UI.formSaving">
+                                                            Please Wait...
+                                                        </span>
+                                                    </button>
+                                                    <button 
+                                                        class="payroll-deduction-options-button button warning white-text"
+                                                        type="button"
+                                                        ng-click="deduction.remove = !deduction.remove"
+                                                    >
+                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="UI.userDeductionsLoaded"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <label for="name">
+                                    Deduction Name
+                                    <span class="required">
+                                        *
+                                    </span>
+                                </label>
+                                <input
+                                    class="form-input"
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    ng-model="payrollDeduction.name"
+                                    placeholder="Enter deduction name (e.g., Health Insurance, 401k)"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-8 large-8">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <label for="type">
+                                    Deduction Type
+                                    <span class="required">
+                                        *
+                                    </span>
+                                </label>
+                                <selectize
+                                    class="form-input"
+                                    config="typeOptions"
+                                    options="deductionTypes"
+                                    id="type"
+                                    name="type"
+                                    ng-model="payrollDeduction.type"
+                                    required
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                                ng-title="payrollDeduction.type === 'percentage' ? 
+                                'Enter percentage (e.g., 5.5 for 5.5%)' : 'Enter dollar amount (e.g., 100.00)'"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <label 
+                                    for="amount"
+                                    ng-if="payrollDeduction.type === 'fixed'"
+                                >
+                                    Amount
+                                    <span class="required">
+                                        *
+                                    </span>
+                                    <span class="medium-gray-text">
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                </label>
+                                <label 
+                                    for="amount"
+                                    ng-if="payrollDeduction.type === 'percentage'"
+                                >
+                                    Percentage
+                                    <span class="required">
+                                        *
+                                    </span>
+                                    <span class="medium-gray-text">
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                </label>
+                                <input
+                                    class="form-input" 
+                                    type="text"
+                                    id="amount"
+                                    name="amount"
+                                    placeholder="0.00" 
+                                    ng-model="payrollDeduction.value" 
+                                    format-number 
+                                    allow-decimal="true" 
+                                    decimal-places="2" 
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="·"
+                                    required 
+                                    ng-if="payrollDeduction.type === 'fixed'"
+                                />
+                                <input
+                                    class="form-input" 
+                                    type="number"
+                                    id="amount"
+                                    name="amount"
+                                    placeholder="0%" 
+                                    ng-model="payrollDeduction.value"
+                                    required 
+                                    ng-if="payrollDeduction.type === 'percentage'"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <label for="effectiveDate">
+                                    Effective Date
+                                    <span class="required">
+                                        *
+                                    </span>
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-input"
+                                    id="effectiveDate"
+                                    name="effectiveDate"
+                                    ng-model="payrollDeduction.effectiveDate"
+                                    flatpickr
+                                    date-only="true"
+                                    allow-past="true"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <label for="endDate">
+                                    End Date
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-input"
+                                    id="endDate"
+                                    name="endDate"
+                                    ng-model="payrollDeduction.endDate"
+                                    flatpickr
+                                    date-only="true"
+                                    allow-past="true"
+                                    min-date-model="payrollDeduction.effectiveDate"
+                                />
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.userDeductionsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.userDeductionsLoaded"
+                                ></div>
+                                <div class="form-textarea-container">
+                                    <label for="notes">
+                                        Notes
+                                    </label>
+                                    <textarea
+                                        class="form-textarea"
+                                        id="notes"
+                                        name="notes"
+                                        ng-model="payrollDeduction.notes"
+                                        placeholder="Add any notes about this deduction..."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12 text-right">
+                            <button 
+                                class="payroll-deduction-form-submit-button submit-button button success white-text" 
+                                type="submit" 
+                                ng-disabled="UI.formSaving || 
+                                !payrollDeduction.name || 
+                                !payrollDeduction.type || 
+                                !payrollDeduction.value || 
+                                !payrollDeduction.effectiveDate"
+                                ng-class="{'form-saving': UI.formSaving}"
+                                ng-if="UI.newPayrollDeduction"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-save"></i> 
+                                    Save
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                            <button 
+                                class="payroll-deduction-form-update-button submit-button button" 
+                                id="payrollDeductionFormUpdateButton"
+                                type="button"
+                                ng-disabled="UI.formSaving"
+                                ng-class="{'form-saving': UI.formSaving}"
+                                ng-click="updatePayrollDeduction(payrollDeduction)"
+                                ng-if="!UI.newPayrollDeduction"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-check-circle"></i> Update
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div 
+    class="view-event-documents-container view-event-container view-container"
+    ng-init="initEvent();"
+>
+    <div format-events event="event"></div>
+    <div class="view-event-documents view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-4 large-4">
+                        <div ng-include="'dist/partials/events/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/event-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="call small-12 medium-auto large-auto">
+                <div class="view-client-documents-documents-container">
+                    <document-uploader 
+                        event-id="{{event.id}}"
+                        client-id="{{event.clientId}}"
+                        ng-if="event.clientId"
+                    ></document-uploader>
+                    <document-uploader 
+                        event-id="{{event.id}}"
+                        ng-if="!event.clientId"
+                    ></document-uploader>
+                    <div 
+                        class="grid-x grid-margin-x documents-ssc ssc"
+                        ng-if="!UI.documentsLoaded"
+                    >
+                        <div 
+                            class="cell small-12 medium-4 large-3 ssc-square"
+                            ng-repeat="x in [].constructor(20) track by $index"
+                        ></div>
+                    </div>
+                    <format-documents 
+                        class="container" 
+                        documents="eventDocuments"
+                    ></format-documents>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,641 @@
+<div class="admin-estimator-ai-container admin-form-container">
+    <div class="admin-estimator-ai admin-form-details">
+        <h1>
+            <b>
+                Go Esti
+            </b>
+        </h1>
+        <form 
+            class="estimator-ai-form admin-form golura-form"
+            id="estimatorAiForm"
+            name="estimatorAiForm"
+            ng-submit="createAIEstimator($event, estimator)"
+        >
+            <div class="ai-step-content" ng-if="UI.step === 1">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div 
+                            class="input-container"
+                            ng-class="{'ssc': !UI.estimatorLoaded}"
+                        >
+                            <div 
+                                class="ssc-square"
+                                ng-if="!UI.estimatorLoaded"
+                            ></div>
+                            <label for="estimatorName">   
+                                Title
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="estimatorTitle"
+                                name="estimatorTitle"
+                                placeholder="Estimator title"
+                                ng-model="estimator.title"
+                                autocomplete="off"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label title="Please be specific about the scope of work to help our AI create better estimates. Include materials, processes, or special requirements.">
+                                <i class="fal fa-question-circle"></i> 
+                                What specific work do you plan to do for this?
+                                <span class="alert-text">*</span>
+                                <span class="medium-gray-text">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </label>
+                            <div class="form-textarea-container">
+                                <textarea 
+                                    class="form-textarea"
+                                    ng-model="estimator.details"
+                                    placeholder="For example: Install new kitchen cabinets, replace countertops, and update electrical for appliances..."
+                                    rows="4"
+                                    required>
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="ai-step-content" 
+                ng-if="UI.step === 2"
+            >
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Complexity
+                            </label>
+                            <selectize
+                                class="form-input"
+                                config="complexityOptions"
+                                options="complexities"
+                                id="complexitySelect"
+                                name="complexitySelect"
+                                ng-model="estimator.complexity"
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Project Description
+                            </label>
+                            <div class="form-textarea-container">
+                                <textarea 
+                                    class="form-textarea"
+                                    ng-model="estimator.description"
+                                    placeholder="Describe the typical projects this estimator will be used for..."
+                                    rows="4"
+                                    required
+                                >
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-6 large-6">
+                        <div class="input-container">
+                            <label>
+                                Budget Range
+                                <span class="alert-text">*</span>
+                            </label>
+                            <selectize
+                                class="form-input"
+                                config="budgetRangeOptions"
+                                options="budgetRange"
+                                id="budgetRangeSelect"
+                                name="budgetRangeSelect"
+                                ng-model="estimator.budgetRange"
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-6 large-6">
+                        <div class="input-container">
+                            <label>
+                                Market
+                            </label>
+                            <selectize
+                                class="form-input"
+                                config="marketOptions"
+                                options="markets"
+                                id="marketSelect"
+                                name="marketSelect"
+                                ng-model="estimator.market" 
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label title="Create the key areas or components relevant to this project eg: kitchen, flooring, bathroom, electrical, plumbing">
+                                Key Areas/Components
+                                <span class="medium-gray-text">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </label>
+                            <selectize
+                                class="form-input"
+                                config="keyAreasOptions"
+                                options="estimator.components"
+                                id="keyAreasSelect"
+                                name="keyAreasSelect"
+                                ng-model="estimator.components"
+                                required
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-step-content" ng-if="UI.step === 3">
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-12 large-12">
+                        <h2 ng-if="!UI.aiAnalyzing && estimator.aiData">
+                            <b>
+                                Analysis & Recommendations
+                            </b>
+                        </h2>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12" 
+                        ng-if="UI.aiAnalyzing"
+                    >
+                        <div class="ai-analysis-loading text-center">
+                            <div class="loading-spinner">
+                                <i class="fas fa-sparkles fa-beat-fade"></i>
+                            </div>
+                            <h3>
+                                <b>
+                                    Analyzing your Estimator requirements
+                                </b>
+                            </h3>
+                            <h6>
+                                Please wait while we gather the necessary information.
+                                <br/>
+                                This may take a few minutes...
+                            </h6>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12" 
+                        ng-if="UI.aiAnalysisComplete && estimator.aiData"
+                    >
+                        <div class="ai-analysis-results">
+                            <div 
+                                class="question-containers-section" 
+                                ng-if="estimator.aiData.questionContainers.length"
+                            >
+                                <h3>
+                                    <b>
+                                        Question Containers ({{estimator.aiData.questionContainers.length}})
+                                    </b>
+                                </h3>
+                                <div class="question-containers-container list-container">
+                                    <div class="question-containers list-details">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell small-12 medium-12 large-12 overflow-scroll">
+                                                <ul 
+                                                    class="question-containers-accordion accordion list" 
+                                                    data-accordion
+                                                    data-deep-link="false"
+                                                    data-allow-all-closed="true"
+                                                >
+                                                    <li 
+                                                        class="question-container-item accordion-item list-item"
+                                                        ng-repeat="container in estimator.aiData.questionContainers track by $index"
+                                                        data-accordion-item
+                                                    >
+                                                        <a 
+                                                            class="question-container-title accordion-title list-item-header"
+                                                            href="#"
+                                                        >
+                                                            <div class="grid-x grid-padding-x align-middle">
+                                                                <div class="cell small-auto medium-auto large-auto">
+                                                                    <h6 class="list-item-name">
+                                                                        <b>
+                                                                            {{container.title}}
+                                                                        </b>
+                                                                    </h6>
+                                                                    <p class="list-item-description">
+                                                                        {{container.description}}
+                                                                    </p>
+                                                                    <span 
+                                                                        class="label white-text" 
+                                                                        ng-if="container.questions"
+                                                                    >
+                                                                        {{container.questions.length}} Questions
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                        <div 
+                                                            class="question-container-content accordion-content list-item-content"
+                                                            data-tab-content
+                                                        >
+                                                            <div 
+                                                                class="container-questions list-container" 
+                                                                ng-if="container.questions && container.questions.length"
+                                                            >
+                                                                <ul class="questions-list list">
+                                                                    <li 
+                                                                        class="question-item list-item position-relative"
+                                                                        ng-repeat="question in container.questions track by $index"
+                                                                    >
+                                                                        <div class="grid-x grid-padding-x align-middle">
+                                                                            <div class="cell small-auto medium-auto large-auto">
+                                                                                <h6 class="list-item-name">
+                                                                                    {{question.text}}
+                                                                                </h6>
+                                                                                <div class="question-details">
+                                                                                    <div 
+                                                                                        ng-if="question.options" 
+                                                                                        class="question-options"
+                                                                                    >
+                                                                                        <span class="question-options medium-gray-text">
+                                                                                            Options: {{question.options.join(', ')}}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <span class="label white-text">
+                                                                                        {{question.type}}
+                                                                                    </span>
+                                                                                    <span 
+                                                                                        class="label white-text" 
+                                                                                        ng-class="question.required ? 'alert' : 'secondary'"
+                                                                                    >
+                                                                                        {{question.required ? 'Required' : 'Optional'}}
+                                                                                    </span>
+                                                                                    <span class="label white-text warning">
+                                                                                        {{question.variable}}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cell small-auto medium-shrink large-shrink">
+                                                                                <div class="list-item-options-container">
+                                                                                    <button 
+                                                                                        class="button alert white-text" 
+                                                                                        type="button" 
+                                                                                        ng-click="removeQuestion(question)"
+                                                                                    >
+                                                                                        <i class="fal fa-archive"></i> Remove
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="formulas-section" 
+                                ng-if="estimator.aiData.formulas.length"
+                            >
+                                <h3>
+                                    <b>
+                                        <i class="fal fa-calculator"></i> 
+                                        Generated Formulas ({{estimator.aiData.formulas.length}})
+                                    </b>
+                                </h3>
+                                <div class="formulas-container list-container">
+                                    <div class="formulas list-details">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell small-12 medium-12 large-12 overflow-scroll">
+                                                <div class="list-container">
+                                                    <ul class="formulas-list list">
+                                                        <li 
+                                                            class="formula-item list-item position-relative"
+                                                            ng-repeat="formula in estimator.aiData.formulas track by $index"
+                                                        >
+                                                            <div class="grid-x grid-padding-x align-middle">
+                                                                <div class="cell small-auto medium-auto large-auto">
+                                                                    <h6 class="list-item-name">
+                                                                        <b>
+                                                                            {{formula.title}}
+                                                                        </b>
+                                                                    </h6>
+                                                                    <p class="list-item-description">
+                                                                        {{formula.description}}
+                                                                    </p>
+                                                                    <div class="formula-details">
+                                                                        <code class="formula-code">
+                                                                            {{formula.formula}}
+                                                                        </code>
+                                                                        <span class="label white-text warning">
+                                                                            {{formula.category}}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="cell small-auto medium-shrink large-shrink">
+                                                                    <div class="list-item-options-container">
+                                                                        <button 
+                                                                            type="button" 
+                                                                            class="button alert white-text" 
+                                                                            ng-click="removeFormula(formula)"
+                                                                        >
+                                                                            <i class="fal fa-archive"></i> Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="line-items-section" 
+                                ng-if="estimator.aiData.lineItems.length"
+                            >
+                                <h3>
+                                    <b>
+                                        <i class="fal fa-list"></i> 
+                                        Generated Line Items ({{estimator.aiData.lineItems.length}})
+                                    </b>
+                                </h3>
+                                <div class="line-items-container list-container">
+                                    <div class="line-items list-details">
+                                        <div class="golura-block grid-y">
+                                            <div class="cell small-12 medium-12 large-12 overflow-scroll">
+                                                <div class="list-container">
+                                                    <ul class="line-items-list list">
+                                                        <li 
+                                                            class="line-item-item list-item position-relative"
+                                                            ng-repeat="lineItem in estimator.aiData.lineItems track by $index"
+                                                        >
+                                                            <div class="grid-x grid-padding-x align-middle">
+                                                                <div class="cell small-auto medium-auto large-auto">
+                                                                    <h6 class="list-item-name">
+                                                                        {{lineItem.title}}
+                                                                    </h6>
+                                                                    <p class="list-item-description">
+                                                                        {{lineItem.description}}
+                                                                    </p>
+                                                                    <div class="line-item-details">
+                                                                        <span class="label white-text">
+                                                                            {{lineItem.unit}}
+                                                                        </span>
+                                                                        <span class="label white-text warning">
+                                                                            {{lineItem.category}}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="cell small-auto medium-shrink large-shrink">
+                                                                    <div class="list-item-options-container">
+                                                                        <button 
+                                                                            type="button" 
+                                                                            class="button alert white-text" 
+                                                                            ng-click="removeLineItem(lineItem)"
+                                                                        >
+                                                                            <i class="fal fa-archive"></i> Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="ai-step-content" 
+                ng-if="UI.step === 4"
+            >
+                <div class="grid-x grid-margin-x align-top">
+                    <div class="cell small-12">
+                        <h2>
+                            <b>
+                                Review & Generate Estimator
+                            </b>
+                        </h2>
+                        <p class="help-text">
+                            Review the AI recommendations and generate your estimator
+                        </p>
+                    </div>
+
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div class="estimator-preview">
+                            <h3>
+                                <b>
+                                    Estimator Summary
+                                </b>
+                            </h3>
+                            <h6 class="summary-item">
+                                <b>Name: </b>
+                                {{estimator.title}}
+                            </h6>
+                            <h6 
+                                class="summary-item" 
+                                ng-if="estimator.eventDetails"
+                            >
+                                <b>Specific Work: </b>
+                                {{estimator.eventDetails}}
+                            </h6>
+                            <h6 class="summary-item">
+                                <b>Complexity: </b>
+                                {{estimator.complexity}}
+                            </h6>
+                            <div 
+                                class="ai-analysis-text" 
+                                ng-if="estimator.aiData.analysis"
+                            >
+                                <div class="analysis-content">
+                                    <div
+                                         format-ai 
+                                         ai-text="estimator.aiData.analysis"
+                                         ai-data="estimator.aiData">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-shrink larger-shrink">
+                        <div class="generation-options">
+                            <h4>
+                                <b>
+                                    <i class="fal fa-cog"></i> 
+                                    Generation Options
+                                </b>
+                            </h4>
+                            <div class="option-item">
+                                <div class="option-item-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="option-item-select-button select-button button"
+                                                type="button"
+                                                ng-click="estimator.options.includeFormulas = !estimator.options.includeFormulas"
+                                                ng-class="{'selected': estimator.options.includeFormulas}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="estimator.options.includeFormulas"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include Calculation Formulas?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-item">
+                                <div class="option-item-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="option-item-select-button select-button button"
+                                                type="button"
+                                                ng-click="estimator.options.includeVariables = !estimator.options.includeVariables"
+                                                ng-class="{'selected': estimator.options.includeVariables}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="estimator.options.includeVariables"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Generate Custom Variables?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-item">
+                                <div class="option-item-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="option-item-select-button select-button button"
+                                                type="button"
+                                                ng-click="estimator.options.includeLineItems = !estimator.options.includeLineItems"
+                                                ng-class="{'selected': estimator.options.includeLineItems}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="estimator.options.includeLineItems"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Create Line Item Templates?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="option-item-select-button-container select-container">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="option-item-select-button select-button button"
+                                                type="button"
+                                                ng-click="estimator.options.includeValidation = !estimator.options.includeValidation"
+                                                ng-class="{'selected': estimator.options.includeValidation}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="estimator.options.includeValidation"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include Validation?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-form-navigation">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-6 large-6 text-left">
+                        <button 
+                            class="button warning white-text" 
+                            type="button" 
+                            ng-click="initEstimatorForm()"
+                            ng-if="UI.step === 1"
+                        >
+                            <i class="fal fa-times-circle"></i> Cancel
+                        </button>
+                        <button 
+                            class="button warning white-text" 
+                            type="button" 
+                            ng-click="updateStep('back')"
+                            ng-if="UI.step > 1"
+                        >
+                            <i class="fal fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="cell small-6 text-right">
+                        <button 
+                            class="button" 
+                            type="button" 
+                            ng-click="updateStep(UI.step + 1)"
+                            ng-if="UI.step < 4"
+                            ng-disabled="!validateEstimatorAIStep()"
+                        >
+                            <i class="fal fa-check-circle"></i>  
+                            Continue
+                        </button>
+                        <button 
+                            class="estimator-ai-form-submit-button submit-button button success white-text" 
+                            type="submit" 
+                            ng-if="UI.step === 4"
+                            ng-disabled="UI.formSaving"
+                            ng-class="{'form-saving': UI.formSaving}"
+                        >
+                            <span ng-if="!UI.formSaving">
+                                <i class="fal fa-sparkles"></i> 
+                                Generate
+                            </span>
+                            <span ng-if="UI.formSaving">
+                                Please Wait...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

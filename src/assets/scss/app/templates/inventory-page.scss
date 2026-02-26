@@ -1,0 +1,179 @@
+.inventory-container {
+    height: 100%;
+
+    .inventory {
+        height: 100%;
+
+        &.warehouses,
+        &.vendors,
+        &.items {
+            padding: 0px;
+        }
+        .inventory-tabs-container {
+            background: var(--white);
+            border-right: 1px solid var(--light-gray);
+            height: 100%;
+            
+            .inventory-tabs-link-title {
+                padding: 0px 0px $container-radius;
+                display: block;
+                float: none;
+                width: auto;
+
+                a {    
+                    border-radius: $container-radius;
+                    padding: 1.5rem;
+                    display: block;
+                    font-size: 0.75rem;
+                    line-height: 1;
+                    color: var(--anchor-color);
+
+                    &:hover {
+                        background: var(--light-gray);
+                    }
+                }
+            }
+        }
+        .inventory-tabs-content {
+            background: $transparent;
+
+            .inventory-warehouses-tabs-panel,
+            .inventory-vendors-tabs-panel {
+                background: var(--white);
+                overflow: hidden;
+                border: none;
+
+            }
+        }
+    }
+}
+.view-warehouse-container {
+
+    .view-warehouse {
+        padding: 0px;
+
+        .view-warehouse-create-button  {
+            padding: 1rem 1.5rem;
+        }
+        .view-warehouse-delete-container {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2;
+            padding: 1rem;
+            border-radius: $circle-radius;
+            border: .25rem solid $alert-color;
+
+            .view-warehouse-delete-button {
+                border-radius: $circle-radius;
+                padding: 2rem 2.25rem;
+                font-size: 2rem;
+                margin: 0px;
+            }
+        }
+        .warehouse {
+            height: 100%;
+
+            .dhx_grid {
+                background: $transparent;
+
+                .dhx_header-wrapper  {
+
+                    .dhx_header-row {
+                        background: var(--black);
+                        color: var(--font-color);
+
+                        .dhx_grid-header-cell  {
+                            background: var(--black);
+                        }
+                    }
+                }
+
+                .dhx_grid-content {
+                    border: none;
+                    border-bottom-right-radius: $container-radius;
+                    border-bottom-left-radius: $container-radius;
+                    overflow: hidden;
+                    min-height: 100%; 
+                    min-width: 100%; 
+                    background: var(--black);
+
+                    .dhx_grid-body {
+                        min-height: 100%; 
+                        min-width: 100%; 
+
+                        .input-container {
+                            margin: 0px;
+                            width: 100%
+                        }
+                        div[role=button] {
+
+                            .edit-button {
+                                margin: 0px 0px 0px 1rem;
+                                padding: 0rem 1rem;
+                                width: 10rem;
+                                font-size: 1rem;
+                                height: 2.75rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.view-vendor-details-container {
+    background: var(--white);
+    border-radius: $container-radius;
+    border: 1px solid var(--light-gray);
+
+    h3 {
+        padding: 1rem 1rem 0px;
+    }
+}
+.view-warehouse-creation-reveal {
+    padding-bottom: 1rem;
+
+    &.no-padding {
+
+        .view-warehouse-creation-options-back-button  {
+            margin: 2rem 2rem 0px;
+        }
+    }
+    .view-warehouse-creation-options-container {
+
+        .view-warehouse-creation-option {
+            padding: 4rem 2rem;
+            background: var(--light-gray);
+            color: $medium-gray;
+            border-radius: $container-radius;
+            margin-bottom: 1rem;
+
+            cursor: pointer;
+
+            &:hover {
+                background: darken($light-gray, 5);
+            }
+
+            span {
+                display: block;
+                font-size: 2rem;
+            }
+        }
+    }
+    .estimators-list-container {
+
+        h2 {
+            padding: 1rem 2rem;
+        }
+        .estimators-container {
+
+            .estimators {
+
+                .estimators-list-container {
+                    max-height: 25rem;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,290 @@
+<div 
+    class="work-orders-container"
+    ng-init="initWorkOrders()"
+>
+    <div class="work-orders">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="work-orders-search-container list-search-container">
+                    <div class="work-orders-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell small-10 medium-auto large-auto align-self-bottom">
+                                    <input
+                                        class="work-orders-search-input search-input"
+                                        id="workOrderSearchInput" 
+                                        type="text"
+                                        placeholder="Search work orders..."
+                                        ng-model="search.workOrder.value"
+                                    />
+                                </div>
+                                <div class="cell small-2 medium-shrink large-shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div 
+                                    class="cell small-7 medium-shrink large-shrink"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <div class="sort-input-container">
+                                        <div class="grid-x">
+                                            <div class="cell auto">
+                                                <selectize
+                                                    class="work-orders-search-sort-input form-input sort-input"
+                                                    id="work-orderSearchSortInput"
+                                                    config="sortOptions"
+                                                    options="workOrderOptions"
+                                                    ng-model="sort.workOrder.id"
+                                                    ng-change="orderBy(sort.workOrder.id)"
+                                                    ng-cloak
+                                                >
+                                                </selectize>
+                                            </div>
+                                            <div class="cell shrink">
+                                                <span class="sort-icon">
+                                                    <i class="fal fa-sort"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-shrink large-shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="work-orders-search-create-button-container create-button-container">
+                                        <a 
+                                            class="work-orders-search-create-button submit-button create-button button success white-text" 
+                                            ng-class="{'expanded': $root.UI.isMobile}"
+                                            id="workOrderSearchCreateButton"
+                                            type="button"
+                                            ng-href="workOrder/work-order"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="work-orders-list-header-container list-header-container">
+                    <div class="work-orders-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>ID</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Cost</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Priority</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Due Date</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Scheduled Date</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Approval Status</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created By</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-2 large-2"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="work-orders-list-container list-container">
+                    <ul 
+                        class="work-orders-list list"
+                        id="workOrderList"
+                    >
+                        <li ng-if="!UI.workOrdersLoaded">
+                            <div class="ssc work-orders-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="work-orders-list-item list-item position-relative"
+                            ng-repeat="workOrder in filteredWorkOrders = 
+                            (workOrders | filter:search.workOrder.value) |
+                            orderBy: sort.workOrder.value |
+                            limitTo: UI.workOrderDisplayed track by $index"
+                            ng-class="{'selected': workOrder.selected}"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6 class="work-orders-list-item-number list-item-name">
+                                        <a ng-href="work-orders/work-order/{{workOrder.id}}">
+                                            {{workOrder.workOrderNumber}}
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="work-orders-list-item text-capitalize">
+                                        ${{workOrder.cost | number}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 ng-class="{'alert-text': workOrder.Priority.level == 'high'}">
+                                        {{workOrder.Priority.level}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="work-orders-list-item text-capitalize">
+                                        {{workOrder.dueDate | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="work-orders-list-item text-capitalize">
+                                        {{workOrder.scheduledDate | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <span 
+                                            class="success-text"
+                                            ng-if="workOrder.WorkOrderStatus.name == 'approved'"
+                                        >
+                                            approved
+                                        </span>
+                                        <span 
+                                            class="alert-text"
+                                            ng-if="workOrder.WorkOrderStatus.name == 'not approved'"
+                                        >
+                                            not approved
+                                        </span>
+                                        <span ng-if="!workOrder.scheduledDate">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        {{workOrder.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="list-item-options-container">
+                                        <a 
+                                            class="list-item-options-button button white-text"
+                                            ng-href="work-order/work-order/{{workOrder.id}}/edit"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="workOrder.delete = !workOrder.delete"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="work-orders-list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="workOrder.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this work-order?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteWorkOrder(u)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="workOrder.delete = !workOrder.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="work-orders-list-infinite-scroll text-center"
+                            id="workOrderListInfiniteScroll"
+                            ng-init="initInfiniteScroll()"
+                            ng-show="filteredWorkOrders.length > 20"
+                            ng-click="updateWorkOrdersDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredWorkOrders.length"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the Work Order you're looking, 
+                                    try to double check your spelling!
+                                    
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

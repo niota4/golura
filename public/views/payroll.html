@@ -1,0 +1,253 @@
+<div 
+    class="payroll-container"
+    ng-init="initPayrolls()"
+>
+    <user-onboarding page-name="payroll" auto-start="true"></user-onboarding>
+    <div class="payroll">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="payroll-search-container list-search-container">
+                    <div class="payroll-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="payroll-search-input search-input"
+                                        id="payrollSearchInput" 
+                                        type="text"
+                                        placeholder="Search payroll..."
+                                        autocomplete="off"
+                                        ng-model="search.payrolls"
+                                        ng-keyup="$event.keyCode == 13 && searchPayrolls()"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="payroll-search-create-button-container create-button-container">
+                                        <button 
+                                            class="payroll-search-create-button create-button submit-button button success white-text" 
+                                            id="payrollSearchCreateButton"
+                                            type="button"
+                                            data-open="payrollCreateReveal"
+                                            ng-click="initPayrollCreateForm()"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="payroll-list-header-container list-header-container">
+                    <div class="payroll-list-header list-header">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-3 large-2">
+                                <h6>
+                                    <b>
+                                        Number
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h6>
+                                    <b>
+                                        Period
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Status
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h6>
+                                    <b>
+                                        Employees
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Total Gross
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Total Net
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Deductions
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h6>
+                                    <b>
+                                        Actions
+                                    </b>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="payroll-list-container list-container">
+                    <div 
+                        ng-if="UI.payrollLoaded && payroll.length === 0" 
+                        class="no-payroll-message"
+                    >
+                        <div class="text-center">
+                            <i class="fal fa-money-check-alt fa-3x"></i>
+                            <p>No payroll found. Create your first payroll to get started.</p>
+                            <button 
+                                class="button primary"
+                                type="button"
+                                data-open="payrollCreateReveal"
+                            >
+                                <i class="fal fa-plus"></i> Create Payroll
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="payroll-list list">
+                        <li ng-show="!UI.payrollsLoaded">
+                            <div class="ssc payroll-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li 
+                            class="payroll-list-item list-item" 
+                            ng-repeat="payroll in filteredPayrolls = (payrolls | 
+                            filter:search.payrolls |
+                            limitTo: pagination.limit) track by $index"
+                        >
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6 class="payroll-number">
+                                        <b>{{ payroll.payrollNumber }}</b>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <div class="payroll-period">
+                                        <h6>
+                                            <b>{{ payroll.startDate | DateTimeFormat}} - {{ payroll.endDate | DateTimeFormat }}</b>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <span 
+                                        class="label white-text" 
+                                        ng-class="{'warning': payroll.status === 'approved',
+                                            'success': payroll.status === 'paid'}"
+                                    >
+                                        {{ payroll.status }}
+                                    </span>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Employees: 
+                                        </b>
+                                        {{ payroll.PayrollItems.length || 0 }}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Total Gross: 
+                                        </b>
+                                        ${{ payroll.totalGrossPay}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Total Net: 
+                                        </b>
+                                        ${{ payroll.totalNetPay }}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <b ng-if="$root.UI.isMobile">
+                                            Deductions: 
+                                        </b>
+                                        -${{ payroll.totalDeductions }}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div 
+                                        class="list-item-options-container"
+                                        ng-class="{'text-right': $root.UI.isMobile}"
+                                    >
+                                        <a 
+                                            class="list-item-options-button button success white-text"
+                                            ng-href="payroll/{{payroll.id}}"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-search"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                View
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="payroll-create-reveal reveal large"
+    id="payrollCreateReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closePayrollCreateReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'/dist/forms/payroll/payroll-create-form.html'"
+    ></div>
+</div>

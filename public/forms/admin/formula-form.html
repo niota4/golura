@@ -1,0 +1,160 @@
+<div class="admin-formula-container admin-form-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="admin-formula admin-form-details create-edit grid-container">
+        <h1>
+            <b>
+                Manage Formula
+            </b>
+        </h1>
+        <form 
+            class="formula-form admin-form golura-form"
+            id="formulaForm"
+            name="formulaForm"
+            ng-submit="createFormula($event, formula)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.formulaLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.formulaLoaded"
+                        ></div>
+                        <label for="formulaName">
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="formulaName"
+                            name="formulaName"
+                            placeholder="Formula name"
+                            ng-model="formula.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container math-input-container"
+                        id="formulaMathInputContainer"
+                        ng-class="{'ssc': !UI.formulaLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.formulaLoaded"
+                        ></div>
+                        <label for="formulaName">
+                            Formula
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <span
+                            class="form-input"
+                            id="formulaMath"
+                        ></span>
+                        <input
+                            class="form-input"
+                            type="hidden"
+                            id="formulaExpression"
+                            name="formulaExpression"
+                            placeholder="Formula's expression"
+                            ng-model="formula.expression"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h6 ng-if="UI.mathCalculationParsed">
+                        <b title="If the formula reference has options, we will always use the first one">Example 
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                            : </b>
+                        <b>
+                            {{UI.mathCalculationParsed}}
+                        </b>
+                    </h6>
+                    <h6 ng-if="mathCalculation || UI.mathCalculationResponse">
+                        Result: 
+
+                        <span 
+                            class="success-text"
+                            ng-class="{'success-text': mathCalculation && !UI.mathCalculationLoading && !UI.mathCalculationResponse}"
+                            ng-if="mathCalculation && !UI.mathCalculationLoading"
+                        >
+                            {{mathCalculation}}
+                        </span>
+                        <span 
+                            class="alert-text"
+                            ng-class="{'error-text': UI.mathCalculationResponse}"
+                            ng-if="UI.mathCalculationResponse"
+                        >
+                            {{UI.mathCalculationResponse}}
+                        </span> 
+                    </h6>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="formula-form-submit-button submit-button button" 
+                        id="formulaFormSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newFormula"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="formula-form-edit-submit-button submit-button button" 
+                        id="formulaFormEditSubmitButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-click="updateFormula(formula)" 
+                        ng-if="!UI.newFormula"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

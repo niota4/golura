@@ -1,0 +1,143 @@
+
+<div class="view-work-order-items-container view-details-container">
+    <div class="view-work-order-items list-container view-details">
+        <div class="golura-block grid-y overflow-hidden">
+            <div class="cell shrink">
+                <h2>
+                    <b>
+                        Work Order Line Items
+                    </b>
+                </h2>
+            </div>
+            <div class="cell shrink">
+                <div class="view-work-order-items-search-container list-search-container">
+                    <div class="view-work-order-items-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="view-work-order-items-search-input search-input"
+                                        id="itemSearchInput" 
+                                        type="text"
+                                        placeholder="Search items..."
+                                        ng-model="search.LineItems.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <ul class="view-work-order-items-list list">
+                    <li ng-show="!UI.workOrderLoaded">
+                        <div class="ssc work-order-item-ssc">
+                            <div 
+                                class="ssc-square"
+                                ng-repeat="x in [].constructor(40) track by $index"
+                            ></div>
+                        </div>
+                    </li>
+                    <li 
+                        class="view-client-work-orders-list-item"
+                        ng-if="!filteredItems.length &&
+                        UI.workOrderLoaded"
+                    >
+                        <h5>
+                            <b>No Work Orders Items Found</b>
+                        </h5>
+                    </li>
+                    <li
+                        class="view-work-order-items-list-item list-item position-relative"
+                        ng-repeat="item in filteredItems = 
+                        (workOrder.LineItems | filter:search.LineItems.value) 
+                        track by $index"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>Name: </b>
+                                    {{item.name}}
+                                </h6>
+                                <h6>
+                                    <b>Unit Price: </b>
+                                    ${{item.unit}}
+                                </h6>
+                                <h6>
+                                    <b>Total Cost: </b>
+                                    ${{item.total | number}}
+                                </h6>
+                                <h6>
+                                    <b>Description: </b>
+                                    {{item.description}}
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="button-group align-right">
+                                    <button  
+                                        class="list-item-options-button button success white-text"
+                                        type="button"
+                                        ng-click="initEditWorkOrderLineItem(item)"
+                                        data-open="workOrderLineItemFormReveal"
+                                    >
+                                        <i class="fal fa-edit"></i> Edit
+                                    </button>
+                                    <button  
+                                        class="list-item-options-button button alert white-text"
+                                        type="button"
+                                        ng-click="item.remove = !item.remove"
+                                        ng-if="permissions.canArchive"
+                                    >
+                                        <i class="fal fa-times-circle"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="view-work-order-items-list-item-remove-container black-overlay"
+                            ng-if="item.remove"
+                        >
+                            <div class="golura-block grid-x grid-margin-x align-middle white-text">
+                                <div class="cell small-12 medium-12 large-12">
+                                    <h4>
+                                        <b class="alert-text">Warning: </b>
+                                        <span class="white-text">Are you sure you want to remove 
+                                            this Item?
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12">
+                                    <button
+                                        class="delete-button button alert white-text"
+                                        type="button"
+                                        ng-class="{'form-alert': item.deleting}"
+                                        ng-click="removeWorkOrderLineItem(item)"
+                                    >
+                                        <span ng-if="!item.deleting">
+                                            <i class="fal fa-times-circle"></i> Confirm
+                                        </span>
+                                        <span ng-if="item.deleting">
+                                            Please Wait...
+                                        </span>
+                                    </button>
+                                    <button 
+                                        class="button warning white-text"
+                                        type="button"
+                                        ng-click="item.remove = !item.remove"
+                                    >
+                                        <i class="fal fa-times-circle"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

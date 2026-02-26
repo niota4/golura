@@ -1,0 +1,65 @@
+<div class="assign-work-order-container create-edit-container">
+    <div format-users users="users"></div>
+    <div class="assign-work-order create-edit"> 
+        <div 
+            class="callout sticky text-center fade"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+        >
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>       
+        <form
+            class="assign-work-order-form golura-form"
+            id="assignWorkOrderForm"
+            name="assignWorkOrderForm"
+            ng-submit="assignedUserToWorkOrder($event, workOrder)"
+        >
+            <h1>
+                <b>
+                    Assign Purchase order to Vendor
+                </b>
+            </h1>
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="vendorId">
+                            Assigned User
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="userOptions"
+                            options="users"
+                            id="userId"
+                            name="userId"
+                            ng-model="workOrder.assignedUserId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="work-order-form-submit-button submit-button button" 
+                        id="workOrderFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving || !workOrder.assignedUserId"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

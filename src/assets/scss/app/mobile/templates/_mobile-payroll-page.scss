@@ -1,0 +1,66 @@
+// Mobile Payroll Page Styles
+@include breakpoint(small only) {
+    .payroll-container {
+        .payroll {
+
+            .payroll-list {
+
+                .payroll-list-item {
+
+                    .payroll-number {
+                        font-size: 1.25rem !important;
+                    }
+
+                }
+            }
+        }
+    }
+    .view-payroll-container {
+
+        .view-payroll {
+
+            .view-payroll-summary {
+
+                .view-payroll-summary-card {
+                    margin-bottom: 1rem;
+                    padding: 1rem 0px;
+                    background: var(--light-gray);
+                    border-radius: $container-radius;
+                    color: var(--medium-gray);
+                }
+            }
+            .view-payroll-details {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    .payroll-create-edit-container {
+
+        .payroll-create-edit {
+            padding: 0px;
+
+            .payroll-form {
+                padding: 0px;
+
+                .payroll-create-select-period {
+                    padding: 0px;
+                }
+            }
+        }
+    }
+    .payroll-item-form-container {
+
+        .payroll-item {
+
+            .payroll-item-employee-pay-rates-container {
+
+                .payroll-item-employee-pay-rates {
+
+                    .payroll-item-employee-pay-rates-list {
+                        padding: 0px;
+                    }
+                }
+            }
+        }
+    }
+}

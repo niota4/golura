@@ -1,0 +1,214 @@
+<div 
+    class="view-client-invoices-container view-client-container view-container"
+    ng-init="initClient()"
+>
+    <div format-clients client="client"></div>
+    <div class="view-client-invoices view-client view">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="button-group align-right">
+                    <button
+                        class="view-client-invoices-create-invoice-button submit-button create-button button success white-text" 
+                        id="viewClientInvoicesCreateInvoiceButton"
+                        type="button"
+                        data-open="invoiceCreationReveal"
+                        ng-if="subPermissions.invoices.canCreate"
+                    >
+                        <i class="fal fa-layer-plus"></i> Create Invoice
+                    </button>
+                    <button
+                        class="view-client-invoices-create-invoice-button submit-button create-button button white-text"
+                        ng-class="{'alert': !UI.archiveInvoices}"
+                        id="viewClientInvoicesCreateInvoiceButton"
+                        type="button"
+                        ng-if="subPermissions.invoices.canArchive"
+                        ng-click="initInvoices(!UI.archiveInvoices)"
+                    >
+                        <span ng-if="!UI.archiveInvoices">
+                            <i class="fal fa-box-archive"></i> View Archived
+                        </span>
+                        <span ng-if="UI.archiveInvoices">
+                            <i class="fal fa-search"></i> View Active
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="view-client-invoices-list-container list-item-details-container">
+                    <div class="golura-block list-item-details">
+                        <div class="golura-block grid-y">
+                            <div class="cell shrink">
+                                <div class="grid-x">
+                                    <div class="cell small-12 medium-auto large-auto">
+                                        <h3>
+                                            <b>
+                                                <span ng-if="UI.archiveInvoices">
+                                                    Archived     
+                                                </span>
+                                                Invoices
+                                            </b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="list-search-container list-container">
+                                    <div class="list-search">
+                                        <div class="search-input-container">
+                                            <div class="grid-x align-middle">
+                                                <div class="cell auto align-self-bottom">
+                                                    <input
+                                                        class="view-client-invoices-search-input search-input"
+                                                        id="viewClientWorkOrdersSearchInput" 
+                                                        type="text"
+                                                        placeholder="Search work orders..."
+                                                        ng-model="search.Invoices.value"
+                                                    />
+                                                </div>
+                                                <div class="cell shrink align-self-bottom">
+                                                    <span class="search-icon">
+                                                        <i class="fal fa-search"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>            
+                            <div class="cell shrink" ng-if="!$root.UI.isMobile">
+                                <div class="view-client-invoices-header-container list-header-container">
+                                    <div class="view-client-invoices-header list-header">
+                                        <div class="grid-x grid-padding-x align-middle align-left">
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Invoice Number</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Total</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Approval Status</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3>
+                                                    <b>Created</b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h3 class="list-header-options">
+                                                    <b>Options</b>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+                            >
+                                <div class="list-container golura-form">
+                                    <ul class="view-client-invoices-list list">
+                                        <li 
+                                            class="view-client-invoices-list-item"
+                                            ng-if="!filteredInvoices.length && UI.invoicesLoaded"
+                                        >
+                                            <h5>
+                                                <b>
+                                                    No 
+                                                    <span ng-if="UI.archiveInvoices">
+                                                        Archived 
+                                                    </span>
+                                                    Invoices Found
+                                                </b>
+                                            </h5>
+                                        </li>
+                                        <li 
+                                            class="view-client-invoices-list-item list-item"
+                                            ng-repeat="i in filteredInvoices = 
+                                            (invoices | filter: search.Invoices.value) |
+                                            orderBy: sort.default.value track by $index"
+                                        >
+                                            <div format-users user="i.Creator"></div>
+                                            <div class="grid-x grid-margin-x align-middle">
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">Invoice Number: </b>{{i.invoiceNumber}}
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">Total: </b>${{i.total | number}}
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">Approval Status: </b>
+                                                        <span ng-if="i.approvalStatus">
+                                                            {{i.approvalStatus}}
+                                                        </span>
+                                                        <span ng-if="!i.approvalStatus">
+                                                            Pending
+                                                        </span>
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <b ng-if="$root.UI.isMobile">Created: </b>
+                                                        <i>
+                                                            {{i.createdAt | DateTimeFormat}}
+                                                        </i>
+                                                    </h6>
+                                                </div>
+                                                <div class="cell small-12 medium-auto large-auto">
+                                                    <div class="button-group" ng-class="{'align-right': $root.UI.isMobile}">
+                                                        <a 
+                                                            class="list-item-options-button button"
+                                                            ng-href="invoices/invoice/{{i.id}}"
+                                                            ng-if="subPermissions.invoices.canView"
+                                                            ng-cloak
+                                                        >
+                                                            <i class="fal fa-search"></i> 
+                                                            <span ng-if="!$root.UI.isMobile">View</span>
+                                                        </a>
+                                                        <a 
+                                                            class="list-item-options-button button success white-text"
+                                                            ng-href="invoices/invoice/{{i.id}}/edit"
+                                                            ng-if="subPermissions.invoices.canEdit"
+                                                            ng-cloak
+                                                        >
+                                                            <i class="fal fa-edit"></i> 
+                                                            <span ng-if="!$root.UI.isMobile">Edit</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

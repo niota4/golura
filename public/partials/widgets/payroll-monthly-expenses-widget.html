@@ -1,0 +1,316 @@
+<div class="payroll-monthly-expenses-widget-container widget-container">
+    <div format-users users="widgetData.payrollExpenses.topEmployees"></div>
+    <div class="payroll-monthly-expenses-widget widget">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <div 
+                    class="grid-x grid-margin-x align-middle"
+                >
+                    <div 
+                        class="cell small-10 medium-auto large-auto"
+                    >
+                        <div 
+                            class="cell small-12 medium-auto large-auto"
+                        >
+                            <h3 class="payroll-monthly-expenses-title">
+                                <b>
+                                    <i class="fal fa-chart-line"></i> Payroll Expenses
+                                </b>
+                            </h3>
+                            <span 
+                                class="widget-period"
+                            >
+                                <i ng-if="widgetData.payrollExpenses.period">
+                                    {{widgetData.payrollExpenses.period.replace('d', ' days')}}
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="payroll-expenses-options-button button clear" 
+                            type="button"
+                            data-toggle="payrollExpensesOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="payroll-expenses-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="payrollExpensesOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="payroll-expenses-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('payrollExpenses', { period: widgetData.payrollExpenses.period, limit: widgetData.payrollExpenses.limit, includeAllUsers: widgetData.payrollExpenses.includeAllUsers })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="payrollExpensesTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="payrollExpensesTimeRange"
+                                        name="payrollExpensesTimeRange"
+                                        ng-model="widgetData.payrollExpenses.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="payrollExpensesLimit">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="payrollExpensesLimit"
+                                        name="payrollExpensesLimit"
+                                        ng-model="widgetData.payrollExpenses.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="payroll-expenses-select-button-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="payroll-expenses-select-button select-button button"
+                                                type="button"
+                                                ng-click="widgetData.payrollExpenses.includeAllUsers = !widgetData.payrollExpenses.includeAllUsers"
+                                                ng-class="{'selected': widgetData.payrollExpenses.includeAllUsers}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widgetData.payrollExpenses.includeAllUsers"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include all Users?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="payroll-expenses-content">
+                    <div 
+                        ng-if="!widgetData.payrollExpenses.loaded" 
+                        class="widget-loading"
+                    >
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading expense data...
+                        </div>
+                    </div>
+                    <div 
+                        ng-if="widgetData.payrollExpenses.loaded && widgetData.payrollExpenses.data.length === 0" 
+                        class="no-data-message"
+                    >
+                        <div class="text-center">
+                            <i class="fal fa-chart-line fa-3x"></i>
+                            <p>No payroll expense data found for the selected period.</p>
+                        </div>
+                    </div>
+                    <div class="payroll-stats">
+                        <div 
+                            class="grid-x grid-margin-x align-top text-center"
+                            ng-if="widgetData.payrollExpenses.loaded && widgetData.payrollExpenses.data.length > 0"
+                        >
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                            >
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollExpenses.summary.totalExpenses | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Total Expenses
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                            >
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollExpenses.summary.avgPerEmployee | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Avg per Employee
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                            >
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            {{widgetData.payrollExpenses.summary.totalHours | number:1}}h
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Total Hours
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                            >
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollExpenses.summary.avgHourlyRate | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Avg Hourly Rate
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.payrollExpenses.loaded && widgetData.payrollExpenses.data.length > 0"
+            >
+                <div class="payroll-expenses-search-container list-search-container">
+                    <div class="payroll-expenses-search list-search">
+                        <div class="search-input-container">
+                            <div 
+                                class="grid-x align-middle"
+                            >
+                                <div 
+                                    class="cell auto align-self-bottom"
+                                >
+                                    <input
+                                        class="payroll-expenses-search-input search-input"
+                                        id="payrollExpensesSearchInput" 
+                                        type="text"
+                                        placeholder="Search payroll expenses..."
+                                        autocomplete="off"
+                                        ng-model="search.payrollExpenses"
+                                    />
+                                </div>
+                                <div 
+                                    class="cell shrink align-self-bottom"
+                                >
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto overflow-scroll"
+            >
+                <div class="payroll-expenses-list-container list-container">
+                    <ul class="payroll-list list">
+                        <li 
+                            class="payroll-list-item list-item" 
+                            ng-repeat="employee in filteredEmployees = (widgetData.payrollExpenses.topEmployees | 
+                            filter:search.payrollExpenses |
+                            limitTo: widgetData.payrollExpenses.limit) | 
+                            orderBy: '-totalPay' track by $index"
+                        >
+                            <div 
+                                class="grid-x grid-margin-x align-top"
+                            >
+                                <div 
+                                    class="cell small-12 medium-auto large-auto"
+                                >
+                                    <h4 class="employee-name">
+                                        <b>
+                                            {{employee.fullName}}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-shrink large-shrink"
+                                >
+                                    <div class="employee-hours">
+                                        <span 
+                                            class="label success white-text"
+                                        >
+                                            {{employee.totalHours}}
+                                        </span>
+                                    </div>`
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-12 large-12"
+                                >
+                                    <h6>
+                                        <b>
+                                            Total Pay: 
+                                        </b>
+                                        ${{employee.totalPay}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Payrolls: 
+                                        </b>
+                                        {{employee.payrollCount}}
+                                    </h6>
+                                    <div class="expense-bar">
+                                        <div 
+                                            class="bar-fill" 
+                                            ng-style="{ 'width': ((employee.totalPay / widgetData.payrollExpenses.summary.maxEmployeePay) * 100) + '%' }"
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-12 large-12 text-right"
+                                >
+                                    <a 
+                                        class="view-employee-button button"
+                                        href="/users/user/{{employee.id}}" 
+                                    >
+                                        <i class="fal fa-user"></i> View Employee
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

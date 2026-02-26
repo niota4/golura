@@ -1,0 +1,585 @@
+<div 
+    class="view-event-container view-container"
+    ng-init="initEvent()"
+>
+    <div class="view-event view">
+        <div format-events event="event"></div>
+        <div format-clients client="event.Client"></div>
+        <div format-users user="event.Creator"></div>
+        <div format-users users="users"></div>
+        <div format-addresses address="event.Address"></div>
+        <div class="golura-block grid-y">
+            <div 
+                class="cell shrink"
+                ng-hide="!UI.copiedToClipboard"
+            >
+                <div class="callout success success-text text-center fade">
+                    Copied to clipboard.
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell auto">
+                        <div class="view-event-options-container view-options-container">
+                            <div class="grid-x grid-margin-x">
+                                <div 
+                                    class="cell small-12 medium-auto large-auto"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <a 
+                                        class="view-event-options-button back-button button warning white-text"
+                                        ng-click="$root.goBack()"
+                                    >
+                                        <i class="fal fa-circle-arrow-left"></i> Back
+                                    </a>
+                                    <a 
+                                        class="view-event-navigate-button button white-text" 
+                                        type="button"
+                                        ng-href="events?date={{event.startDate | date:'yyyy-MM-dd'}}"
+                                    >
+                                        <i class="fal fa-calendar-alt"></i> View In Calendar
+                                    </a>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="grid-x"
+                                        ng-if="$root.UI.isMobile"
+                                    >
+                                        <div class="cell auto">
+                                            <a 
+                                                class="view-event-options-button back-button button warning white-text"
+                                                ng-click="$root.goBack()"
+                                            >
+                                                <i class="fal fa-circle-arrow-left"></i>
+                                            </a>
+                                        </div>
+                                        <div class="cell auto text-right">
+                                            <button 
+                                                class="view-event-options-reveal-button view-options-reveal-button button clear"
+                                                type="button"
+                                                data-open="viewEventOptionsMobileReveal"
+                                                aria-label="Open Event Options"
+                                            >
+                                                <i class="fal fa-bars"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div 
+                                        class="button-group align-right"
+                                        ng-if="!$root.UI.isMobile"
+                                    >
+                                        <button 
+                                            class="event-preview-check-in-button button warning white-text expanded"
+                                            type="button"
+                                            ng-click="checkInEvent(event)"
+                                            ng-disabled="!isEventToday(event)"
+                                            ng-if="!validateCheckInOrOut(event) && isParticipantOfEvent() && !event.completed && event.EventType.requireCheckIn"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-check"></i> Check In
+                                        </button>
+                                        <button 
+                                            class="event-preview-check-out-button button warning white-text expanded"
+                                            type="button"
+                                            ng-if="validateCheckInOrOut(event) && isParticipantOfEvent() && !event.completed && event.EventType.requireCheckIn"
+                                            ng-cloak
+                                            ng-click="checkOutEvent(event)"
+                                        >
+                                            <i class="fal fa-check-double"></i> Check Out
+                                        </button>
+                                        <button 
+                                            class="event-check-out-button warning button white-text"
+                                            ng-if="event.checkInDate"
+                                            ng-cloak
+                                            ng-click="checkOutEvent(event)"
+                                        >
+                                            <i class="fal fa-check-double"></i> Check Out
+                                        </button>
+                                        <a 
+                                            class="view-event-options-options-button button white-text"
+                                            ng-href="events/event/{{event.id}}/edit"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="delete-button button alert white-text" 
+                                            type="button"
+                                            ng-click="UI.eventDeleteConfirmation = !UI.eventDeleteConfirmation"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="golura-block grid-x grid-margin-x">
+                    <div class="cell small-12 medium-12 large-3">
+                        <div class="view-event-details-container view-details-container">
+                            <div class="view-event-details view-details grid-y">
+                                <div class="cell shrink">
+                                    <h3>
+                                        <b>
+                                            {{event.title}}
+                                        </b>
+                                    </h3>
+                                    <ul class="view-event-details-list">
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Start: </b> 
+                                                {{event.formattedStartDate}}
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>End: </b> 
+                                                {{event.formattedEndDate}}
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                            ng-if="
+                                                !UI.eventLoaded ||
+                                                event.clientId
+                                            "
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Client: </b> 
+                                                <a
+                                                    ng-href="clients/client/{{event.clientId}}"
+                                                    ng-cloak
+                                                >
+                                                    <i class="fal fa-user"></i> 
+                                                    {{event.Client.fullName}}
+                                                </a>
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Type: </b> 
+                                                {{event.EventType.name}}
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                            ng-if="
+                                                !UI.eventLoaded ||
+                                                event.groupId
+                                            "
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Group: </b> 
+                                                {{event.Group.name}}
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                            ng-if="
+                                                !UI.eventLoaded ||
+                                                event.recurring
+                                            "
+                                            ng-cloak
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>
+                                                    Recurring:
+                                                </b>
+                                                <span ng-if="event.RecurrencePattern.frequency != 'custom'">
+                                                    {{event.RecurrencePattern.frequency}}
+                                                </span>
+                                                <span ng-if="event.RecurrencePattern.endDate">
+                                                    Ends on {{event.RecurrencePattern.endDate}}
+                                                </span>
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                            ng-cloak
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <div class="grid-x align-middle">
+                                                <div class="cell shrink">
+                                                    <p>
+                                                        <b>
+                                                            Created By: 
+                                                        </b>
+                                                        <a ng-href="users/user/{{event.creatorId}}">
+                                                            {{event.Creator.fullName}}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Address: </b> 
+                                                {{event.Address.fullAddress}}
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-class="{'ssc': !UI.eventLoaded}"
+                                        >
+                                            <div 
+                                                class="ssc-line"
+                                                ng-if="!UI.eventLoaded"
+                                            ></div>
+                                            <p
+                                                ng-if="UI.eventLoaded"
+                                                ng-cloak
+                                            >
+                                                <b>Details: </b> 
+                                            </p>
+                                            <p 
+                                                ng-if="event.details"
+                                                ng-bind-html="event.details"
+                                            >
+                                            </p>
+                                            <p ng-if="!event.details">
+                                                <i>
+                                                    No details available
+                                                </i>
+                                            </p>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-cloak
+                                        >
+                                            <p ng-if="UI.eventLoaded">
+                                                <b>
+                                                    Participants:
+                                                </b>
+                                            </p>
+                                            <div 
+                                                class="event-participants-container"
+                                                ng-if="UI.eventLoaded"
+                                            >
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div 
+                                                        class="cell small-2 medium-shrink large-shrink"
+                                                        ng-repeat="participant in (event.EventParticipants | limitTo: UI.participantLimit) track by $index"
+                                                    >
+                                                        <div format-users user="participant.User"></div>
+                                                        <user-icon user="participant.User"></user-icon>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large">
+                                                        <button 
+                                                            class="view-participants-button button expanded" 
+                                                            type="button" 
+                                                            ng-click="toggleParticipantLimit()"
+                                                            ng-if="event.EventParticipants.length > ($root.UI.isMobile ? 6 : 12)"
+                                                        >
+                                                            <i class="fal fa-users"></i> 
+                                                            {{$root.UI.isMobile ? (UI.participantLimit === 6 ? 'View More Participants' : 'View Less Participants') : (UI.participantLimit === 12 ? 'View More Participants' : 'View Less Participants')}}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li 
+                                            class="view-event-details-list-item"
+                                            ng-cloak
+                                        >
+                                            <button 
+                                                class="view-event-checklist-button button expanded white-text" 
+                                                type="button"
+                                                ng-click="initEventChecklist(event)"
+                                                ng-if="company.eventRequireChecklist"
+                                                data-open="eventsChecklistReveal"
+                                            >
+                                                <i class="fal fa-list-check"></i> Checklist
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="cell shrink">
+                                    <address-map 
+                                        latitude="event.Address.latitude" 
+                                        longitude="event.Address.longitude"
+                                        color="event.EventType.backgroundColor"
+                                    ></address-map>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="view-event-recent-activities-container view-details-container"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <div class="view-event-recent-activities-list-container view-details list-container">
+                                <h3>
+                                    <b>
+                                        Recent Activity
+                                    </b>
+                                </h3>
+                                <ul 
+                                    class="view-event-recent-activities-list list"
+                                    id="eventRecentActivitiesList"
+                                >
+                                    <li ng-show="!UI.eventActivitiesLoaded">
+                                        <div class="ssc view-event-recent-activities-ssc">
+                                            <div 
+                                                class="ssc-square"
+                                                ng-repeat="x in [].constructor(3) track by $index"
+                                            ></div>
+                                        </div>
+                                    </li>
+                                    <li
+                                        class="view-event-recent-activities-list-item list-item position-relative"
+                                        ng-repeat="activity in activities |
+                                        limitTo: 3 track by $index"
+                                    >
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-6 medium-6 large-6">
+                                                <p>
+                                                    <b>
+                                                        Type: 
+                                                    </b>
+                                                    {{activity.formattedName}}
+                                                </p>
+                                            </div>
+                                            <div class="cell small-6 medium-6 large-6 text-right">
+                                                <p>
+                                                    <i>
+                                                        {{activity.timestamp | DateTimeFormat}}
+                                                    </i>
+                                                </p>
+                                            </div>
+                                            <div 
+                                                class="cell small-12 medium-12 large-12"
+                                                ng-if="activity.changedBy"
+                                            >
+                                                <p>
+                                                    <b>
+                                                        changed by: 
+                                                    </b>
+                                                    {{activity.changedBy.firstName}} {{activity.changedBy.lastName}}
+                                                </p>
+                                            </div>
+                                            <div class="cell small-12 medium-12 large-12">
+                                                <p>
+                                                    <b>
+                                                        description:
+                                                    </b>
+                                                </p>
+                                                <p ng-bind-html="activity.description">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            class="view-recent-activities-button button expanded"
+                                            ng-href="events/event/{{event.id}}/activity"
+                                        >
+                                            <i class="fal fa-wave-pulse"></i>
+                                            View All Activity
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="view-event-details-option-container">
+                            <div class="grid-y">
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <div ng-include="'/dist/navigations/event-navigation.html'"></div>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="view-event-details-comment-container">
+                                        <full-text-area 
+                                            placeholder="Write a comment..."
+                                            ng-model="comment.comment" 
+                                            event-id="{{event.id || ''}}" 
+                                            event-id="{{event.clientId || ''}}"
+                                            estimate-id="{{estimate.id || ''}}" 
+                                            work-order-id="{{workOrder.id || ''}}" 
+                                            invoice-id="{{invoice.id || ''}}" 
+                                            events="events || []" 
+                                            estimates="estimates || []" 
+                                            work-orders="workOrders || []" 
+                                            invoices="invoices || []" 
+                                            comment="{{comment.id || ''}}" 
+                                            user="{{user.id || ''}}"
+                                            users="users"
+                                            images="eventPhotos"
+                                        >
+                                        </full-text-area>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12">
+                                    <div class="view-event-details-comments-container">
+                                        <h3>
+                                            <b>
+                                                Comments
+                                            </b>
+                                        </h3>
+                                        <div ng-include="'dist/partials/general/comments.html'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    ng-include="'dist/partials/events/deletion-screen.html'"
+    ng-if="UI.eventDeleteConfirmation"
+></div>
+<div 
+    class="view-event-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewEventOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewEventOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-event-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <button 
+                        class="event-preview-check-out-button warning button white-text"
+                        ng-if="event.checkInDate"
+                        ng-cloak
+                        ng-click="checkOutEvent(event)"
+                        data-close
+                    >
+                        <i class="fal fa-check-double"></i> Check Out
+                    </button>
+                    <a 
+                        class="view-event-options-options-button button white-text"
+                        ng-href="events/event/{{event.id}}/edit"
+                        ng-if="permissions.canEdit"
+                        data-close
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="delete-button button alert white-text" 
+                        type="button"
+                        ng-click="UI.eventDeleteConfirmation = !UI.eventDeleteConfirmation; closeViewEventOptionsMobileReveal()"
+                        ng-if="permissions.canArchive"
+                        data-close
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div ng-include="'/dist/navigations/event-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="event-checklist-reveal reveal large"
+    id="eventsChecklistReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsCalendarEventReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/events/checklist.html'"
+    >
+    </div>
+</div>

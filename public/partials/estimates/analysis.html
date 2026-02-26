@@ -1,0 +1,80 @@
+<div class="estimate-analysis-container view-container">
+    <div class="estimate-analysis view">
+        <div 
+            class="callout sticky text-center fade"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length || 
+            UI.modalFormSaved"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            data-sticky 
+            data-options="marginTop:0;"
+        >
+            <button 
+                class="close-button button clear"
+                ng-class="{'success': UI.message,
+                'alert': UI.errMessage}"
+                type="button"
+                ng-click="UI.errMessage = !UI.errMessage;
+                UI.message = !UI.message"
+            >
+                <i class="fal fa-times-circle"></i>
+            </button>
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <h1>
+                    <b>
+                        <i class="fal fa-sparkles"></i> Estimate Analysis
+                    </b>
+                </h1>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div 
+                    class="estimate-analysis-loading"
+                    ng-show="!UI.estimateAnalysisLoaded"
+                >
+                    <span class="loading-text">
+                        <span class="loading-icon">
+                            <i class="fas fa-sparkles fa-beat-fade"></i>
+                        </span>
+                        <span class="loading-message">
+                            Analyzing Please Wait...
+                        </span>
+                    </span>
+                </div>
+
+                <!-- Analysis Results -->
+                <div 
+                    class="estimate-analysis-results"
+                    ng-show="UI.estimateAnalysisLoaded && estimateAnalysis"
+                >
+                    <div class="analysis-content">
+                        <div 
+                            class="analysis-text-section"
+                            ai-data="estimateAnalysis"
+                            format-ai
+                        ></div>
+                    </div>
+                </div>
+                <div 
+                    class="no-analysis-message"
+                    ng-show="UI.estimateAnalysisLoaded && !estimateAnalysis"
+                >
+                    <div class="text-center">
+                        <i class="fal fa-exclamation-triangle fa-3x"></i>
+                        <h3>No Analysis Available</h3>
+                        <p>Unable to generate analysis for this estimate. Please try again.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

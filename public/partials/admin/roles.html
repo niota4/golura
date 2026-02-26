@@ -1,0 +1,173 @@
+<div class="admin-roles-container admin-list-container">
+    <div class="admin-roles admin-list-details">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="roles-search-container list-search-container">
+                    <div class="roles-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="roles-search-input search-input"
+                                        id="rolesSearchInput" 
+                                        type="text"
+                                        placeholder="Search roles..."
+                                        ng-model="search.roles.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="roles-search-create-button-container create-button-container button-group" ng-class="{'align-right': $root.UI.isMobile}">
+                                        <button 
+                                            class="roles-search-create-button create-button button success white-text" 
+                                            id="rolesSearchCreateButton"
+                                            type="button"
+                                            ng-click="initUserRoleForm()"
+                                            data-open="userRolesFormReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="roles-list-header-container list-header-container">
+                    <div class="roles-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-auto medium-auto large-auto">
+                                <h3>
+                                    <b>
+                                        Name
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <h3 class="list-header-options">
+                                    <b>
+                                        Options
+                                    </b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto"
+                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+            >
+                <div class="roles-list-container list-container">
+                    <ul 
+                        class="roles-list list"
+                        id="rolesList"
+                    >
+                        <li ng-if="!UI.rolesLoaded">
+                            <div class="ssc roles-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="roles-list-item list-item position-relative"
+                            ng-repeat="r in filteredRoles = 
+                            (roles | filter:search.roles.value) |
+                            orderBy: sort.roles.value track by $index"
+                        >
+
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-auto medium-auto large-auto">
+                                    <h6 class="list-item-name">
+                                        <b ng-if="$root.UI.isMobile">Name:</b>
+                                        {{r.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-auto medium-shrink large-shrink">
+                                    <div class="list-item-options-container">
+                                        <div class="button-group" ng-class="{'align-right': $root.UI.isMobile}">
+                                        <button 
+                                            class="list-item-options-button button white-text"
+                                            data-open="userRolesFormReveal"
+                                            ng-click="initUserRoleForm(r)"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Edit
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-click="r.delete = !r.delete"
+                                            ng-if="r.userId"
+                                        >
+                                            <i class="fal fa-archive"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Delete
+                                            </span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="role-list-item-delete-container list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="r.delete"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to delete 
+                                                this Role?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div class="cell small-12 medium-auto large-auto" ng-class="{'text-center': $root.UI.isMobile}">
+                                        <button 
+                                            class="list-item-options-button  button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="deleteRole(r)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="r.delete = !r.delete"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

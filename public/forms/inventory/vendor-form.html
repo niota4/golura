@@ -1,0 +1,277 @@
+<div class="vendor-container inventory-form-container create-edit-container">
+    <div class="vendor inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newVendor">
+                Create Vendor
+            </b>
+            <b ng-if="!UI.newVendor">
+                Edit Vendor
+            </b>
+        </h1>
+        <form 
+            class="vendor-form inventory-form golura-form"
+            id="vendorForm"
+            name="vendorForm"
+            ng-submit="createVendor($event, vendor)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.vendorLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.vendorLoaded"
+                        ></div>
+                        <label for="vendorName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="vendorName"
+                            name="vendorName"
+                            placeholder="Vendor name"
+                            ng-model="vendor.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.vendorLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.vendorLoaded"
+                        ></div>
+                        <label for="vendorName">   
+                            Contact Name
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="vendorContactName"
+                            name="vendorContactName"
+                            placeholder="Vendor Contact name"
+                            ng-model="vendor.contactName"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.vendorLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.vendorLoaded"
+                        ></div>
+                        <label for="vendorEmail">
+                            Contact Phone Number
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="vendorPhoneNumber"
+                            placeholder="(123) 456-7890"
+                            ng-model="vendor.contactPhone"
+                            ui-mask="(999) 999-9999"
+                            ui-mask="99.99.9999"  
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="_"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.vendorLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.vendorLoaded"
+                        ></div>
+                        <label for="vendorEmail">
+                            Contact Email
+                        </label>
+                        <input
+                            class="form-input"
+                            type="email"
+                            name="vendorEmail"
+                            ng-model="vendor.contactEmail"
+                            placeholder="example@domain.com"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="input-container">
+                        <label>
+                            Street 1
+                            <span>
+                                *
+                            </span>
+                        </label>
+                        <address-lookup 
+                            input-id="dynamicAddressField1" 
+                            address="address" 
+                            ng-model="address.street1"
+                            states="states"
+                        >
+                        </address-lookup>
+                    </div>
+                </div>
+                <div class="cell small-auto medium-4 large-4">
+                    <div class="input-container">
+                        <label>
+                            Street 2
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            id="addressFormStreet2Input"
+                            name="addressFormStreet2Input"
+                            ng-model="address.street2"
+                            placeholder="Suite 123"
+                            autocomplete="off"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-shrink medium-shrink large-shrink">
+                    <button 
+                        class="unlock-button button alert white-text"
+                        type="button"
+                        ng-click="address.unlockAddress = !address.unlockAddress"
+                        ng-if="!address.unlockAddress"
+                    >
+                        <span class="unlock-icon">
+                            <i class="fal fa-unlock"></i> Unlock
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'disabled': !address.unlockAddress}"
+                    >
+                        <label>
+                            City
+                            <span>
+                                *
+                            </span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            id="addressFormCityInput"
+                            name="addressFormCityInput"
+                            ng-model="address.city"
+                            ng-disabled="!address.unlockAddress"
+                            placeholder="Wonderland"
+                            autocomplete="off"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-4 large-4">
+                            <div 
+                                class="input-container"
+                                ng-class="{'disabled': !address.unlockAddress}"
+                            >
+                                <label>
+                                    State
+                                    <span>
+                                        *
+                                    </span>
+                                </label>
+                                <selectize
+                                    class="states-input form-input"
+                                    config="stateOptions"
+                                    options="states"
+                                    id="addressFormStateInput"
+                                    name="addressFormStateInput"
+                                    ng-model="address.stateId"
+                                    ng-disabled="!address.unlockAddress"
+                                    autocomplete="off"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'disabled': !address.unlockAddress}"
+                            >
+                                <label>
+                                    Zip Code
+                                    <span>
+                                        *
+                                    </span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-input"
+                                    name="zipCode"
+                                    ng-model="address.zipCode"
+                                    placeholder="123456"
+                                    ui-mask="99999"
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="_"
+                                    autocomplete="off"
+                                    ng-disabled="!address.unlockAddress"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button
+                        class="vendor-create-button submit-button button"
+                        id="vendorCreateButton"
+                        type="submit"
+                        ng-disabled="vendorForm.$invalid || UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newVendor"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="vendor-update-button submit-button button"
+                        id="vendorUpdateButton"
+                        type="button"
+                        ng-disabled="vendorForm.$invalid || UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="!UI.newVendor"
+                        ng-click="updateVendor(vendor)"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

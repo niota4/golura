@@ -1,0 +1,300 @@
+<div class="general-search-container">
+    <div class="general-search">
+        <div class="general-search-form golura-form">
+            <div class="general-search-input-container input-container">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell auto">
+                        <input
+                            class="general-search-input form-input"
+                            type="text"
+                            id="generalSearch"
+                            name="generalSearch"
+                            placeholder="Search Golura..."
+                            autocomplete="off"
+                            ng-model="search.value"
+                            required
+                            data-open="generalSearchFormContent"
+                        />
+                    </div>
+                    <div class="cell shrink">
+                        <span 
+                            class="search-icon"
+                        >
+                            <i class="fal fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div 
+            class="general-search-form-content dropdown-pane list-container" 
+            id="generalSearchFormContent" 
+            data-dropdown
+            data-auto-focus="true" 
+            data-close-on-click="true"
+            ng-show="search.value.length > 3"
+        >
+            <div format-clients clients="general.clients"></div>
+            <div format-users users="general.users"></div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.clients.length"
+            >
+                <h2>
+                    <b>
+                        Clients
+                    </b>
+                </h2>
+                <ul 
+                    class="clients-list list"
+                    id="clientsList"
+                >
+                    <li
+                        class="clients-list-item list-item position-relative"
+                        ng-repeat="c in general.clients track by $index"
+                    >
+                        <div class="grid-x grid-padding-x align-middle">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h6 class="clients-list-item-name">
+                                    <a 
+                                        ng-href="clients/client/{{c.id}}"
+                                        data-close
+                                    >
+                                        {{c.fullName}}
+                                    </a>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6 
+                                    ng-if="c.primaryPhoneNumber.number"
+                                    phone-number
+                                >
+                                    {{c.primaryPhoneNumber.number}}
+                                </h6>
+                                <button
+                                    class="view-more-button button clear"
+                                    type="button"
+                                    ng-click="toggleClientsDetails(c, 'phoneNumbers')"
+                                >
+                                    view ({{c.ClientPhoneNumbers.length}}) more
+                                </button>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6 class="clients-list-item-email">
+                                    <span ng-if="c.primaryEmail.email">
+                                        {{c.primaryEmail.email}}
+                                    </span>
+                                    <span ng-if="!c.primaryEmail.email">
+                                        N/A
+                                    </span>
+                                </h6>
+                                <button
+                                    class="view-more-button button clear"
+                                    type="button"
+                                    ng-click="toggleClientsDetails(c, 'emails')"
+                                >
+                                    view ({{c.ClientEmails.length}}) more
+                                </button>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <span ng-if="c.primaryAddress.street1">
+                                        {{c.primaryAddress.street1}} {{c.primaryAddress.street2}} <br/>
+                                        {{c.primaryAddress.city}}, {{c.primaryAddress.State.abbreviation}}
+                                        {{c.primaryAddress.zipCode}}
+                                    </span>
+                                    <span ng-if="!c.primaryAddress.street1">
+                                        N/A
+                                    </span>
+                                </h6>
+                                <button
+                                    class="view-more-button button clear"
+                                    type="button"
+                                    ng-click="toggleClientsDetails(c, 'addresses')"
+                                >
+                                    view ({{c.ClientAddresses.length}}) more
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.users.length"
+            >
+                <h2>
+                    <b>
+                        Users
+                    </b>
+                </h2>
+                <ul class="general-search-form-content-item-list list">
+                    <li 
+                        class="general-search-form-content-item-list-item list-item"
+                        ng-repeat="u in general.users track by $index"
+                    >
+                        <div class="grid-x grid-padding-x align-middle">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="grid-x align-middle">
+                                    <div class="cell shrink">
+                                        <div class="golura-user-icon-container text-center frame-container">
+                                            <div 
+                                                class="golura-user-icon text-center" 
+                                                ng-style="{'background-color': u.Preferences.backgroundColor}"
+                                            >
+                                                <h2 class="flex-child-auto align-middle white-text">
+                                                    {{u.shortName}}
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <h6 class="users-list-item-name list-item-name">
+                                            <a 
+                                                ng-href="users/user/{{u.id}}"
+                                                data-close
+                                            >
+                                                {{u.fullName}}
+                                            </a>
+                                            <span 
+                                                class="user-online-icon"
+                                                ng-class="{
+                                                    'success-background': u.online,
+                                                    'light-gray-background': !u.online
+                                                }"
+                                            ></span>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6 class="users-list-item-role text-capitalize">
+                                    <b>Role: </b>
+                                    {{u.Role.name}}
+                                </h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.events.length"
+            >
+                <h2>
+                    <b>
+                        Events
+                    </b>
+                </h2>
+                <ul class="general-search-form-content-item-list list">
+                    <li 
+                        class="general-search-form-content-item-list-item list-item"
+                        ng-repeat="e in general.events track by $index"
+                    >
+                        <div class="grid-x grid-padding-x align-middle">
+                            <div class="cell small-12 medium-12 large-12">
+                                <a 
+                                    ng-href="/events/event/{{e.id}}"
+                                    data-close
+                                >
+                                    <b>{{e.title}}</b>
+                                </a>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>Start:</b> {{e.startDate | date:'medium'}}
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>End:</b> {{e.endDate | date:'medium'}}
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>Status:</b> {{e.EventStatus.name}}
+                                </h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.estimates.length"
+            >
+                <h2>
+                    <b>
+                        Estimates
+                    </b>
+                </h2>
+                <ul class="general-search-form-content-item-list list">
+                    <li 
+                        class="view-client-estimates-list-item list-item"
+                        ng-class="{'is-active': e.id == estimate.id}"
+                        ng-repeat="e in general.estimates track by $index"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-auto large-auto">
+                                <a 
+                                    ng-href="/estimates/estimate/{{e.id}}"
+                                    data-close
+                                >
+                                    <b>
+                                        {{e.estimateNumber}}
+                                    </b>
+                                </a>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Total: 
+                                    </b>
+                                    ${{e.total | number}}
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Status: 
+                                    </b>
+                                    {{e.EstimateStatus.name}}
+                                </h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.workOrders.length"
+            >
+                <h2>
+                    <b>
+                        Work Orders
+                    </b>
+                </h2>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.invoices.length"
+            >
+                <h2>
+                    <b>
+                        Invoices
+                    </b>
+                </h2>
+            </div>
+            <div 
+                class="general-search-form-content-item"
+                ng-if="general.other.length"
+            >
+                <h2>
+                    <b>
+                        Other
+                    </b>
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>

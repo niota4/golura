@@ -1,0 +1,124 @@
+
+<div class="media-options grid-x white-text">
+    <div format-users user="video.User"></div>
+    <div class="cell small-12 medium-6 large-6">
+        <button 
+            class="media-close-button button warning white-text"
+            type="button"
+            ng-click="initTabs()"
+        >
+            <b>
+                <i class="fal fa-times-circle"></i> Close
+            </b>
+        </button>
+        <button 
+            class="associate-button button success white-text"
+            type="button"
+            ng-click="initTabs('associate')"
+        >
+            <b>
+                <i class="fal fa-clone"></i> Associate Video
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-6 large-6 text-right">
+        <button 
+            class="delete-button button alert white-text"
+            type="button"
+            ng-click="initTabs('delete')"
+        >
+            <b>
+                <i class="fal fa-archive"></i> Delete
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-12 large-12">
+        <h4 class="separator-left">
+            <b>
+                Video Details
+            </b>
+        </h4>
+        <h6>
+            <b>
+                Uploaded On: 
+            </b>
+            {{video.createdAt | DateTimeFormat}}
+        </h6>
+        <h6>
+            <b>
+                Uploaded By: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="users/user/{{video.userId}}"
+            >
+                {{video.User.fullName}}
+            </a>
+        </h6>
+        <h6 ng-if="video.estimateId">
+            <b>
+                Related Estimate: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="estimates/estimate/{{video.estimateId}}"
+            >
+                {{video.Estimate.estimateId}}
+            </a>
+        </h6>
+        <h6 ng-if="video.eventId">
+            <b>
+                Related Event: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="events/event/{{video.Event.id}}"
+            >
+                {{video.Event.title}}
+            </a>
+        </h6>
+        <h6 ng-if="media.marketingId">
+            <b>
+                Related Marketing: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="marketings/marketing/{{video.marketingId}}"
+            >
+                {{video.Estimate.marketingId}}
+            </a>
+        </h6>
+        <h6>
+            <b>
+                Duration: 
+            </b>
+            {{video.duration ? (video.duration | TimeFormat) : 'N/A'}}
+        </h6>
+        <h6>
+            <b>
+                Size: 
+            </b>
+            {{video.size ? (video.size | ByteFormat) : 'N/A'}}
+        </h6>
+        <h6>
+            <b>
+                Frame Rate: 
+            </b>
+            {{ video.frameRate || 'N/A' }}
+        </h6>
+        <h6>
+            <b>
+                Resolution: 
+            </b>
+            {{ video.resolution ? video.resolution + 'px' : 'N/A' }}
+        </h6>
+        <h6>
+            <b>
+                Format: 
+            </b>
+            <span class="text-uppercase">
+                {{ video.format || 'N/A' }}
+            </span>
+        </h6>
+    </div>
+</div>

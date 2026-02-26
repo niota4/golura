@@ -1,0 +1,188 @@
+<div class="todo-list-items-container">
+    <ul class="todo-list-item-tasks-list list">
+        <li 
+            class="todo-list-item-task-list-item list-item"
+            ng-repeat="item in toDo.data track by $index"
+        >
+            <div class="grid-x grid-padding-x align-middle">
+                <div class="cell small-auto medium-auto large-auto">
+                    <div class="todo-task-list-item-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="todo-task-list-item-select-button select-button button"
+                                    type="button"
+                                    ng-click="item.completed = !item.completed; toggleToDoItem(toDo.id, $index);"
+                                    ng-class="{'selected': item.completed}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="item.completed"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label ng-if="item.title">
+                                    {{item.title}}
+                                </label>
+                                <label 
+                                    class="alert-text"
+                                    ng-if="!item.title"
+                                >
+                                    <i>
+                                        No Title
+                                    </i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink text-right">
+                    <div class="button-group">
+                        <image-uploader 
+                            event-id="{{event.id}}"
+                            to-do-id="{{toDo.id}}"
+                            to-do-item-index="{{$index}}"
+                            ng-if="item.requireImages"
+                            ng-disabled="item.completed"
+                        ></image-uploader>
+                        <video-uploader 
+                            event-id="{{event.id}}"
+                            to-do-id="{{toDo.id}}"
+                            to-do-item-index="{{$index}}"
+                            ng-if="item.requireVideos"
+                            ng-disabled="item.completed"
+                        ></video-uploader>
+                        <document-uploader 
+                            event-id="{{event.id}}"
+                            to-do-id="{{toDo.id}}"
+                            to-do-item-index="{{$index}}"
+                            ng-if="item.requiresDocuments"
+                            ng-disabled="item.completed"
+                        ></document-uploader>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="item.photos.length"
+                >
+                    <div class="todo-task-list-item-images-container images-container grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <h6>
+                                <b>
+                                    {{item.photos.length}} Photo(s)
+                                </b>
+                            </h6>
+                        </div>
+                        <div 
+                            class="cell small-12 medium-3 large-3"
+                            ng-repeat="photo in item.photos track by $index"
+                        >
+                        
+                            <div class="todo-task-list-item-image-container image-container">
+                                <button 
+                                    class="remove-button button alert clear" 
+                                    type="button" 
+                                    ng-click="removeToDoItemMedia(toDo.id, $parent.$index, $index, 'photo')"
+                                    ng-if="!item.completed"
+                                >
+                                    <i class="fal fa-times-circle"></i>
+                                </button>
+                                <div 
+                                    class="todo-task-list-item-image image"
+                                    ng-click="initImage(photo)"
+                                    data-open="todoTaskListItemImageViewReveal"
+                                >
+                                    <div 
+                                        class="todo-task-list-item-image-background image-background"
+                                        style="background-image: url('{{photo.url}}');"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="item.videos.length"
+                >
+                    <div class="todo-task-list-item-videos-container videos-container grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <h6>
+                                <b>
+                                    {{item.videos.length}} Video(s)
+                                </b>
+                            </h6>
+                        </div>
+                        <div
+                            class="cell small-12 medium-3 large-3"
+                            ng-repeat="video in item.videos track by $index"
+                        >
+                            <div class="todo-task-list-item-video-container video-container">
+                                <button 
+                                    class="remove-button button alert clear" 
+                                    type="button" 
+                                    ng-click="removeToDoItemMedia(toDo.id, $parent.$index, $index, 'video')"
+                                    ng-if="!item.completed"
+                                >
+                                    <i class="fal fa-times-circle"></i>
+                                </button>
+                                <div 
+                                    class="todo-task-list-item-video video"
+                                    ng-click="initVideo(video)"
+                                    data-open="todoTaskListItemVideoViewReveal"
+                                >
+                                    <div 
+                                        class="todo-task-list-item-video-background video-background"
+                                        style="background-image: url('{{video.thumbnail}}');"
+                                    ></div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="item.documents.length"
+                >
+                    <div class="todo-task-list-item-documents-container documents-container grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <h6>
+                                <b>
+                                    {{item.documents.length}} Document(s)
+                                </b>
+                            </h6>
+                        </div>
+                        <div
+                            class="cell small-12 medium-3 large-3"
+                            ng-repeat="document in item.documents track by $index"
+                        >
+                            <div class="todo-task-list-item-document-container document-container">
+                                <button 
+                                    class="remove-button button alert clear" 
+                                    type="button" 
+                                    ng-click="removeToDoItemMedia(toDo.id, $parent.$index, $index, 'document')"
+                                    ng-if="!item.completed"
+                                >
+                                    <i class="fal fa-times-circle"></i>
+                                </button>
+                                <div 
+                                    class="todo-task-list-item-document document"
+                                    ng-click="initDocument(document)"
+                                    data-open="todoTaskListItemDocumentViewReveal"
+                                >
+                                    <div 
+                                        class="todo-task-list-item-document-background document-background"
+                                        style="background-image: url('{{document.thumbnail}}');"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

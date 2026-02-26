@@ -1,0 +1,474 @@
+<div 
+    class="estimate-view-container view-container"
+    ng-init="initEstimate()"
+>
+    <div format-addresses address="estimate.billingAddress"></div>
+    <div format-addresses address="estimate.clientAddress"></div>
+    <div format-clients client="estimate.Client"></div>
+    <div format-phone-numbers phone-number="estimate.clientPhoneNumber"></div>
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-if="UI.estimateView"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="estimate-view view">
+        <div class="grid-y grid-container">
+            <div class="cell shrink">
+                <div class="grid-x">
+                    <div 
+                        class="small-12 medium-shrink large-shrink"
+                        ng-if="UI.estimateView"
+                    >
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> 
+                            <span ng-if="!$root.UI.isMobile">
+                                Back
+                            </span>
+                        </button>
+                        <button
+                            class="estimate-options-button button float-right"
+                            type="button"
+                            ng-click="toggleEstimateOptions()"
+                            data-open="viewEstimateOptionsReveal"
+                            ng-if="$root.UI.isMobile"
+                        >      
+                            <i class="fal fa-cog"></i> 
+                        </button>
+                    </div>
+                    <div 
+                        class="small-12 medium-auto large-auto"
+                        ng-if="!$root.UI.isMobile"
+                    >
+                        <div ng-include="'/dist/partials/estimates/top-bar.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="estimate-view-total-container estimate-view-item-container view-details-container">
+                    <h2>
+                        <b>
+                            {{estimate.estimateNumber}}
+                        </b>
+                    </h2>
+                    <h4>
+                        <b ng-if="!estimate.won">
+                            <b>
+                                Due Now: 
+                            </b>
+                            <span ng-if="estimate.dueNow">
+                                ${{estimate.dueNow | number}}
+                            </span>
+                            <span ng-if="!estimate.dueNow">
+                                $0.00
+                            </span>
+                        </b>
+                        <b 
+                            class="success-text"
+                            ng-if="estimate.won"
+                        >
+                            Paid
+                        </b>
+                    </h4>
+                    <h6>
+                        <b>
+                            Sub Total: 
+                        </b>
+                        <span ng-if="estimate.subTotal">
+                            ${{estimate.subTotal | number}}
+                        </span>
+                        <span ng-if="!estimate.subTotal">
+                            $0.00
+                        </span>
+                    </h6>
+                    <h6>
+                        <b>
+                            Discounts Total: 
+                        </b>
+                        <span ng-if="estimate.discountTotal">
+                            -{{estimate.discountTotal | number}}
+                        </span>
+                        <span ng-if="!estimate.discountTotal">
+                            - $0.00
+                        </span>
+                    </h6>
+                    <h6>
+                       <b>
+                            Total: 
+                       </b>
+                        <span ng-if="estimate.total">
+                            ${{estimate.total | number}}
+                        </span>
+                        <span ng-if="!estimate.total">
+                            $0.00
+                        </span>
+                    </h6>
+                    <h6>
+                        <b>
+                            Billing Address: 
+                        </b>
+                        <span ng-if="estimate.total">
+                            {{estimate.billingAddress.fullAddress}}
+                        </span>
+                    </h6>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="estimate-view-client-container estimate-view-item-container view-details-container">
+                    <h2>
+                        <b>
+                            Client
+                        </b>
+                    </h2>
+                    <div class="estimate-view-client">
+                        <h4>
+                            <a
+                                class="client-name-link"
+                                ng-href="/clients/client/{{estimate.Client.id}}"
+                                ng-if="estimate.Client.id"
+                            >
+                                <b>
+                                    {{estimate.Client.fullName}}
+                                </b>
+                            </a>
+                        </h4>
+                        <h6>
+                            <b>Email:</b> {{estimate.clientEmail.email}}
+                        </h6>
+                        <h6>
+                            <b>Phone:</b> {{estimate.clientPhoneNumber.formattedNumber}}
+                        </h6>
+                        <h6>
+                            <b>Address:</b> {{estimate.clientAddress.fullAddress}}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="estimate-view-memo-container estimate-view-item-container view-details-container">
+                    <h2>
+                        <b>
+                            Memo
+                        </b>
+                    </h2>
+                    <div 
+                        class="estimate-view-memo"
+                        ng-bind-html="estimate.memo"
+                    ></div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="estimate-view-line-items-container estimate-view-item-container view-details-container list-container">
+                    <h2>
+                        <b>
+                            Line Items
+                        </b>
+                    </h2>
+                    <ul 
+                        class="line-items-list list"
+                        id="lineItemsList"
+                    >
+                        <li ng-if="!UI.estimateLoaded">
+                            <div class="ssc line-items-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="line-items-list-item list-item position-relative"
+                            ng-repeat="l in estimate.EstimateLineItems track by $index"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="line-items-list-item-name">
+                                        <b>
+                                            {{l.name}}
+                                        </b>
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-shrink large-shrink"
+                                    ng-if="estimate.lineItemPrice"
+                                >
+                                    <h6>
+                                        ${{l.totalPrice | number}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12">
+                                    <p ng-bind="l.description"></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="estimate-view-discounts-container estimate-view-item-container view-details-container list-container">
+                    <h2>
+                        <b>
+                            Discounts
+                        </b>
+                    </h2>
+                    <ul class="estimate-view-discounts-list list">
+                        <li 
+                            class="estimate-view-discounts-list-item"
+                            ng-repeat="discount in estimate.discounts track by $index"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="line-items-list-item-name">
+                                        {{discount.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <h6>
+                                        ${{discount.total | number}}
+                                    </h6>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="text-center"
+                            ng-if="!estimate.discounts.length"
+                        >
+                            <h6>
+                                <b>
+                                    None Applied
+                                </b>
+                            </h6>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-show="UI.signatureLoaded && UI.estimateView"
+            >
+                <div class="estimate-view-signature-container estimate-view-item-container view-details-container">
+                    <h2>
+                        <b>
+                            Signature
+                        </b>
+                    </h2>
+                    <h6 
+                        class="text-center"
+                        ng-if="!estimate.EstimateSignature && !estimate.converted" 
+                    >
+                        <b>Sign Below</b>
+                    </h6>
+                    <h6 
+                        class="text-center"
+                        ng-if="estimate.EstimateSignature" 
+                    >
+                        <b>
+                            This estimate has been sign!
+                        </b>
+                        <br/>
+                        Scroll up to pay a deposit if it hasn't already been paid!
+                    </h6>
+                    <h4
+                        class="text-center"
+                        ng-if="estimate.converted && !estimate.EstimateSignature"
+                    >
+                        <b>
+                            This estimate has been converted to a Invoice! Without a signature!
+                            <br/>
+                        </b>
+                    </h4>
+                    <div class="view-invoice-button-container text-center">
+                        <button 
+                            class="view-invoice-button button success white-text"
+                            type="button"
+                            ng-if="estimate.converted && !estimate.EstimateSignature"
+                        >
+                            <i class="fal fa-search"></i> View Invoice
+                        </button>
+                    </div>
+                    <div 
+                        class="estimate-signature-pad-container"
+                        ng-if="!estimate.EstimateSignature && !estimate.converted ||
+                        estimate.EstimateSignature"
+                    >
+                        <canvas     
+                            id="estimateSignaturePad" 
+                            class="estimate-signature-pad"
+                            width="600" 
+                            height="300"
+                            ng-if="!$root.UI.isMobile"
+                        ></canvas>
+                        <canvas     
+                            id="estimateSignaturePad" 
+                            class="estimate-signature-pad"
+                            width="300" 
+                            height="150"
+                            ng-if="$root.UI.isMobile"
+                        ></canvas>
+                    </div>
+                    <div 
+                        class="button-group align-right"
+                        ng-if="!estimate.EstimateSignature && !estimate.converted ||
+                        estimate.EstimateSignature"
+                    >
+                        <button 
+                            class="estimate-view-signature-clear-button button warning white-text"
+                            type="button"
+                            ng-if="!estimate.EstimateSignature" 
+                            ng-click="clearSignature()"
+                        >
+                            <i class="fal fa-broom"></i> Clear
+                        </button>
+                        <button 
+                            class="estimate-view-signature-save-button button success white-text" 
+                            ng-if="!estimate.EstimateSignature && 
+                            !estimate.estimateTermsAndConditions" 
+                            ng-click="saveSignature()"
+                        >
+                            <i class="fal fa-save"></i> Continue
+                        </button>
+                        <button 
+                            class="estimate-view-signature-save-button button" 
+                            type="button"
+                            ng-if="!estimate.EstimateSignature &&
+                            estimate.estimateTermsAndConditions"
+                            data-open="estimateTermsAndConditionsReveal"
+                            ng-click="UI.errMessage = !UI.errMessage;
+                            UI.message = !UI.message"
+                            ng-if="!estimate.EstimateSignature && 
+                            estimate.estimateTermsAndConditions"
+                        >
+                            Continue <i class="fal fa-circle-arrow-right"></i> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="estimate.Videos.length"
+            >
+                <h6 class="text-center">
+                    <b>
+                        Associated Videos
+                    </b>
+                </h6>
+                <format-videos 
+                    class="container" 
+                    videos="estimate.Videos"
+                ></format-videos>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="estimate.Images.length"
+            >
+                <h6 class="text-center">
+                    <b>
+                        Associated Images
+                    </b>
+                </h6>
+                <format-images 
+                    class="container" 
+                    images="estimate.Images"
+                ></format-images>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-estimate-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewEstimateOptionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewEstimateOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-estimate-options-mobile golura-block">
+        <div ng-include="'/dist/partials/estimates/top-bar.html'"></div>
+    </div>
+</div>
+<div
+    class="estimate-terms-and-conditions-reveal reveal"
+    id="estimateTermsAndConditionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateTermsAndConditionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-bind-html="estimate.estimateTermsAndConditions"></div>
+    <div class="button-group align-right">
+        <button 
+            class="estimate-view-signature-save-button button warning white-text"
+            type="button"
+            data-close
+        >
+            <i class="fal fa-times-circle"></i> Cancel
+        </button>
+        <button 
+            class="estimate-view-signature-save-button button success white-text" 
+            type="button"
+            ng-click="acceptTerms()"
+        >
+            <i class="fal fa-save"></i> Accept Terms & Continue
+        </button>
+    </div>
+</div>
+<div
+    class="estimate-payment-reveal reveal"
+    id="estimatePaymentReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimatePaymentReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/payments/payment-method-form.html'"></div>
+</div>

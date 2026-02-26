@@ -1,0 +1,295 @@
+<div class="inventory-item-container inventory-form-container create-edit-container">
+    <div class="inventory-item inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventoryItem">
+                Create Inventory Item
+            </b>
+            <b ng-if="!UI.newInventoryItem">
+                Edit Inventory Item
+            </b>
+        </h1>
+        <form 
+            class="inventory-item-form inventory-form golura-form"
+            id="inventoryItemForm"
+            name="inventoryItemForm"
+            ng-submit="createInventoryItem($event, inventoryItem)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryItemLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryItemLoaded"
+                        ></div>
+                        <label for="itemName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="itemName"
+                            name="itemName"
+                            placeholder="Item name"
+                            ng-model="inventoryItem.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryItemLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryItemLoaded"
+                        ></div>
+                        <label for="itemRate">   
+                            Rate
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="itemRate"
+                            name="itemRate"
+                            placeholder="Enter rate"
+                            ng-model="inventoryItem.rate"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryItemLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryItemLoaded"
+                        ></div>
+                        <label for="itemUnit">   
+                            Unit
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="itemUnit"
+                            name="itemUnit"
+                            placeholder="Enter unit"
+                            ng-model="inventoryItem.unit"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="vendorId">
+                            Vendor
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="vendorOptions"
+                            options="vendors"
+                            id="vendorId"
+                            name="vendorId"
+                            ng-model="inventoryItem.vendorId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="minimumOrderAmount">
+                            Minimum Order Amount
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="minimumOrderAmount"
+                            name="minimumOrderAmount"
+                            ng-model="inventoryItem.minimumOrderAmount"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="parentManufacturerPartNumber">
+                            Parent Manufacturer Part Number
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="parentManufacturerPartNumber"
+                            name="parentManufacturerPartNumber"
+                            ng-model="inventoryItem.parentManufacturerPartNumber"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="adHocEstimates">
+                            Ad Hoc Estimates
+                        </label>
+                        <input
+                            class="form-input"
+                            type="checkbox"
+                            id="adHocEstimates"
+                            name="adHocEstimates"
+                            ng-model="inventoryItem.adHocEstimates"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="discountItem">
+                            Discount Item
+                        </label>
+                        <input
+                            class="form-input"
+                            type="checkbox"
+                            id="discountItem"
+                            name="discountItem"
+                            ng-model="inventoryItem.discountItem"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="isPercent">
+                            Is Percent
+                        </label>
+                        <input
+                            class="form-input"
+                            type="checkbox"
+                            id="isPercent"
+                            name="isPercent"
+                            ng-model="inventoryItem.isPercent"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="imgUrl">
+                            Image URL
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="imgUrl"
+                            name="imgUrl"
+                            ng-model="inventoryItem.imgUrl"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="manufacturerPartNumber">
+                            Manufacturer Part Number
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="manufacturerPartNumber"
+                            name="manufacturerPartNumber"
+                            ng-model="inventoryItem.manufacturerPartNumber"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="isVariable">
+                            Is Variable
+                        </label>
+                        <input
+                            class="form-input"
+                            type="checkbox"
+                            id="isVariable"
+                            name="isVariable"
+                            ng-model="inventoryItem.isVariable"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label for="variableName">
+                            Variable Name
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="variableName"
+                            name="variableName"
+                            ng-model="inventoryItem.variableName"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="itemDescription"
+                                name="itemDescriptionTextarea"
+                                ng-model="inventoryItem.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-item-form-submit-button submit-button button" 
+                        id="inventoryItemFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventoryItemLoaded && UI.newInventoryItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-item-form-edit-submit-button submit-button button" 
+                        id="inventoryItemFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventoryItem(inventoryItem)"
+                        ng-if="UI.inventoryItemLoaded && !UI.newInventoryItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

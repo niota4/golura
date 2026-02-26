@@ -1,0 +1,98 @@
+<div 
+    class="reports-container"
+    ng-init="initReports()"
+>
+    <user-onboarding page-name="reports" auto-start="true"></user-onboarding>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="reports">
+        <div class="reports-tabs-container">
+            <div class="golura-block grid-x">
+                <div class="golura-block cell hide-for-small-only small-12 medium-2 large-2 tabs-container">
+                    <div class="reports-sidebar tabs-list-container">
+                        <ul 
+                            class="reports-side-bar-tabs-list tabs-list tabs vertical" 
+                            id="reportsSideBarTabs"
+                        >
+                            <li 
+                                class="reports-side-bar-tabs-title tabs-title"
+                                ng-repeat="type in reportTypes track by $index"
+                                ng-class="{'is-active': $index === UI.activeTabIndex}"
+                            >
+                                <a  
+                                    class="reports-side-bar-tabs-title-link reports-side-bar-tabs-details-link"
+                                    ng-click="switchTab($index)"
+                                    href="javascript:void(0)"
+                                    ng-cloak
+                                >
+                                    <i 
+                                        class="fal"
+                                        ng-class="{
+                                            'fa-chart-line': type.name === 'Analytics',
+                                            'fa-user': type.name === 'Client',
+                                            'fa-envelope': type.name === 'Communication',
+                                            'fa-dollar-sign': type.name === 'Financial',
+                                            'fa-briefcase': type.name === 'HR/Payroll',
+                                            'fa-box': type.name === 'Inventory',
+                                            'fa-tachometer-alt': type.name === 'KPI',
+                                            'fa-cogs': type.name === 'Operations',
+                                            'fa-list-alt': type.name === 'Summary'
+                                        }"
+                                    ></i> {{type.name}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="golura-block cell small-12 medium-auto large-auto">
+                    <div class="golura-block reports-side-bar-tabs-content tabs-content">
+                        <div 
+                            class="reports-side-bar-tabs-panel tabs-panel" 
+                            ng-class="{'is-active': $index === UI.activeTabIndex}"
+                            ng-repeat="type in reportTypes track by $index" 
+                        >
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div 
+                                    class="reports-side-bar-tabs-panel-content cell small-12 medium-4 large-3"
+                                    ng-repeat="report in reports track by $index"
+                                    ng-if="report.typeId === reportType.id"
+                                >
+                                    <a 
+                                        class="reports-side-bar-tabs-panel-content-link"
+                                        ng-href="/reports/report/{{report.id}}"
+                                        ng-cloak
+                                    >
+                                        <div class="reports-side-bar-tabs-panel-content-link-inner">
+                                            <div class="reports-side-bar-tabs-panel-content-link-details text-center">
+                                                <h6 class="reports-side-bar-tabs-panel-content-link-title">
+                                                    <b>
+                                                        {{report.name}}
+                                                    </b>
+                                                </h6>
+                                                <p class="reports-side-bar-tabs-panel-content-link-description">
+                                                    {{report.description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

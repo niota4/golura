@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changes Requested - {{company.name}}</title>
+    <style>
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .estimate-details {
+            background-color: #f8f9fa;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .changes-requested {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .action-button {
+            display: inline-block;
+            background-color: #ffc107;
+            color: #212529;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .warning-icon {
+            font-size: 48px;
+            color: #ffc107;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>📝 Changes Requested</h1>
+        </div>
+        
+        <div class="content">
+            <div class="warning-icon">✏️</div>
+            
+            <h2>Estimate Revision Needed</h2>
+            <p>Your client has requested changes to estimate <strong>{{estimate.estimateNumber}}</strong>.</p>
+            
+            <div class="estimate-details">
+                <strong>Estimate Details:</strong><br>
+                <strong>Number:</strong> {{estimate.estimateNumber}}<br>
+                <strong>Client:</strong> {{client.firstName}} {{client.lastName}}<br>
+                <strong>Total Amount:</strong> ${{estimate.total}}<br>
+                <strong>Requested By:</strong> {{feedback.clientName || 'Client'}}<br>
+                <strong>Requested On:</strong> {{feedback.createdAt}}<br>
+            </div>
+            
+            <div class="changes-requested">
+                <strong>Requested Changes:</strong><br>
+                "{{feedback.message}}"
+            </div>
+            
+            <p><strong>Next Steps:</strong></p>
+            <ul>
+                <li>Review the client's change requests carefully</li>
+                <li>Update the estimate with the requested modifications</li>
+                <li>Send the revised estimate to the client for approval</li>
+                <li>Contact the client if clarification is needed</li>
+            </ul>
+            
+            <a href="{{baseUrl}}/estimates/{{estimate.id}}" class="action-button">Update Estimate</a>
+            
+            <p>This request was automatically logged in your system for tracking purposes.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from {{company.name}}<br>
+            {{company.address}} | {{company.phone}} | {{company.email}}</p>
+        </div>
+    </div>
+</body>
+</html>

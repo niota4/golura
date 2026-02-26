@@ -1,0 +1,151 @@
+<div class="add-line-item-to-invoice-form-container invoice-form-container form-container">
+    <div class="golura-block add-line-item-to-invoice invoice invoice-form-details">
+        <form 
+            class="add-line-item-to-invoice-form invoice-form golura-form form"
+            id="addLineItemToInvoiceForm"
+            name="addLineItemToInvoiceForm"
+        >
+            <div class="golura-block grid-x">
+                <div class="golura-block cell small-12 medium-3 large-3">
+                    <div class="add-line-item-to-invoice-form-sidebar form-sidebar grid-y">
+                        <div class="cell shrink">
+                            <h4 class="medium-gray-text text-center">
+                                <b>Invoice: </b>
+                                #{{invoice.invoiceNumber}}
+                                <hr/>
+                            </h4>
+                        </div>
+                        <div class="cell auto overflow-scroll">
+                            <div class="list-container">
+                                <ul class="view-invoice-list-item-details-list list-item-details-list list">
+                                    <li 
+                                        class="invoice-list-item-details-list-item list-item-details-list-item list-item position-relative"
+                                        ng-repeat="item in filteredinvoiceLineItems = 
+                                        (invoice.InvoiceLineItems | filter: search.invoiceLineItems.value) |
+                                        orderBy: -createdAt track by $index"
+                                    >   
+                                        <h6>
+                                            <b>ID: </b>
+                                            {{item.LineItems.id}}
+                                        </h6>
+                                        <h6>
+                                            <b>Name: </b>
+                                            {{item.LineItems.name}}
+                                        </h6>
+                                        <h6>
+                                            <b>Unit: </b>
+                                            {{item.LineItems.unit}}
+                                        </h6>
+                                        <h6>
+                                            <b>Description: </b>
+                                            {{item.LineItems.moduleDescription}}
+                                        </h6>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="golura-block cell small-12 medium-auto large-auto position-relative">
+                    <div 
+                        class="callout sticky success success-text text-center fade"
+                        ng-hide="!UI.modalFormSaved"
+                        data-sticky 
+                        data-options="marginTop:0;"
+                    >
+                        <button 
+                            class="close-button success button clear"
+                            type="button"
+                            ng-click="UI.modalFormSaved = !UI.modalFormSaved"
+                        >
+                            <i class="fal fa-times-circle"></i>
+                        </button>
+                        <p>
+                            {{UI.message}}
+                        </p>
+                    </div>
+                    <div class="golura-block add-line-item-to-invoice-form-progressions grid-y">
+                        <div class="cell shrink">
+                            <div class="invoice-search-container list-search-container">
+                                <div class="invoice-search list-search">
+                                    <div class="search-input-container">
+                                        <div class="grid-x align-middle">
+                                            <div class="cell auto align-self-bottom">
+                                                <input
+                                                    class="invoice-search-input search-input"
+                                                    id="estimatorLineItemsSearchInput" 
+                                                    type="text"
+                                                    placeholder="Search line items..."
+                                                    ng-model="search.lineItems.value"
+                                                />
+                                            </div>
+                                            <div class="cell shrink align-self-bottom">
+                                                <span class="search-icon">
+                                                    <i class="fal fa-search"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell auto overflow-scroll position-relative">
+                            <div class="invoice-list-container list-container">
+                                <ul 
+                                    class="invoice-list list"
+                                    id="estimatorProgressionsList"
+                                >
+                                    <li ng-show="!UI.lineItemsLoaded">
+                                        <div class="ssc invoice-ssc">
+                                            <div 
+                                                class="ssc-square"
+                                                ng-repeat="x in [].constructor(40) track by $index"
+                                            ></div>
+                                        </div>
+                                    </li>
+                                    <li
+                                        class="invoice-list-item list-item position-relative"
+                                        ng-repeat="lineItem in filteredLineItems = 
+                                        (lineItems | filter:search.lineItems.value) 
+                                        track by $index"
+                                    >
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <h6 
+                                                    class="invoice-list-item-name"
+                                                    title="{{lineItem.name}}"
+                                                >
+                                                    #{{lineItem.id}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h6>
+                                                    {{lineItem.name}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <button
+                                                    class="add-line-item-to-invoice-form-add-button button"
+                                                    ng-click="addLineItemToInvoice(lineItem)"
+                                                    ng-class="{'form-saving': lineItem.adding}"
+                                                >
+                                                    <span ng-if="!lineItem.adding">
+                                                        <i class="fal fa-plus-circle"></i> 
+                                                        Add
+                                                    </span>
+                                                    <span ng-if="lineItem.adding">
+                                                        Please Wait...
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+@include breakpoint(small only) {
+    body {
+        .golura-navigation-container {
+
+            .mobile-navigation-container {
+                position: relative;
+                z-index: 3;
+                background: var(--white);
+                border-bottom: 1px solid var(--light-gray);
+            
+                .back-button {
+                    padding: 1rem;
+                    margin: 0px;
+
+                    .navigation-logo {
+                        background: url('/dist/assets/img/logos/golura/golura-icon.svg');
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: contain;
+                        border-radius: $container-radius;
+                        height: 2rem;
+                        width: 2.5rem;
+                    }
+                }
+                .mobile-navigation-reveal-button {
+                    padding: 1.5rem;
+                    margin: 0px;
+                    font-size: 1.25rem;
+                }
+            }
+        }
+        .notifications-off-canvas  {
+
+            &.is-open {
+                width: 100%;
+                left: 0px;
+                right: 0px;
+                padding: 0px;
+            }
+        }
+        .notifications-off-canvas {
+
+            .notifications-side-bar-container {
+                padding-top: 4rem;
+            }
+        }
+    }
+    .mobile-navigation-breadcrumbs {
+        padding: 0px 0px 1rem;
+
+        a {
+            margin-right: .25rem;
+        }
+    }
+    
+}
+@include breakpoint(medium only) {
+    body {
+        .navigation-side-bar-container {
+
+            .navigation-side-bar {
+
+                .logged-in-navigation-actions {
+                    padding: 2rem .75rem;
+
+                    li {
+
+                        .navigation-side-bar-item {
+                            padding: .65rem .85rem;
+                            border-radius: 15px !important;
+
+                            span {
+                                font-size: .75rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

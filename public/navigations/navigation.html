@@ -1,0 +1,144 @@
+<header class="golura-navigation-container">
+    <div class="golura-navigation">
+        <div 
+            class="connection-error-callout callout alert"
+            ng-if="UI.connectionError"
+            data-closable
+        >
+            <button 
+                class="close-button small" 
+                aria-label="Close alert" 
+                type="button" 
+                data-close
+            >
+                <span aria-hidden="true">
+                    <i class="fal fa-times-circle"></i>
+                </span>
+            </button>
+            <h5 class="text-center">
+                <b>OH SNAP!</b>
+                <br>
+                An error occured, please 
+                <a ng-href="UI.currentUrlString">
+                    click here
+                </a> 
+                to refresh the page. If
+                it just can't be fixed let us know at
+                <a ng-href="mailto:support@directconnectsolutions.com">
+                    <b>support@directconnectsolutions.com</b>
+                </a>
+            </h5>
+        </div>
+        <div 
+            class="grid-x align-center"
+            ng-if="!$root.UI.isMobile"
+        >
+            <div class="cell small-10 medium-3 large-3">
+                <div class="navigation-breadcrumbs-container">
+                    <div class="grid-x align-middle">
+                        <div class="cell shrink">
+                            <button 
+                                class="back-button button clear" 
+                                ng-class="{
+                                    'secondary': $root.UI.isMobile,
+                                }"
+                                ng-click="$root.goBack()"
+                                ng-cloak
+                            >
+                                <div 
+                                    class="navigation-logo"
+                                    ng-style="$root.company.logoUrl ? {'background-image': 'url(' + $root.company.logoUrl + ')'} : {}"
+                                ></div>
+                            </button>
+                        </div>
+                        <div class="cell hide-for-small-only shrink">
+                            <div 
+                                class="cell shrink"
+                                ng-if="$root.UI.mainTitle"
+                            >
+                                <a ng-href="/{{$root.UI.mainUrl}}">
+                                    <b>
+                                        {{$root.UI.mainTitle}}
+                                    </b>
+                                </a>
+                            </div>
+                        </div>
+                        <div 
+                            class="cell hide-for-small-only shrink"
+                            ng-if="$root.UI.subTitle"
+                        >
+                            <span>
+                                / 
+                                <b>
+                                    {{$root.UI.subTitle}} 
+                                </b>
+                            </span>
+                            <span 
+                                class="navigation-sid"
+                                ng-if="$root.UI.id"
+                            >
+                                {{$root.UI.id}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto hide-for-small-only">
+                <div ng-include="'dist/forms/general/general-search-form.html'"></div>
+            </div>
+            <div class="cell hide-for-small-only shrink">
+                <button 
+                    class="settings-button button clear"
+                    ng-class="{'secondary': $root.UI.isMobile}"
+                    data-toggle="sideBarNavigationOffCanvas"
+                    aria-label="sideBarNavigationOffCanvas" 
+                    ng-click="initWeather()"
+                >
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div
+        class="mobile-navigation-container"
+        ng-if="$root.UI.isMobile"
+    >
+        <div class="grid-x grid-margin-x align-middle">
+            <div class="cell auto">
+                <a 
+                    class="back-button button clear" 
+                    ng-href="/dashboard"
+                    ng-cloak
+                >
+                    <div 
+                        class="navigation-logo"
+                        ng-style="$root.company.logoUrl ? {'background-image': 'url(' + $root.company.logoUrl + ')'} : {}"
+                    ></div>
+                </a>
+            </div>
+            <div class="cell shrink">
+                <button 
+                    class="mobile-navigation-reveal-button button clear"
+                    ng-class="{'secondary': $root.UI.isMobile}"
+                    ng-click="initMobileNavigation()"
+                >
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div 
+        class="navigation-progress progress" 
+        role="progressbar" 
+        aria-valuenow="{{$root.UI.pageProgress }}" 
+        aria-valuemin="0" 
+        aria-valuetext="{{$root.UI.pageProgress}} percent" 
+        aria-valuemax="100"
+        ng-if="$root.UI.pageLoading"
+    >
+        <div 
+            class="progress-meter" 
+            ng-style="{width: $root.UI.pageProgress + '%'}"
+        ></div>
+    </div>
+</header>

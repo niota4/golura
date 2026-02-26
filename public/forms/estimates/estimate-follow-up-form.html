@@ -1,0 +1,482 @@
+<div class="estimate-follow-up-form-container estimate-form-container form-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="estimate-follow-up grid-container">
+        <div format-addresses addresses="addresses"></div>
+        <div format-addresses addresses="client.ClientAddresses"></div>
+        <div format-phone-numbers phone-numbers="client.ClientPhoneNumbers"></div>
+        <div format-phone-numbers phone-numbers="phoneNumbers"></div>
+        <form 
+            class="estimate-follow-up-form estimate-form golura-form"
+            id="estimateFollowUpForm"
+            name="estimateFollowUpForm"
+            ng-submit="followUpEstimate($event, followUp)"
+        >
+            <h1 ng-if="!followUp.type">
+                <b>
+                    Follow Up
+                </b>
+            </h1>
+            <div 
+                class="estimates-follow-up-warning-message warning-message warning-background"
+                ng-if="UI.followUpCount > 0 && UI.currentStep === 1"
+            >
+                <div class="grid-x grid-margin-x align-middle white-text">
+                    <div class="cell small-12 medium-shrink large-shrink">
+                        <span class="estimates-follow-up-warning-icon">
+                            <i class="fal fa-exclamation-circle"></i>
+                        </span>
+                    </div>
+                    <div class="cell small-12 medium-auto large-auto">
+                        <h4 class="white-text">
+                            <b>
+                                You already have {{UI.followUpCount}} upcoming Follow Up(s) for this estimate.
+                                <br/>
+                                Are you sure you want to add another one?
+                            </b>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 1">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="estimate-follow-up-type-list-container">
+                        <h2 class="text-center">
+                            <b>
+                                What kind of follow up would you like to do?
+                            </b>
+                        </h2>
+                        <ul class="estimate-follow-up-type-list grid-x grid-margin-x align-middle">
+                            <li 
+                                class="estimate-follow-up-type-list-item cell small-12 medium-3 large-3"
+                                ng-repeat="type in followUpTypes track by $index"
+                                ng-click="UI.currentStep = 2; followUp.type = type.value"
+                            >
+                                <div class="estimate-follow-up-type-list-item-content">
+                                    <i 
+                                        class="fal "
+                                        ng-class="{
+                                            'fa-phone': type.value === 'call',
+                                            'fa-envelope': type.value === 'email',
+                                            'fa-sms': type.value === 'text',
+                                            'fa-calendar': type.value === 'in person',
+                                        }"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <span>
+                                        <b>
+                                            {{type.name}}
+                                        </b>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="UI.currentStep === 2">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell shrink">
+                        <button 
+                            class="estimate-button button warning white-text" 
+                            type="button" 
+                            ng-click="initEstimateFollowUpForm(followUp.estimate)"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> 
+                            <span ng-if="!$root.UI.isMobile">
+                                Back
+                        </button>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <h1>
+                            <b>
+                                Following up with 
+                                <span class="text-capitalize">{{followUp.type}} </span>
+                                for Estimate: #{{followUp.estimate.estimateNumber}}
+                            </b>
+                        </h1>
+                    </div>
+                </div>
+                <div 
+                    class="grid-x grid-margin-x align-middle"
+                    ng-if="followUp.type == 'call'"
+                >
+                    <div class="cell small-12 medium-12 large-12">
+                        <div 
+                            class="cell small-12 medium-12 large-12"
+                            ng-if="!phoneNumbers.length && !client.ClientPhoneNumbers.length"
+                        >
+                            <span class="alert-text">
+                                There are currently no available Phone Numbers. Create one to add it.
+                            </span>
+                        </div>
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !phoneNumbers.length && !client.ClientPhoneNumbers.length}"
+                                >
+                                    <label>
+                                        Phone Number
+                                    </label>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimatePhoneNumber"
+                                        name="estimatePhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="client.ClientPhoneNumbers"
+                                        ng-model="followUp.phoneNumberId"
+                                        ng-if="estimate.clientId"
+                                        ng-disabled="!client.ClientPhoneNumbers.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimatePhoneNumber"
+                                        name="estimatePhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="phoneNumbers"
+                                        ng-model="followUp.phoneNumberId"
+                                        ng-if="!estimate.clientId"
+                                        ng-disabled="!phoneNumbers.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <div class="cell shrink">
+                                    <button 
+                                        type="button" 
+                                        class="estimate-button button" 
+                                        ng-click="UI.createPhoneNumber = !UI.createPhoneNumber"
+                                    >
+                                        <i class="fal fa-layer-plus"></i> 
+                                        Create Phone Number
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Call Notes
+                            </label>
+                            <div class="form-textarea-container">
+                                <textarea 
+                                    class="form-textarea" 
+                                    id="callNotes"
+                                    name="callNotes" 
+                                    placeholder="Type your notes here..." 
+                                    ng-model="followUp.notes"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="estimate-button button success white-text"
+                            id="callFollowUpButton"
+                            type="submit"
+                            ng-disabled="!followUp.phoneNumberId"
+                        >
+                            <i class="fal fa-phone"></i> 
+                            Call
+                        </button>
+                    </div>
+                </div>
+                <div 
+                    class="grid-x grid-margin-x align-middle"
+                    ng-if="followUp.type == 'email'"
+                >
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div 
+                                class="cell small-12 medium-12 large-12"
+                                ng-if="!emails.length && !client.ClientEmails.length"
+                            >
+                                <span class="alert-text">
+                                    There are currently no available Emails. Create one to add it.
+                                </span>
+                            </div>
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !emails.length && !client.ClientEmails.length}"
+                                >
+                                    <label>
+                                        Email
+                                    </label>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimateEmail"
+                                        name="estimateEmail"
+                                        config="emailOptions"
+                                        options="client.ClientEmails"
+                                        ng-model="followUp.emailId"
+                                        ng-if="estimate.clientId"
+                                        ng-disabled="!client.ClientEmails.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimateEmail"
+                                        name="estimateEmail"
+                                        config="emailOptions"
+                                        options="emails"
+                                        ng-model="followUp.emailId"
+                                        ng-if="!estimate.clientId"
+                                        ng-disabled="!emails.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <button 
+                                    type="button" 
+                                    class="estimate-button button" 
+                                    ng-click="UI.createEmail = !UI.createEmail"
+                                >
+                                    <i class="fal fa-layer-plus"></i> 
+                                    <span ng-if="!$root.UI.isMobile">
+                                        Create Email
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Subject
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="text"
+                                name="followUpSubject"
+                                ng-model="followUp.subject"
+                                placeholder="Type your subject here..."
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="estimate-email-follow-up-editor-container">
+                            <div 
+                                class="estimate-email-follow-up-editor-container golura-rich-text-editor"
+                                id="estimateEmailFollowUpEditor"
+                                rich-text-editor 
+                                ng-model="followUp.message"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="estimate-button button success white-text"
+                            id="sendEmailButton"
+                            type="submit"
+                            ng-disabled="!estimate.clientEmailId || !followUp.subject || !followUp.message"
+                        >
+                            <i class="fal fa-check-circle"></i> 
+                            Send Email
+                        </button>
+                    </div>
+                </div>
+                <div 
+                    class="grid-x grid-margin-x align-middle"
+                    ng-if="followUp.type == 'text'"
+                >
+                    <div class="cell small-12 medium-12 large-12">
+                        <div 
+                            class="cell small-12 medium-12 large-12"
+                            ng-if="!phoneNumbers.length && !client.ClientPhoneNumbers.length"
+                        >
+                            <span class="alert-text">
+                                There are currently no available Phone Numbers. Create one to add it.
+                            </span>
+                        </div>
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !phoneNumbers.length && !client.ClientPhoneNumbers.length}"
+                                >
+                                    <label>
+                                        Phone Number
+                                    </label>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimatePhoneNumber"
+                                        name="estimatePhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="client.ClientPhoneNumbers"
+                                        ng-model="followUp.phoneNumberId"
+                                        ng-if="estimate.clientId"
+                                        ng-disabled="!client.ClientPhoneNumbers.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimatePhoneNumber"
+                                        name="estimatePhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="phoneNumbers"
+                                        ng-model="followUp.phoneNumberId"
+                                        ng-if="!estimate.clientId"
+                                        ng-disabled="!phoneNumbers.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <div class="cell shrink">
+                                    <button 
+                                        type="button" 
+                                        class="estimate-button button" 
+                                        ng-click="UI.createPhoneNumber = !UI.createPhoneNumber"
+                                    >
+                                        <i class="fal fa-layer-plus"></i> 
+                                        Create Phone Number
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Message
+                            </label>
+                            <div class="form-textarea-container">
+                                <textarea 
+                                    class="form-textarea" 
+                                    id="textMessage"
+                                    name="textMessage" 
+                                    placeholder="Type your message here..." 
+                                    ng-model="followUp.textMessage"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="estimate-button button success white-text"
+                            id="sendTextButton"
+                            type="submit"
+                            ng-disabled="!followUp.phoneNumberId || !followUp.textMessage"
+                        >
+                            <i class="fal fa-paper-plane"></i> 
+                            Send Text
+                        </button>
+                    </div>
+                </div>
+                <div 
+                    class="grid-x grid-margin-x align-middle"
+                    ng-if="followUp.type == 'in person'"
+                >
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label>
+                                Scheduled Date
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="text"
+                                name="followUpScheduledDate"
+                                ng-model="followUp.scheduledDate"
+                                flatpickr
+                                twelve-hour="true"
+                                placeholder="Select a Date and time"
+                                required 
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div 
+                                class="cell small-12 medium-12 large-12"
+                                ng-if="!addresses.length && !client.ClientAddresses.length"
+                            >
+                                <span class="alert-text">
+                                    There are currently no available Addresses. Create one to add it.
+                                </span>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'ssc': !UI.addressesLoaded,
+                                    'disabled': !addresses.length && !client.ClientAddresses.length}"
+                                >
+                                    <div 
+                                        class="ssc-square"
+                                        ng-if="!UI.addressesLoaded"
+                                    ></div>
+                                    <label>
+                                        Address
+                                    </label>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="followUpAddress"
+                                        name="followUpAddress"
+                                        config="addressOptions"
+                                        options="client.ClientAddresses"
+                                        ng-model="followUp.addressId"
+                                        ng-if="estimate.clientId"
+                                        ng-disabled="!client.ClientAddresses.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="estimate-input form-input"
+                                        id="estimateAddress"
+                                        name="estimateAddress"
+                                        config="addressOptions"
+                                        options="addresses"
+                                        ng-model="followUp.addressId"
+                                        ng-if="!estimate.clientId"
+                                        ng-disabled="!addresses.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell hide-for-small-only small-12 medium-shrink large-shrink">
+                                <button 
+                                    type="button" 
+                                    class="estimate-button button" 
+                                    ng-click="UI.createAddress = !UI.createAddress"
+                                >
+                                    <i class="fal fa-layer-plus"></i> 
+                                    Create Address
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="estimate-button button success white-text"
+                            id="scheduleFollowUpButton"
+                            type="submit"
+                            ng-disabled="!followUp.scheduledDate || !followUp.addressId"
+                        >
+                            <i class="fal fa-check-circle"></i> 
+                            Schedule Follow Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

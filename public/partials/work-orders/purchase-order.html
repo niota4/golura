@@ -1,0 +1,351 @@
+<div 
+    class="view-purchase-order-container view-container"
+    ng-init="initPurchaseOrder()"
+>
+    <div class="view-purchase-order view">
+        <div format-clients client="purchaseOrder.Client"></div>
+        <div format-users user="purchaseOrder.Creator"></div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x align-middle">
+                    <div class="cell small-12 medium-shrink large-shrink">
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> Back
+                        </button>
+                        <button
+                            class="purchase-order-options-button button float-right"
+                            type="button"
+                            data-open="viewPurchaseOrderOptionsReveal"
+                            ng-if="$root.UI.isMobile"
+                        >      
+                            <i class="fal fa-cog"></i> 
+                        </button>
+                    </div>
+                    <div 
+                        class="small-12 medium-auto large-auto"
+                        ng-if="!$root.UI.isMobile"
+                    >
+                        <button 
+                            class="add-purchase-order-item-button button success white-text" 
+                            type="button"
+                            ng-click="initVendorItems()"
+                            data-open="addItemFormReveal"
+                            ng-if="permissions.canEdit"
+                        >
+                            <i class="fal fa-plus-circle"></i> Add Items
+                        </button>
+                        <button 
+                            class="add-purchase-order-item-button button white-text" 
+                            type="button"
+                            ng-click="initVendors()"
+                            data-open="assignPurchaseOrderFormReveal"
+                            ng-if="permissions.canEdit && !purchaseOrder.vendorId"
+                        >
+                            <i class="fal fa-solid fa-link-horizontal"></i> Assign to Vendor
+                        </button>
+                        <button 
+                            class="button warning white-text"
+                            ng-if="permissions.canEdit"
+                            ng-click="initPurchaseOrderConvertForm(purchaseOrder)"
+                            data-open="purchaseOrderConvertFormReveal"
+                        >
+                            <i class="fal fa-arrows-rotate"></i>
+                            Convert
+                        </button>
+                        <button 
+                            class="button alert white-text"
+                            ng-click="UI.purchaseOrderDeleteConfirmation = !UI.purchaseOrderDeleteConfirmation"
+                            ng-if="permissions.canArchive"
+                        >
+                            <i class="fal fa-archive"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="view-purchase-order-details-container">
+                    <div 
+                        class="grid-x grid-margin-x"
+                        ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                    >
+                        <div class="cell small-12 medium-12 large-3">
+                            <div class="view-event-purchase-order-detail-container view-details-container">
+                                <div class="view-event-purchase-order-summary view-details">
+                                    <h2>
+                                        <b>
+                                            Purchase Order Summary
+                                        </b>
+                                    </h2>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Purchase Order ID: 
+                                        </b> 
+                                        {{purchaseOrder.purchaseOrderNumber || 'N/A'}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Work Order ID: 
+                                        </b> 
+                                        <a ng-href="work-orders/work-order/{{purchaseOrder.workOrderId}}">
+                                            {{purchaseOrder.WorkOrder.workOrderNumber}}
+                                        </a>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Vendor: 
+                                        </b> 
+                                        <a ng-href="inventory/vendors/vendor/{{purchaseOrder.vendorId}}">
+                                            {{purchaseOrder.Vendor.name}}
+                                        </a>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Vendor Contact: 
+                                        </b> 
+                                        {{purchaseOrder.Vendor.contactName}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Vendor Phone Number: 
+                                        </b> 
+                                        <button
+                                            class="phone-number-button"
+                                            ng-model="purchaseOrder.Vendor.contactPhone"
+                                            ng-if="UI.purchaseOrderLoaded"
+                                            ng-cloak
+                                            phone-number
+                                        >
+                                            {{purchaseOrder.Vendor.contactPhone}}
+                                        </button>
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Vendor Email: 
+                                        </b> 
+                                        {{purchaseOrder.Vendor.contactEmail}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Status: 
+                                        </b> 
+                                        {{purchaseOrder.PurchaseOrderStatus.name || 'N/A'}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Order Date: 
+                                        </b>
+                                        {{ purchaseOrder.orderDate ? (purchaseOrder.orderDate | DateTimeFormat) : 'N/A' }}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Delivery Date: 
+                                        </b>
+                                        {{ purchaseOrder.deliveryDate ? (purchaseOrder.deliveryDate | DateTimeFormat) : 'N/A' }}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Total Cost: 
+                                        </b> 
+                                        {{purchaseOrder.totalCost ? ('$' + purchaseOrder.totalCost) : '$0.00'}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Created: 
+                                        </b>
+                                        {{purchaseOrder.createdAt | DateTimeFormat}}
+                                    </h6>
+                                    <h6 ng-class="{'ssc': !UI.purchaseOrderLoaded}">
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.purchaseOrderLoaded"
+                                        ></div>
+                                        <b>
+                                            Created By: 
+                                        </b>
+                                        <a ng-href="users/user/{{purchaseOrder.creatorId}}">
+                                            {{purchaseOrder.Creator.fullName}}
+                                        </a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="golura-block cell small-12 medium-auto large-auto">
+                            <div 
+                                class="golura-block"
+                                ng-include="'dist/partials/work-orders/items.html'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-purchase-order-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewPurchaseOrderOptionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewPurchaseOrderOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-purchase-order-options-mobile golura-block">
+        <div class="button-group stacked">
+            <button 
+                class="add-purchase-order-item-button button success expanded white-text" 
+                type="button"
+                ng-click="initVendorItems()"
+                data-open="addItemFormReveal"
+                ng-if="permissions.canEdit"
+            >
+                <i class="fal fa-plus-circle"></i> Add Items
+            </button>
+            <button 
+                class="add-purchase-order-item-button button expanded white-text" 
+                type="button"
+                ng-click="initVendors()"
+                data-open="assignPurchaseOrderFormReveal"
+                ng-if="permissions.canEdit && !purchaseOrder.vendorId"
+            >
+                <i class="fal fa-solid fa-link-horizontal"></i> Assign to Vendor
+            </button>
+            <button 
+                class="button warning expanded white-text"
+                ng-if="permissions.canEdit"
+                ng-click="initPurchaseOrderConvertForm(purchaseOrder)"
+                data-open="purchaseOrderConvertFormReveal"
+            >
+                <i class="fal fa-arrows-rotate"></i>
+                Convert
+            </button>
+            <button 
+                class="button alert expanded white-text"
+                ng-click="UI.purchaseOrderDeleteConfirmation = !UI.purchaseOrderDeleteConfirmation"
+                ng-if="permissions.canArchive"
+            >
+                <i class="fal fa-archive"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+<div
+    class="add-item-form-reveal form-reveal reveal no-padding"
+    id="addItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAddItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/add-item-to-purchase-order-form.html'"
+    ></div>
+</div>
+<div
+    class="assign-purchase-order-form-reveal reveal"
+    id="assignPurchaseOrderFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAssignPurchaseOrderFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/assign-purchase-order-to-line-item.html'"
+    ></div>
+</div>
+<div
+    class="purchase-order-convert-form-reveal form-reveal reveal"
+    id="purchaseOrderConvertFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closePurchaseOrderConvertFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/purchase-order-convert-form.html'"
+    ></div>
+</div>

@@ -1,0 +1,614 @@
+<div 
+    class="view-question-container-container admin-container view-container"
+    ng-init="initQuestionContainer()"
+>
+    <div 
+        class="callout sticky success success-text text-center fade"
+        ng-hide="!UI.formSaved"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button success button clear"
+            type="button"
+            ng-click="UI.formSaved = !UI.formSaved"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="view-question-container-main admin view overflow-scroll">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <a 
+                    class="view-question-container-options-button back-button button warning white-text"
+                    ng-click="$root.goBack()"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> 
+                    <span ng-if="!$root.UI.isMobile">
+                        Back
+                    </span>
+                </a>
+            </div>
+            <div class="cell auto">
+                <div 
+                    class="grid-x grid-margin-x"
+                    ng-class="{'golura-block': !$root.UI.isMobile}"
+                >
+                    <div 
+                        class="golura-block cell small-12"
+                        ng-class="UI.showLineItems ? 'medium-7 large-7' : 'medium-3 large-3'"
+                    >
+                        <div class="view-question-container-details-container view-details-container">
+                            <div class="view-question-container-details admin-list-container view-details">
+                                <h3>
+                                    <b>
+                                        {{questionContainer.name}}
+                                    </b>
+                                </h3>
+                                <ul class="view-question-container-details-list admin-list">
+                                    <li 
+                                        class="view-question-container-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.questionContainerLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.questionContainerLoaded"
+                                        ></div>
+                                    </li>
+                                    <li 
+                                        class="view-question-container-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.questionContainerLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.questionContainerLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.questionContainerLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Related Estimator: </b> 
+                                            {{questionContainer.Estimator.title}}
+                                        </h6>
+                                    </li>
+                                    <li 
+                                        class="view-question-container-primary-details-list-item"
+                                        ng-class="{'ssc': !UI.questionContainerLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-line"
+                                            ng-if="!UI.questionContainerLoaded"
+                                        ></div>
+                                        <h6
+                                            ng-if="UI.questionContainerLoaded"
+                                            ng-cloak
+                                        >
+                                            <b>Created: </b> 
+                                            {{questionContainer.createdAt | DateTimeFormat:'MMM dd, yyyy'}}
+                                        </h6>
+                                    </li>
+                                </ul>
+                                <button 
+                                    class="questions-view-rules-button submit-button button white-text" 
+                                    ng-class="{'warning': UI.showLineItems}"
+                                    id="estimatorProgressRuleViewButton"
+                                    type="button"
+                                    ng-click="UI.showLineItems = !UI.showLineItems;"
+                                >
+                                    <span ng-if="!UI.showLineItems">
+                                        <i class="fal fa-eye"></i> View Associated Line Items
+                                    </span>
+                                    <span ng-if="UI.showLineItems">
+                                        <i class="fal fa-times-circle"></i> Close
+                                    </span>
+                                </button>
+                                <button 
+                                    class="questions-add-rule-button submit-button button white-text"
+                                    id="estimatorProgressAddRuleButton"
+                                    type="button"
+                                    ng-if="UI.showLineItems"
+                                    ng-click="initLineItemForm()"
+                                    data-open="lineItemFormReveal"
+                                >
+                                    <i class="fal fa-plus-circle"></i> Add Line Item
+                                </button>
+                            </div>
+                            <div class="view-question-container-rules-container">
+                                <div 
+                                    class="golura-block grid-y"
+                                    ng-if="UI.showLineItems"
+                                >
+                                    <div class="cell shrink position-relative">
+                                        <div class="questions-view-rules-search-container list-search-container">
+                                            <div class="questions-view-rules-search list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="questions-view-rules-search-input search-input"
+                                                                id="questions-view-rulesSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search Line Items..."
+                                                                ng-model="search.estimatorProgressRules.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line-items-list-container list-container">
+                                        <ul 
+                                            class="line-items-list list"
+                                            id="lineItemsList"
+                                        >
+                                            <li ng-if="!UI.lineItemsLoaded">
+                                                <div class="ssc line-items-ssc">
+                                                    <div 
+                                                        class="ssc-square"
+                                                        ng-repeat="x in [].constructor(10) track by $index"
+                                                    ></div>
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="line-items-list-item list-item position-relative"
+                                                ng-repeat="lineItem in filteredLineItems = 
+                                                (lineItems | filter:search.lineItems.value) |
+                                                orderBy: sort.lineItems.value |
+                                                limitTo: UI.lineItemsDisplayed track by $index"
+                                                ng-class="{'selected': lineItem.selected}"
+                                            >
+                                                <div class="grid-x grid-padding-x align-middle">
+                                                    <div class="cell small-12 medium-auto large-auto">
+                                                        <h4 class="line-items-list-item-name text-capitalize">
+                                                            {{lineItem.name}}
+                                                        </h4>
+                                                    </div>
+                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                        <div class="list-item-options-container">
+                                                            <button 
+                                                                class="list-item-options-button button white-text"
+                                                                type="button"
+                                                                ng-click="initLineItemForm(lineItem)"
+                                                                data-open="lineItemFormReveal"
+                                                                ng-cloak
+                                                            >
+                                                                <i class="fal fa-edit"></i> Edit
+                                                            </button>
+                                                            <button 
+                                                                class="list-item-options-button button alert white-text"
+                                                                type="button"
+                                                                ng-click="lineItem.delete = !lineItem.delete"
+                                                            >
+                                                                <i class="fal fa-archive"></i> Delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6>
+                                                            <b>
+                                                                 Rate:
+                                                            </b>   
+                                                            {{lineItem.rate}}%
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6>
+                                                            <b>
+                                                                Markup:
+                                                            </b>   
+                                                            {{lineItem.markup}}%
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6>
+                                                            <b>
+                                                                 Unit:
+                                                            </b>   
+                                                            {{lineItem.unit}}%
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6 ng-if="lineItem.pricedBy == 'custom'">
+                                                            <b>
+                                                                Total:
+                                                            </b>   
+                                                            ${{lineItem.total | number}}
+                                                        </h6>
+                                                        <h6 ng-if="lineItem.pricedBy != 'custom'">
+                                                            <b>
+                                                                Price By:
+                                                            </b>   
+                                                            {{lineItem.pricedBy}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6>
+                                                            <b>
+                                                                Created At:
+                                                            </b>    
+                                                            {{lineItem.createdAt | DateTimeFormat}}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <div>
+                                                            <h6>
+                                                                <b>Line Item Description: </b>
+                                                            </h6>
+                                                            <p>
+                                                                {{lineItem.description || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div 
+                                                    class="line-items-list-item-delete-container list-item-delete-container black-overlay"
+                                                    ng-if="lineItem.delete"
+                                                >
+                                                    <div class="grid-x grid-padding-x align-middle">
+                                                        <div class="cell small-12 medium-auto large-auto text-center">
+                                                            <h4>
+                                                                <b class="alert-text">Warning: </b>
+                                                                <span class="white-text">Are you sure you want to delete 
+                                                                    this line-item?
+                                                                </span>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="cell small-12 medium-auto large-auto">
+                                                            <button 
+                                                                class="list-item-options-button button alert white-text"
+                                                                type="button"
+                                                                ng-disabled="UI.formSaving"
+                                                                ng-class="{'form-alert': UI.formSaving}"
+                                                                ng-click="deleteLineItem(l)"
+                                                            >
+                                                                <span ng-if="!UI.formSaving">
+                                                                    <i class="fal fa-check-circle"></i> Confirm
+                                                                </span>
+                                                                <span ng-if="UI.formSaving">
+                                                                    Please Wait...
+                                                                </span>
+                                                            </button>
+                                                            <button 
+                                                                class="list-item-options-button button warning white-text"
+                                                                type="button"
+                                                                ng-click="lineItem.delete = !lineItem.delete"
+                                                            >
+                                                                <i class="fal fa-times-circle"></i> Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="golura-block view-question-container-questions-container list-item-details-container">
+                            <div class="golura-block view-question-container-questions">
+                                <div class="golura-block grid-y">
+                                    <div class="cell shrink">
+                                        <div class="grid-x">
+                                            <div class="cell small-12 medium-12 large-auto">
+                                                <h3>
+                                                    <b>
+                                                        Questions
+                                                    </b>
+                                                </h3>
+                                            </div>
+                                            <div class="cell small-12 medium-12 large-shrink">
+                                                <div 
+                                                    class="button-group"
+                                                    ng-class="{'align-right': $root.UI.isMobile}"
+                                                >
+                                                    <button 
+                                                        class="manage-formula-container-button add-button button" 
+                                                        id="manageFormulaButton"
+                                                        type="button"
+                                                        ng-click="initFormulaForm()"
+                                                        data-open="formulaFormReveal"
+                                                    >
+                                                        <i class="fal fa-gear"></i> 
+                                                        <span ng-if="!$root.UI.isMobile">
+                                                            Manage Formula
+                                                        </span>
+                                                    </button>
+                                                    <button 
+                                                        class="questions-create-button add-button button" 
+                                                        id="questionCreateButton"
+                                                        type="button"
+                                                        ng-click="initQuestionForm()"
+                                                        data-open="questionFormReveal"
+                                                    >
+                                                        <i class="fal fa-layer-plus"></i> 
+                                                        <span ng-if="!$root.UI.isMobile">
+                                                            Create Question
+                                                        </span>
+                                                    </button>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-search-container list-container">
+                                            <div class="list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="view-question-container-questions-search-input search-input"
+                                                                id="viewEstimateProgressQuestionsSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search questions..."
+                                                                ng-model="search.questionContainerQuestions.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+                                    >
+                                        <div class="list-container golura-form">
+                                            <ul class="view-question-container-questions-list-item-details-list list-item-details-list list">
+                                                <li 
+                                                    class="question-containerions-list-item-details-list-item list-item-details-list-item list-item position-relative"
+                                                    ng-repeat="question in filteredQuestions = 
+                                                    (questionContainer.Questions | 
+                                                    filter: search.questionContainerQuestions.value | 
+                                                    orderBy: 'displayOrder') track by $index"
+                                                >   
+                                                    <div class="grid-x grid-margin-x align-middle">
+                                                        <div 
+                                                            class="cell small-12"
+                                                            ng-class="UI.showLineItems ? 'medium-12 large-12' : 'medium-auto large-auto'"
+                                                        >
+                                                            <h6>
+                                                                <b>Question Text: </b>
+                                                                {{question.questionText}}
+                                                            </h6>
+                                                            <h6>
+                                                                <b>Type: </b>
+                                                                {{question.inputType}}
+                                                            </h6>
+                                                            <h6>
+                                                                <b>required: </b>
+                                                                {{question.isRequired ? 'Yes' : 'No'}}
+                                                            </h6>
+                                                            <h6>
+                                                                <b>Formula Reference: </b>
+                                                                <span ng-class="{'alert-text': question.formulaReference}">
+                                                                    <i>
+                                                                        {{question.formulaReference || 'N/A'}}
+                                                                    </i>
+                                                                </span>
+                                                            </h6>
+                                                        </div>
+                                                        <div 
+                                                            class="cell small-12 medium-shrink large-shrink"
+                                                            ng-class="{'text-right': $root.UI.isMobile}"
+                                                        >
+                                                            <button
+                                                                class="list-item-options-button button success white-text"
+                                                                type="button"
+                                                                ng-click="moveQuestion(question, 'up')"
+                                                                ng-disabled="question.displayOrder == 1"
+                                                                ng-if="questionContainer.Questions.length > 1"
+                                                            >
+                                                                <i class="fal fa-up"></i>
+                                                            </button>   
+                                                            <button
+                                                                class="list-item-options-button button success white-text"
+                                                                type="button"
+                                                                ng-click="moveQuestion(question, 'down')"
+                                                                ng-disabled="question.displayOrder == questionContainer.Questions.length || 
+                                                                questionContainer.Questions.length <= question.displayOrder"
+                                                                ng-if="questionContainer.Questions.length > 1"
+                                                            >
+                                                                <i class="fal fa-down"></i>
+                                                            </button> 
+                                                            <button 
+                                                                class="question-containerions-update-step-button button" 
+                                                                type="button"
+                                                                ng-click="initQuestionForm(question)"
+                                                                data-open="questionFormReveal"
+                                                            >
+                                                                <i class="fal fa-edit"></i> 
+                                                                <span ng-if="!$root.UI.isMobile">
+                                                                    Edit
+                                                                </span>
+                                                            </button>
+                                                            <button 
+                                                                class="list-item-options-button button alert white-text"
+                                                                type="button"
+                                                                ng-click="question.remove = !question.remove"
+                                                            >
+                                                                <i class="fal fa-archive"></i> 
+                                                                <span ng-if="!$root.UI.isMobile">
+                                                                    Remove
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        class="view-question-container-questions-list-item-delete-container list-item-delete-container list-item-delete-container black-overlay"
+                                                        ng-if="question.remove"
+                                                    >
+                                                        <div class="grid-x grid-padding-x align-middle">
+                                                            <div class="cell small-12 medium-auto large-auto text-center">
+                                                                <h4>
+                                                                    <b class="alert-text">Warning: </b>
+                                                                    <span class="white-text">Are you sure you want to remove 
+                                                                        this Question? This can affect the outcome of the estimate.
+                                                                    </span>
+                                                                </h4>
+                                                            </div>
+                                                            <div class="cell small-12 medium-auto large-auto">
+                                                                <button 
+                                                                    class="list-item-options-button button alert white-text"
+                                                                    type="button"
+                                                                    ng-disabled="UI.formSaving"
+                                                                    ng-class="{'form-alert': UI.formSaving}"
+                                                                    ng-click="removeEstimatorQuestionFromProgress(question)"
+                                                                >
+                                                                    <span ng-if="!UI.formSaving">
+                                                                        <i class="fal fa-check-circle"></i> Confirm
+                                                                    </span>
+                                                                    <span ng-if="UI.formSaving">
+                                                                        Please Wait...
+                                                                    </span>
+                                                                </button>
+                                                                <button 
+                                                                    class="list-item-options-button button warning white-text"
+                                                                    type="button"
+                                                                    ng-click="question.remove = !question.remove"
+                                                                >
+                                                                    <i class="fal fa-times-circle"></i> Cancel
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="question-form-reveal form-reveal reveal"
+    id="questionFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeQuestionFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/admin/question-form.html'"></div>
+</div>
+<div
+    class="line-item-form-reveal form-reveal reveal"
+    id="lineItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeLineItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/estimates/line-item-form.html'"></div>
+</div>
+<div
+    class="add-item-form-reveal form-reveal reveal large no-padding"
+    id="addItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAddItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/estimates/add-item-to-line-item-form.html'"
+    ></div>
+</div>
+<div
+    class="formula-form-reveal reveal large"
+    id="formulaFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeFormulaFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="grid-x grid-margin-x align-top"
+        ng-class="{'golura-block': !$root.UI.isMobile}"
+    >
+        <div 
+            class="cell small-12 medium-4 large-4"
+            ng-class="{'golura-block': !$root.UI.isMobile}"
+        >
+            <div class="variables-side-bar-container">
+                <h4>
+                    <b>Global Variables</b>
+                </h4>
+                <ul class="variables-side-bar-list">
+                    <li 
+                        class="variables-side-bar-list-item"
+                        ng-repeat="variable in variables"
+                    >
+                        <h6>
+                            <b>
+                                <i>
+                                    {{variable.name}}
+                                </i>
+                            </b> =
+                            {{variable.value}}
+                        </h6>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div 
+            class="cell small-12 medium-auto large-auto"
+            ng-class="{'golura-block': !$root.UI.isMobile}"
+        >
+            <div 
+                class="golura-block"
+                ng-include="'dist/forms/admin/formula-form.html'"
+            ></div>
+        </div>
+    </div>
+</div>

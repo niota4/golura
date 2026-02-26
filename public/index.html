@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta 
+			name="viewport" 
+			content="width=device-width"
+			charset="utf-8"
+		>
+		<meta name="description" content="Golura web application for company management and collaboration." />
+		<base href="/">
+		<title>{{ $root.company.name || 'Golura' }}</title>
+		<link 
+			rel="shortcut icon" 
+			type="image/x-icon" 
+			href="favicon.png"
+			aria-label="Golura Favicon"
+		/>
+		<link 
+			rel="preload"
+			href="/dist/assets/css/plugins.css" 
+			type="text/css"
+			as="style"
+			onload="this.rel='stylesheet'"
+		/>
+		<link 
+			rel="preload" 
+			href="/dist/assets/css/app.css" 
+			type="text/css"  
+			as="style"
+			onload="this.rel='stylesheet'"
+		/>
+		<link 
+			rel="preload" 
+			href="/dist/assets/fonts/wxi/wx-icons.css" 
+			type="text/css"  
+			as="style"
+			onload="this.rel='stylesheet'"
+		/>
+	</head>  
+	<body class="golura-block off-canvas-wrapper">
+		<div 
+			class="side-bar-navigation-off-canvas off-canvas position-right is-closed reveal-for-small" 
+			id="sideBarNavigationOffCanvas" 
+			data-transition="overlap"
+			data-off-canvas
+			data-reveal-class="side-bar-navigation-off-reveal"
+			ng-controller="NavigationController"
+			role="navigation"
+			aria-label="Sidebar Navigation"
+		>
+			<div 
+				class="golura-block"
+				ng-include="'dist/navigations/side-bar.html'"
+				ng-if="user.loggedIn"  
+			>
+			</div> 
+		</div>
+		<div 
+			class="golura-container golura-off-canvas-content off-canvas-content" 
+			data-off-canvas-content
+			role="main"
+			aria-label="Main Content"
+		>
+			<div class="golura-content grid-x align-stretch">
+				<div class="cell auto">
+					<div class="grid-y grid-frame">
+						<div class="cell shrink">
+							<div                     
+								ng-controller="NavigationController"
+								ng-init="initNavigation();"
+							>
+								<div 
+									ng-include="'dist/navigations/navigation.html'"
+									ng-if="$root.user.loggedIn && !$root.UI.timedOut"   
+								>
+								</div>
+							</div>
+						</div>
+						<div class="cell auto">
+							<div class="golura-body-container golura-block grid-x align-middle">
+								<div 
+									class="global-callout callout sticky text-center fade"
+									ng-class="{'show success success-text': $root.UI.message,
+									'show alert alert-text': $root.UI.errMessage}"
+									ng-hide="!$root.UI.message.length &&
+									!$root.UI.errMessage.length"
+									role="alert"
+									aria-live="assertive"
+								>
+									<p ng-if="$root.UI.message.length">
+										{{$root.UI.message}}
+									</p>
+									<p ng-if="$root.UI.errMessage.length">
+										{{$root.UI.errMessage}}
+									</p>
+								</div>  
+								<div 
+									class="golura-block cell hide-for-small-only medium-shrink large-shrink"
+									ng-controller="NavigationController"
+								>
+									<div 
+										class="golura-block"
+										ng-include="'dist/navigations/navigation-side-bar.html'"
+										ng-if="$root.user.loggedIn && !$root.UI.timedOut"   
+										aria-label="Side Navigation"
+									></div>
+								</div>
+								<div 
+									class="golura-block cell small-12 medium-auto large-auto"
+									ng-controller="NavigationController"
+								>
+									<div 
+										class="notifications-off-canvas off-canvas position-left is-closed" 
+										ng-class="{'full': !$root.preferences.minimizeSidebar}"
+										id="notificationsOffCanvas" 
+										data-transition="overlap" 
+										data-off-canvas
+										role="complementary"
+										aria-label="Notifications Sidebar"
+									>
+										<div class="notifications-side-bar-container grid-y">
+											<div ng-if="$root.UI.isMobile">
+												<button 
+													class="close-button notifications-side-bar-close-button button clear"
+													aria-label="Close notifications sidebar"
+													type="button"
+													data-close
+												>
+													<i class="fal fa-times-circle" aria-hidden="true"></i>
+												</button>
+											</div>
+											<div class="cell shrink">
+												<div 
+													class="navigation-side-bar-options-container"
+													ng-class="{'text-right': !$root.UI.isMobile}"
+													aria-label="Notification Actions"
+												>
+													<button
+														class="navigation-side-bar-clear-notifications-button button success white-text"
+														type="button"
+														ng-if="UI.selectNotifications && notifications.length"
+														ng-click="$root.readNotifications(notifications)"
+														ng-disabled="!anyNotificationsSelected()"
+														aria-label="Clear selected notifications"
+													>
+														<i class="fal fa-broom" aria-hidden="true"></i> Clear
+													</button>
+													<button
+														class="navigation-side-bar-clear-notifications-button button"
+														type="button"
+														ng-click="UI.selectNotifications = !UI.selectNotifications"
+														ng-class="{'warning white-text': UI.selectNotifications}"
+														ng-if="notifications.length"
+														aria-label="Toggle notification selection"
+													>
+														<span ng-if="!UI.selectNotifications">
+															<i class="fal fa-check-circle" aria-hidden="true"></i> Select
+														</span>
+														<span ng-if="UI.selectNotifications">
+															<i class="fal fa-times-circle" aria-hidden="true"></i> Cancel
+														</span>
+													</button>
+												</div>
+											</div>
+											<div class="cell auto">
+												<div 
+													class="notifications-side-bar"
+													ng-include="'dist/partials/general/notifications.html'"
+													ng-if="$root.user.loggedIn"   
+													ng-init="initNotifications()"
+												>
+												</div>
+												<div class="notifications-read-button-container">
+													<button
+														class="notifications-read-button button expanded"
+														type="button"
+														ng-click="initSideBarReadNotifications()"
+														aria-label="View read notifications"
+													>
+														<i class="fal fa-search" aria-hidden="true"></i> 
+														View Read Notifications
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<ng-view 
+										class="sticky-container"
+										id="stickyContainer"
+										ng-if="!$root.UI.permissionDenied &&
+										!$root.UI.fourZeroFour"
+										data-sticky-container
+									>
+									</ng-view>
+									<div 
+										class="golura-block"
+										ng-include="'dist/views/permission-denied.html'"
+										ng-if="$root.UI.permissionDenied"
+									></div>
+									<div 
+										class="golura-block"
+										ng-include="'dist/views/four-zero-four.html'"
+										ng-if="$root.UI.fourZeroFour"
+									></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script 
+			data-main="/dist/assets/js/appConfig.js"
+			data-require="require.js"
+			src="/dist/assets/js/require.min.js"
+		>
+		</script>
+	</body>
+</html>

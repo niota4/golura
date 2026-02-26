@@ -1,0 +1,28 @@
+// Mobile Invoices Page Styles
+@include breakpoint(small only) {
+    .invoices-container {
+        .invoices {
+            .golura-block {
+                height: auto !important;
+            }
+            
+            .invoices-search-container {
+                padding: 0 1rem;
+            }
+            
+            .invoices-table-container {
+                overflow-x: auto;
+                
+                .invoices-table {
+                    min-width: 600px;
+                }
+            }
+            
+            .invoice-preview-container {
+                .invoice-preview {
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,334 @@
+<div 
+    class="event-map-calendar-container off-canvas-wrapper"
+    ng-init="initEvents()"
+>
+    <user-onboarding page-name="map-calendar" auto-start="true"></user-onboarding>
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div 
+        class="event-map-settings-off-canvas off-canvas position-right" 
+        id="eventMapSettingsOffCanvas" 
+        data-off-canvas
+        data-transition="overlap"
+    >
+        <div 
+            class="golura-block"
+            ng-include="'dist/partials/events/calendar-settings.html'"
+        ></div>
+    </div>
+    <div 
+        class="event-map-calendar off-canvas-content"
+        data-off-canvas-content
+    >
+        <div 
+            class="event-map-ssc ssc"
+            ng-if="!eventScheduler"
+        >
+            <div class="golura-block grid-y grid-margin-y">
+                <div class="cell shrink">
+                    <div class="event-map-ssc-top ssc-square">
+                    </div>
+                </div>
+                <div class="cell shrink">
+                    <div class="event-map-ssc-middle ssc-square">
+                    </div>
+                </div>
+                <div class="cell auto">
+                    <div class="golura-block grid-x grid-margin-x align-middle">
+                        <div 
+                            class="golura-block cell small-12 medium-2 large-2"
+                            ng-repeat="x in [].constructor(6) track by $index"
+                        >
+                            <div class="event-map-ssc-body ssc-square">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div 
+                    class="event-map-callout callout warning warning-text"
+                    ng-if="UI.eventMapCalender"
+                >
+                    <p class="text-center">
+                        <b>
+                            Warning 
+                        </b>
+                        The map is currently set to closed, you can open it in your settings 
+                    </p>
+                </div>
+                <div 
+                    class="event-map-container"
+                    ng-class="{'hidden': UI.eventMapCalender}"
+                >
+                    <div 
+                        class="event-map"
+                        id="eventMap"
+                    ></div>
+                    <div 
+                        class="event-map-draft-callout callout alert alert-text"
+                        ng-if="UI.eventDraft"
+                    >
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink">
+                                <span>
+                                    <i class="fal fa-circle-exclamation"></i>
+                                </span>
+                            </div>
+                            <div class="cell auto">
+                                <p>
+                                    You are currently in the process of creating an event. 
+                                    Any unsaved changes may be lost if you navigate away from this page. 
+                                    To discard the event, click the 'Cancel' button. 
+                                    Please complete or save your event details to avoid losing progress.
+                                </p>
+                            </div>
+                            <div class="cell shrink">
+                                <button 
+                                    class="event-button delete-button button alert white-text"
+                                    type="button"
+                                    ng-click="cancelEvent()"
+                                    
+                                >
+                                    <i class="fal fa-times-circle"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div 
+                    class="event-map-calendar-groups"
+                    id="eventMapCalendarGroups"
+                >
+                    <div class="golura-block grid-y">
+                        <div class="cell shrink">
+                            <div class="dhx_cal_navline">
+                                <div class="event-map-calendar-groups-header">
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div class="cell auto">
+                                            <div 
+                                                class="dhx_cal_prev_button button hollow clear schedule-button" 
+                                                ng-click="previousSchedule()"
+                                                ng-disabled="!UI.eventMapLoaded"
+                                            >
+                                                <i class="fal fa-circle-arrow-left"></i>
+                                            </div>
+                                            <div class="event-map-calendar-options-container">
+                                                <a 
+                                                    class="event-map-view-events-button event-button button white-text"
+                                                    ng-href="events?date={{UI.date | date:'yyyy-MM-dd'}}"
+                                                >
+                                                    <i class="fal fa-calendar-clock"></i>  View Calendar 
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink text-center">
+                                            <div class="dhx_cal_date"></div>
+                                            <button 
+                                                class="event-map-search-date-button search-date-button button clear position-relative" 
+                                                id="eventMapSearchDateButton"
+                                                type="button"
+                                                title="Search by Date"
+                                                ng-disabled="!UI.eventMapLoaded"
+                                            >
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto text-right">
+                                            <button 
+                                                class="event-button button"
+                                                type="button"
+                                                ng-repeat="mode in eventSchedulerModes track by $index"
+                                                ng-class="{'is-active': mode.id === $root.preferences.eventMap}"
+                                                ng-click="toggleMapSchedulerView(mode.id)"
+                                                ng-disabled="!UI.eventMapLoaded"
+                                            >
+                                                {{mode.name}}
+                                            </button>
+                                            <button 
+                                                class="event-button button warning white-text"
+                                                type="button"
+                                                data-toggle="eventMapSettingsOffCanvas"
+                                                ng-if="!UI.eventDraft"
+                                                ng-disabled="!UI.eventMapLoaded"
+                                                
+                                            >
+                                                <i class="fa-solid fa-sliders"></i> Settings
+                                            </button>
+                                            <div 
+                                                class="dhx_cal_next_button button hollow clear schedule-button" 
+                                                ng-click="nextSchedule()"
+                                                ng-disabled="!UI.eventMapLoaded"
+                                            >
+                                                <i class="fal fa-circle-arrow-right"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell shrink">
+                            <div class="dhx_cal_header"></div>
+                        </div>
+                        <div class="cell auto position-relative">
+                            <div 
+                                class="event-map-calendar-groups-data-container"
+                                ng-class="{'hide-all-day': !UI.showAllDayEvents}"
+                            >
+                                <div class="dhx_cal_data"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="events-create-event-reveal reveal"
+    id="eventsCreateEventReveal"
+    data-reveal
+    data-close-on-click="false"
+    ng-class="{'events-create-event-expanded': event.categoryType}"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsCreateEventReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        ng-include="'dist/forms/address-form.html'"
+        ng-if="UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/phone-number-form.html'"
+        ng-if="UI.createPhoneNumber && !UI.createAddress && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/email-form.html'"
+        ng-if="UI.createEmail && !UI.createAddress && !UI.createPhoneNumber"
+    ></div>
+    <div 
+        ng-include="'dist/forms/events/event-create-form.html'"
+        ng-if="!UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+</div>
+<div
+    class="events-assign-group-reveal reveal"
+    id="eventsAssignGroupReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsAssignGroupReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/events/event-assign-group-form.html'"></div>
+</div>
+<div 
+    class="event-reminder-reveal reveal"
+    id="eventReminderReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeReminderReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="grid-x grid-margin-x align-middle">
+        <div class="cell small-12 medium-auto large-auto">
+            <h2>
+                <i class="fal fa-bell"></i> 
+                <b>
+                    Reminder
+                </b>
+            </h2>
+        </div>
+        <div class="cell small-12 medium-shrink larger-shrink">
+            <button 
+                class="event-reminder-delete-button button alert white-text"
+                id="eventReminderDeleteButton"
+                type="button"
+                ng-click="reminder.delete = !reminder.delete"
+            >
+                <i class="fal fa-times-circle"></i> Delete
+            </button>
+        </div>
+        <div class="cell small-12 medium-12 larger-12">
+            <div 
+                class="golura-block"
+                ng-include="'dist/partials/general/reminder.html'"
+            >
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="events-map-calendar-reveal event-detail-reveal reveal large"
+    id="eventsMapCalendarEventReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsMapCalendarEventReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/events/preview.html'"
+    >
+    </div>
+</div>
+<div 
+    ng-include="'dist/partials/events/creation-screen.html'"
+    ng-if="UI.formSaving && !UI.eventLoaded"
+></div>

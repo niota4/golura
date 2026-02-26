@@ -1,0 +1,96 @@
+$select-color-item: $primary-color;
+$select-color-item-text: $white;
+$select-color-item-active-text: $white;
+$select-color-item-border: $primary-color;
+$select-color-item-active: darken($primary-color, 10);
+$select-color-item-active-border: darken($primary-color, 10);
+$select-width-item-border: 1px;
+
+@import "selectize";
+
+.#{$selectize}-control {
+
+  &.multi {
+    .#{$selectize}-input {
+      border-radius: $global-radius;
+      @include borderboxshadowreset();
+
+      &::before {
+        border: none;
+        background: $transparent;
+      }
+
+      &.has-items {
+        padding: .5rem 1rem;
+        box-shadow: none;
+
+        .item {
+          margin: 0px;
+
+          &:not(:first-child) {
+            margin-left: .5rem;
+          }
+        }
+      }
+      &.disabled [data-value] {
+        color: #999;
+        text-shadow: none;
+        background: none;
+        @include borderboxshadowreset();
+
+        &,
+        .remove {
+          border-color: #e6e6e6;
+        }
+        .remove {
+          background: none;
+        }
+      }
+      [data-value] {
+        box-shadow: none;
+        border-radius: $global-radius;
+        padding: .5rem 1rem;
+      }
+    }
+  }
+  &.single {
+    .#{$selectize}-input {
+      @include selectize-vertical-gradient(#fefefe, #f2f2f2);
+    }
+  }
+}
+
+.#{$selectize}-control.single .#{$selectize}-input,
+.#{$selectize}-dropdown.single {
+}
+
+.#{$selectize}-dropdown {
+  @include borderboxshadowreset();
+  margin-top: .5rem;
+  border-radius: $global-radius;
+  border: 1px solid var(--light-gray);
+  overflow: hidden;
+
+  .selectize-dropdown-content {
+
+    .option {
+      padding: 1rem;
+
+      &.active {
+        background: $primary-color;
+        color: var(--white);
+      }
+    }
+  }
+
+  .optgroup-header {
+    padding-top: $select-padding-dropdown-item-y + 2px;
+    font-weight: bold;
+    font-size: 0.85em;
+  }
+  .optgroup {
+    &:first-child {
+      border-top: 0 none;
+    }
+  }
+}

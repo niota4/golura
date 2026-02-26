@@ -1,0 +1,283 @@
+<div 
+    class="user-drive-container view-user-container view-container"
+    ng-init="initUser()"
+>
+    <div format-users user="user"></div>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="user-drive view-user view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="user-drive-documents-options-container">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div 
+                            class="cell small-12 medium-shrink large-shrink"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <a 
+                                class="view-user-options-button back-button button warning white-text"
+                                ng-click="$root.goBack()"
+                            >
+                                <i class="fal fa-circle-arrow-left"></i> Back
+                            </a>
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <h3>
+                                <b>
+                                    {{user.fullName}}'s 
+                                    <span>
+                                        <i class="fal fa-hard-drive"></i> Drive
+                                    </span>
+                                </b>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto">
+                <div class="user-drive-documents-details-container">
+                    <div class="golura-block grid-x">
+                        <div 
+                            class="golura-block cell small-12 medium-3 large-3"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <div class="user-drive-documents-list-container">
+                                <h6 
+                                    class="text-center"
+                                    ng-if="UI.userFoldersLoaded && !userFolders.length"
+                                >
+                                    <b>
+                                        Oh! 
+                                    </b>
+                                    There are not folders created yet!
+                                </h6>
+                                <div 
+                                    class="user-drive-folders-list"
+                                    id="userDriveFoldersList"
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="golura-block cell small-12 medium-auto large-auto">
+                            <div class="user-drive-documents-container">
+                                <div class="user-drive-documents">
+                                    <div class="golura-block grid-y">
+                                        <div 
+                                            class="cell shrink"
+                                        >
+                                            <div class="view-options-container golura-block grid-x grid-margin-x align-middle">
+                                                <div class="cell small-shrink medium-auto large-auto">
+                                                    <a 
+                                                        class="view-user-options-button back-button button warning white-text"
+                                                        ng-click="$root.goBack()"
+                                                        ng-if="$root.UI.isMobile && !folder.id"
+                                                    >
+                                                        <i class="fal fa-circle-arrow-left"></i>
+                                                    </a>
+                                                    <button
+                                                        class="user-drive-create-document-button user-drive-button button warning white-text"
+                                                        id="userDriveBackFolderButton"
+                                                        type="button"
+                                                        ng-click="updateUserDocumentFolderView()"
+                                                        ng-if="folder.id"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-circle-arrow-left"></i> 
+                                                        <span ng-if="!$root.UI.isMobile">
+                                                            Back
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        class="user-drive-edit-document-button user-drive-button button success white-text"
+                                                        id="userDriveEditFormButton"
+                                                        type="button"
+                                                        ng-click="initFormBuilderForm(document)"
+                                                        data-open="documentCreateFormReveal"
+                                                        ng-if="document.id && !$root.UI.isMobile"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-edit"></i>  Edit
+                                                    </button>
+                                                    <button 
+                                                        class="user-drive-options-reveal-button view-options-reveal-button button clear float-right"
+                                                        type="button"
+                                                        data-open="viewUserOptionsMobileReveal"
+                                                        aria-label="Open User Options"
+                                                        ng-if="$root.UI.isMobile"
+                                                    >
+                                                        <i class="fal fa-bars"></i>
+                                                    </button>
+                                                </div>
+                                                <div 
+                                                    class="cell small-auto medium-shrink large-shrink"
+                                                    ng-if="!$root.UI.isMobile"
+                                                >
+                                                    <button
+                                                        class="user-drive-create-folder-button user-drive-button button success white-text"
+                                                        id="user-driveCreateFolderButton"
+                                                        type="button"
+                                                        data-open="folderCreateFormReveal"
+                                                        ng-click="initFolderForm()"
+                                                        ng-if="worker.id == user.id"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-layer-plus"></i> 
+                                                            Create Folder
+                                                    </button>
+                                                    <document-uploader 
+                                                        user-drive="true"
+                                                        folder-id="{{folder.id}}"
+                                                        ng-if="worker.id == user.id && folder.id"
+                                                    ></document-uploader>
+                                                    <button
+                                                        class="user-drive-edit-folder-button user-drive-button button white-text"
+                                                        id="userDriveEditFolderButton"
+                                                        type="button"
+                                                        data-open="folderCreateFormReveal"
+                                                        ng-click="initFolderForm(folder)"
+                                                        ng-if="folder.id"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-edit"></i> Edit
+                                                    </button>
+                                                    <button
+                                                        class="user-drive-delete-folder-button user-drive-button button alert white-text"
+                                                        id="userDriveEditFolderButton"
+                                                        type="button"
+                                                        ng-click="UI.userFolderDeleteConfirmation = !UI.userFolderDeleteConfirmation"
+                                                        ng-if="folder.id"
+                                                        ng-cloak
+                                                    >
+                                                        <i class="fal fa-archive"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <h3 ng-if="folder.id">
+                                                <b>
+                                                    {{folder.name}}
+                                                </b>
+                                            </h3>
+                                        </div>
+                                        <div class="cell auto">
+                                            <div 
+                                                class="user-drive-documents-data-view-container"
+                                                id="userDriveFormsDataViewContainer"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-user-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewUserOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewUserOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-user-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <a 
+                        class="view-user-options-options-button button white-text"
+                        ng-href="users/user/{{worker.id}}/edit"
+                        ng-if="permissions.canEdit"
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="delete-button button alert white-text" 
+                        type="button"
+                        ng-click="UI.userDeleteConfirmation = !UI.userDeleteConfirmation"
+                        ng-if="permissions.canArchive"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+                <div ng-include="'/dist/navigations/user-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="folder-create-form-reveal reveal large"
+    id="folderCreateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeFolderCreateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'dist/forms/general/folder-form.html'"></div>
+</div>
+<div
+    class="user-drive-document-view-reveal media-reveal reveal"
+    ng-class="{'image-reveal': userDocument.isImage,
+    'document-reveal': userDocument.isDocument,
+    'video-reveal': userDocument.isVideo}"
+    id="userDriveDocumentViewReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserDriveDocumentViewReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-if="userDocument.isImage"
+        ng-include="'dist/partials/media/image-viewer.html'"
+    ></div>
+    <div 
+        class="golura-block"
+        ng-if="userDocument.isDocument"
+        ng-include="'dist/partials/media/document-viewer.html'"
+    ></div>
+</div>
+<div 
+    ng-include="'dist/partials/users/folder-deletion-screen.html'"
+    ng-if="UI.userFolderDeleteConfirmation"
+></div>

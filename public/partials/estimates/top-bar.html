@@ -1,0 +1,224 @@
+<div class="view-estimate-top-bar-container top-bar-container text-right">
+    <div class="button-group"
+        ng-class="{'align-right': !$root.UI.isMobile,
+        'stacked': $root.UI.isMobile}"
+    >
+        <a
+            class="estimate-view-button button"
+            ng-href="estimates/estimate/{{estimate.id}}"
+            ng-if="!UI.estimateView || page.name != 'estimates'"
+        >
+            <i class="fal fa-expand"></i> Full Screen
+        </a>
+        <a
+            class="estimate-view-button button"
+            ng-href="estimates/estimate/{{estimate.id}}/edit"
+            ng-if="UI.estimateView || page.name != 'estimates' ||
+            UI.userEstimates"
+            ng-cloak
+        >
+            <i class="fal fa-edit"></i> Edit
+        </a>
+        <a
+            class="estimate-view-button button success white-text"
+            ng-href="estimates/estimate/{{estimate.id}}/activity"
+            ng-if="UI.estimateView || page.name != 'estimates' ||
+            UI.userEstimates"
+            ng-cloak
+        >
+            <i class="fal fa-wave-pulse"></i> Activity
+        </a>
+        <button
+            class="estimate-follow-ups-button button success white-text"
+            id="estimateFollowUps"
+            type="button"
+            ng-if="UI.estimateView || page.name != 'estimates' ||
+            UI.userEstimates"
+            data-open="estimateFollowUpsReveal"
+            ng-click="initFollowUps(estimate)"
+        >
+            <i class="fal fa-walkie-talkie"></i> Follow Ups
+        </button>
+        <button
+            class="estimate-pay-button button warning white-text"
+            id="estimatePay"
+            type="button"
+            ng-if="estimate.EstimateSignature &&
+            !estimate.won &&
+            estimate.total > 0 &&
+            UI.estimateView"
+            ng-click="initPaymentForm()"
+            data-open="estimatePaymentReveal"
+        >
+            <i class="fal fa-cash-register"></i> Pay
+        </button>
+        <button
+            class="estimate-print-button button success white-text"
+            id="estimateSend"
+            type="button"
+            ng-if="!UI.estimateView && page.name != 'estimates'"
+        >
+            <i class="fal fa-paper-plane"></i> Send
+        </button>
+        <button
+            class="estimate-print-button button warning white-text"
+            id="estimatePrint"
+            type="button"
+            ng-if="UI.estimateView && page.name == 'estimates'"
+            ng-click="printEstimate(estimate)"
+        >
+            <i class="fal fa-print"></i> Print
+        </button>
+        <button 
+            class="button warning white-text"
+            type="button"
+            ng-if="permissions.canEdit && page.name == 'estimates' && !estimate.converted"
+            ng-click="initEstimateConvertForm(estimate)"
+            data-open="estimateConvertFormReveal"
+        >
+            <i class="fal fa-arrows-rotate"></i> Convert
+        </button>
+        <button
+            class="estimate-print-button button alert white-text"
+            id="estimateDelete"
+            type="button"
+            ng-if="UI.estimateLoaded &&
+            !estimate.won &&
+            page.name == 'estimates' &&
+            permissions.canArchive"
+            data-open="estimateDeleteConfirmReveal"
+        >
+            <i class="fal fa-archive"></i> Delete
+        </button>
+    </div>
+</div>
+<div
+    class="estimate-follow-ups-confirm-reveal reveal"
+    id="estimateFollowUpsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateFollowUpsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <button
+        class="estimate-button button success white-text"
+        ng-class="{'expanded': $root.UI.isMobile}"
+        type="button"
+        ng-click="initEstimateFollowUpForm(estimate)"
+        ng-if="!e.converted"
+        data-open="estimateFollowUpReveal"
+    >
+        <i class="fal fa-walkie-talkie"></i> Create Follow Up
+    </button>
+    <div 
+        class="estimate-follow-ups-container golura-block"
+        ng-include="'dist/partials/estimates/follow-ups.html'"
+    ></div>
+</div>
+<div
+    class="estimate-follow-up-reveal reveal"
+    ng-class="{'type-large': followUp.type == 'email',
+    'large': UI.currentStep == 2}"
+    id="estimateFollowUpReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateFollowUpReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/estimates/estimate-follow-up-form.html'"
+    ></div>
+</div>
+<div
+    class="estimate-delete-confirm-reveal reveal"
+    id="estimateDeleteConfirmReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateDeleteConfirmReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="grid-x grid-padding-x align-middle text-center">
+        <div class="cell small-12 medium-shrink large-shrink">
+            <span class="delete-icon">
+                <i class="fal fa-circle-exclamation"></i>
+            </span>
+        </div>
+        <div class="cell small-12 medium-auro large-auto">
+            <h4>
+                <b class="alert-text">Warning: </b>
+                <span>Are you sure you want to Delete 
+                    this Estimate?
+                </span>
+            </h4>
+        </div>
+        <div class="cell small-12 medium-12 large-12">
+            <button 
+                class="delete-estimate-button button alert white-text"
+                type="button"
+                ng-disabled="UI.formSaving"
+                ng-class="{'form-alert': UI.formSaving}"
+                ng-click="deleteEstimate(estimate)"
+            >
+                <span ng-if="!UI.formSaving">
+                    <i class="fal fa-check-circle"></i> Confirm
+                </span>
+                <span ng-if="UI.formSaving">
+                    Please Wait...
+                </span>
+            </button>
+            <button 
+                class="cancel-button button warning white-text"
+                type="button"
+                data-close
+            >
+                <i class="fal fa-times-circle"></i> Cancel
+            </button>
+        </div>
+    </div>
+</div>
+<div
+    class="estimate-convert-form-reveal reveal"
+    id="estimateConvertFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEstimateConvertFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/estimates/estimate-convert-form.html'"
+    ></div>
+</div>

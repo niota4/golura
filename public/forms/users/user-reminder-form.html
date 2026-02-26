@@ -1,0 +1,131 @@
+<div class="user-reminder-form-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="user-reminder-create-edit">
+        <h1>
+            <b>
+                Set Reminder 
+            </b>
+            <span ng-if="worker.id">
+                For {{ worker.fullName }}
+            </span>
+        </h1>
+        <form 
+            class="user-reminder-form golura-form"
+            id="userReminderForm"
+            name="userReminderForm"
+            ng-submit="createUserReminder($user, reminder)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="reminderTitle">Title</label>
+                        <input 
+                            class="form-input"
+                            placeholder="Enter reminder title"
+                            type="text" 
+                            id="reminderTitle" 
+                            name="reminderTitle"
+                            ng-model="reminder.title"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label for="reminderDate">
+                            Date
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input 
+                            class="form-input"
+                            type="text"
+                            id="reminderDate"
+                            name="reminderDate"
+                            ng-model="reminder.date"
+                            flatpickr
+                            twelve-hour="true"
+                            placeholder="Select a Date and time"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="reminderDescription"
+                                name="reminderDescriptionTextarea"
+                                ng-model="reminder.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-3 large-3"
+                    ng-repeat="reminderType in reminderTypes track by $index"
+                >
+                    <div class="user-reminder-type-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="user-reminder-type-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="reminderType.selected = !reminderType.selected"
+                                    ng-class="{'selected': reminderType.selected}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="reminderType.selected"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    {{reminderType.name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="user-reminder-form-submit-button submit-button button"
+                        id="userReminderFormSubmitButton"
+                        name="userReminderFormSubmitButton"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-disabled="UI.formSaving || userReminderForm.$invalid || !anyReminderTypeSelected()"
+                        type="submit"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

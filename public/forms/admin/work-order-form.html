@@ -1,0 +1,489 @@
+<div class="admin-work-order-settings-container admin-form-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="admin-work-order-settings admin-form-details">
+        <h1>
+            <b>
+                Work Order Settings
+            </b>
+        </h1>
+        <form 
+            class="work-order-settings-form admin-form golura-form"
+            id="workOrderSettingsForm"
+            name="workOrderSettingsForm"
+            ng-submit="updateWorkOrderSettings($event, workOrder)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <a
+                        class="admin-button button alert white-text"
+                        ng-class="{'expanded': $root.UI.isMobile}"
+                        ng-href="admin-settings/archived/work-orders"
+                    >
+                        <i class="fal fa-box-archive"></i> View Archived Work Orders
+                    </a>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Default Reminder Settings</b>
+                    </h2>
+                    <p class="golura-tooltip">
+                        Set default reminder times for different priority levels of work orders.
+                    </p>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultWarningReminder">
+                            Warning Priority Reminder (minutes)
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="workOrderDefaultWarningReminder"
+                            name="workOrderDefaultWarningReminder"
+                            placeholder="Enter default warning reminder time"
+                            ng-model="workOrder.workOrderDefaultWarningReminder"
+                            min="0"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultAlertReminder">
+                            Alert Priority Reminder (minutes)
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="workOrderDefaultAlertReminder"
+                            name="workOrderDefaultAlertReminder"
+                            placeholder="Enter default alert reminder time"
+                            ng-model="workOrder.workOrderDefaultAlertReminder"
+                            min="0"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultEmergencyReminder">
+                            Emergency Priority Reminder (minutes)
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            id="workOrderDefaultEmergencyReminder"
+                            name="workOrderDefaultEmergencyReminder"
+                            placeholder="Enter default emergency reminder time"
+                            ng-model="workOrder.workOrderDefaultEmergencyReminder"
+                            min="0"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                        title="Default email template for work order notifications"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderEmailTemplate">
+                            Default Email Template
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="templateOptions"
+                            options="emailTemplates"
+                            id="workOrderEmailTemplate"
+                            name="workOrderEmailTemplate"
+                            ng-model="workOrder.workOrderEmailTemplateId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                        title="Default PDF template for work order documents"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderPdfTemplate">
+                            Default PDF Template
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="templateOptions"
+                            options="pdfTemplates"
+                            id="workOrderPdfTemplate"
+                            name="workOrderPdfTemplate"
+                            ng-model="workOrder.workOrderPdfTemplateId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                        title="Default SMS template for work order notifications"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderSmsTemplate">
+                            Default SMS Template
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="templateOptions"
+                            options="smsTemplates"
+                            id="workOrderSmsTemplate"
+                            name="workOrderSmsTemplate"
+                            ng-model="workOrder.workOrderSmsTemplateId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+
+                <!-- Status and Priority Defaults -->
+                <div class="cell small-12 medium-12 large-12">
+                    <hr />
+                    <h2>
+                        <b>Default Status & Priority</b>
+                    </h2>
+                    <p class="golura-tooltip">
+                        Set default status and priority for new work orders.
+                    </p>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultStatus">
+                            Default Status
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="statusOptions"
+                            options="workOrderStatuses"
+                            id="workOrderDefaultStatus"
+                            name="workOrderDefaultStatus"
+                            ng-model="workOrder.workOrderDefaultStatusId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultPriority">
+                            Default Priority
+                        </label>
+                        <selectize
+                            class="form-input"
+                            id="priorityInput"
+                            config="priorityOptions"
+                            options="priorities"
+                            name="priority"
+                            ng-model="workOrder.workOrderDefaultPriorityId"
+                            ng-cloak
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+
+                <!-- Time and Cost Defaults -->
+                <div class="cell small-12 medium-12 large-12">
+                    <hr />
+                    <h2>
+                        <b>Time & Cost Defaults</b>
+                    </h2>
+                    <p class="golura-tooltip">
+                        Set default time estimates and cost settings for work orders.
+                    </p>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultEstimatedHours">
+                            Default Estimated Hours
+                        </label>
+                        <input
+                            class="form-input"
+                            type="number"
+                            step="0.25"
+                            id="workOrderDefaultEstimatedHours"
+                            name="workOrderDefaultEstimatedHours"
+                            placeholder="Enter default estimated hours"
+                            ng-model="workOrder.workOrderDefaultEstimatedHours"
+                            min="0"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultHourlyRate">
+                            Default Hourly Rate ($)
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="workOrderDefaultHourlyRate"
+                            name="workOrderDefaultHourlyRate"
+                            placeholder="0.00"
+                            ng-model="workOrder.workOrderDefaultHourlyRate"
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required
+                            min="0"
+                        />
+                    </div>
+                </div>
+
+                <!-- Assignment Defaults -->
+                <div class="cell small-12 medium-12 large-12">
+                    <hr />
+                    <h2>
+                        <b>Assignment Settings</b>
+                    </h2>
+                    <p class="golura-tooltip">
+                        Configure default assignment and notification settings.
+                    </p>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.workOrderSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.workOrderSettingsLoaded"
+                        ></div>
+                        <label for="workOrderDefaultAssignedUser">
+                            Default Assigned User
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="userOptions"
+                            options="users"
+                            id="workOrderDefaultAssignedUser"
+                            name="workOrderDefaultAssignedUser"
+                            ng-model="workOrder.workOrderDefaultAssignedUserId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr />
+                    <h2>
+                        <b>Notification Settings</b>
+                    </h2>
+                    <p class="golura-tooltip">
+                        Configure automatic notifications for work order events.
+                    </p>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="work-order-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="work-order-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="work order email notification button"
+                                    ng-click="workOrder.workOrderEmailNotification = !workOrder.workOrderEmailNotification"
+                                    ng-class="{'selected': workOrder.workOrderEmailNotification}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="workOrder.workOrderEmailNotification"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Email Notifications
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="work-order-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="work-order-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="work order SMS notification button"
+                                    ng-click="workOrder.workOrderSmsNotification = !workOrder.workOrderSmsNotification"
+                                    ng-class="{'selected': workOrder.workOrderSmsNotification}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="workOrder.workOrderSmsNotification"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    SMS Notifications
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="work-order-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="work-order-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="work order auto assignment button"
+                                    ng-click="workOrder.workOrderAutoAssign = !workOrder.workOrderAutoAssign"
+                                    ng-class="{'selected': workOrder.workOrderAutoAssign}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="workOrder.workOrderAutoAssign"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Auto-Assignment
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="work-order-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="work-order-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="work order require approval button"
+                                    ng-click="workOrder.workOrderRequireApproval = !workOrder.workOrderRequireApproval"
+                                    ng-class="{'selected': workOrder.workOrderRequireApproval}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="workOrder.workOrderRequireApproval"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Require Approval
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="work-order-settings-form-submit-button submit-button button" 
+                        id="workOrderSettingsFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            <i class="fal fa-spinner fa-spin"></i> Saving...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

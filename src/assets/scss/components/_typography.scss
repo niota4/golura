@@ -1,0 +1,39 @@
+.primary-text {
+    color: var(--primary-color) !important;
+}
+.secondary-text {
+    color: var(--secondary-color) !important;
+}
+.alert-text {
+    color: $alert-color !important;
+}
+.success-text {
+    color: $success-color !important;
+}
+.warning-text {
+    color: $warning-color !important;
+}
+.alert-text {
+    color: $alert-color !important;
+}
+.white-text {
+    color: $white !important;
+}
+.light-gray-text {
+    color: var(--light-gray) !important;
+}
+.medium-gray-text {
+    color: var(--alt-font-color-2) !important;
+}
+.dark-gray-text {
+    color: var(--dark-gray) !important;
+}
+.black-text {
+    color: var(--black) !important;
+}
+.help-text {
+    color: var(--font-color) !important;
+}
+.text-italic {
+    font-style: italic;
+}

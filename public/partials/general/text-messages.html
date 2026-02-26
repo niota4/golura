@@ -1,0 +1,60 @@
+<div 
+    class="text-messages-container"
+    id="textMessagesContainer"
+>
+    <ul 
+        class="text-messages"
+        id="textMessages"
+        ng-class="{'ssc': !UI.textMessagesLoaded}"
+    >
+        <li 
+            class="text-messages-ssc ssc-square"
+            ng-repeat="x in [].constructor(10) track by $index"
+            ng-if="!UI.textMessagesLoaded"
+        ></li>
+        <li 
+            class="text-message-item"
+            ng-class="{
+                'text-left text-message-left': textMessage.Creator.id !== user.id,
+                'text-right text-message-right': textMessage.Creator.id === user.id,
+                'text-message-edit': textMessage.edit,
+                'text-message-pending': textMessage.status === 'Pending',
+                'text-message-sent': textMessage.status === 'Sent',
+                'text-message-failed': textMessage.status === 'Failed'
+            }"
+            ng-repeat="textMessage in textMessages | orderBy: 'createdAt' track by textMessage.id"
+        >
+            <div ng-include="'dist/partials/general/text-message.html'"></div>
+        </li>
+        <h6
+            class="text-center"
+            ng-if="!textMessages.length && UI.textMessagesLoaded"
+        >   
+            <b>
+                Oh! 
+            </b>
+            There's no text messages so far.
+        </h6>
+    </ul>
+</div>
+<div
+    class="text-message-media-view-reveal image-reveal media-reveal reveal"
+    id="textMessageMediaViewReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeTextMessageMediaViewReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/media/image-viewer.html'"
+    ></div>
+</div>

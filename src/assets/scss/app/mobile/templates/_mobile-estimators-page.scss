@@ -1,0 +1,39 @@
+// Mobile Estimators Page Styles
+@include breakpoint(small only) {
+    .estimators-container {
+        .estimators {
+            .golura-block {
+                height: auto !important;
+            }
+            
+            .estimators-search-container {
+                padding: 0 1rem;
+            }
+            
+            .estimators-grid {
+                padding: 0 1rem;
+                
+                .estimator-card {
+                    margin-bottom: 1rem;
+                    
+                    .estimator-card-header {
+                        padding: 1rem;
+                    }
+                    
+                    .estimator-card-body {
+                        padding: 0 1rem 1rem;
+                    }
+                    
+                    .estimator-card-actions {
+                        padding: 0 1rem 1rem;
+                        
+                        .button {
+                            width: 100%;
+                            margin-bottom: 0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

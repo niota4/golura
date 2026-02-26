@@ -1,0 +1,254 @@
+@include breakpoint(small only) {
+    html, body {
+
+
+        ng-view {
+            .golura-block {
+                height: auto !important;
+            }
+            .golura-mobile-block {
+                height: 100% !important;
+            }
+        }
+        .grid-container {
+            padding-top: rem-calc(0);
+        }
+        .callout {
+            border-radius: 0px;
+            margin: -1px 0px 0px;
+            padding: 1.5rem 1rem 1rem;
+
+            .close-button {
+                display: none;
+            }
+        }
+        .options-reveal-button {
+            font-size: 1.5rem;
+            padding: 1rem 0px 1rem 1rem;
+            margin-right: 0px;
+        }
+        .create-button-container {
+            margin: 0px;
+        }
+        .reveal {
+            padding: 4rem 2rem 0px;
+            top: 0px !important;
+            transform: none !important;
+            -webkit-transform: none !important;
+
+            &.form-reveal {
+                height: auto;
+                min-height: 100% !important;
+                width: 100%;
+                max-width: 100%;
+            }
+            &.view-options-mobile-reveal {
+                padding: 4rem 0px 0px;
+
+                .button-group {
+                    width: 100%;
+                    padding: 0px 1rem;
+
+                    .button {
+                        width: 100%;
+                    }
+                }
+            }
+            &.address-map-reveal {
+                padding: 4rem 0px 0px;
+            }
+            &.email-form-reveal,
+            &.text-messages-reveal {
+                padding: 4rem 0px 0px;
+            }
+            &.question-form-reveal,
+            &.line-item-form-reveal  {
+                height: auto !important;
+            }
+            &.formula-form-reveal {
+
+                .variables-side-bar-container {
+                    height: auto;
+                }
+            }
+            &.email-reveal {
+                padding: 4rem 0px 0px;
+
+                .view-client-contact-history-email-iframe {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            &.media-reveal {
+                width: 100% !important;
+                height: 100% !important;
+                background: $black;
+                padding: 0px;
+
+                .close-button {
+                    top: 1rem;
+                    right: 1rem;
+                    color: $white !important;
+                }
+
+                .media-viewer-container {
+
+                    .media-viewer {
+
+                        .button-container {
+                            top: unset;
+                            left: 0px;
+                            bottom: 1rem;
+                            width: 100%;
+                            padding: 0px 1rem;
+                        }
+                        .fullscreen-button {
+                            position: relative;
+                        }
+                    }
+                }
+            }
+            .close-button {
+                top: 1rem;
+                right: 1rem;
+                color: var(--primary-color);
+            }
+        }
+        .create-edit-container {
+            max-height: fit-content !important;
+            min-height: 100%;
+
+            .create-edit {
+                border: none;
+            }
+        }
+        .view-container {
+
+            .view {
+
+                .view-options-container {
+
+                    h3 {
+                        text-transform: capitalize;
+                        margin: 0px;
+                        padding: 1rem 0px;
+                    }
+
+                    .view-options-reveal-button {
+                        font-size: 1.5rem;
+                        padding: 1rem 0px 1rem 1rem;
+                        margin-right: 0px;
+                    }
+                }
+            }
+        }         
+        .sub-navigation-container {
+            background: var(--white);
+
+            .sub-navigation-list {
+                padding: .5rem;
+
+                .sub-navigation-list-item {
+                    margin: 0px 0px 1rem;
+                }
+            }
+        }
+        .top-bar-container {
+
+            h1 {
+                text-align: center;
+                font-weight: bolder;
+
+                a {
+                    display: block;
+                    max-width: 100%;
+                }
+            }
+        }
+        .list-container {
+
+            .list {
+
+                .list-item {
+
+                    .button-group {
+                        margin-top: 1rem;
+                    }
+                    .list-item-delete-container {
+                        
+                    }
+                }
+            }
+        }
+        .mobile-button {
+            font-size: 1.5rem;
+            padding: 1rem;
+            margin: 0px;
+        }
+        .chat-container {
+            overflow-x: hidden;
+
+            .chat {
+                padding: 1rem;
+                position: relative;
+
+                .chat-item {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+        .message-container {
+            
+            .message {
+                min-width: 10rem;
+                max-width: 100%;
+                
+                .message-images-container {
+                    min-width: 15rem;
+                }
+            }
+        }
+        .text-messages-container {
+
+            .text-messages {
+                padding: 1rem;
+                overflow-x: hidden;
+            }
+        }
+        .text-message-phone-number-container {
+
+            .input-container {
+                margin-bottom: 0px !important;
+                border-bottom: none !important;
+            }
+        }
+        .dhx_richtext {
+            border: 1px solid var(--light-gray);
+            border-radius: $container-radius;
+
+            .dhx_layout-cell {
+
+                .dhx_richtext__overflow-wrapper {
+                    padding: 0px;
+                    border-top: 1px solid var(--light-gray);
+
+                    .dhx_richtext-editor {
+                        min-height: 20rem;
+                        border-radius: 0px;
+                    }
+                }
+            }
+        }
+    }
+}
+    
+@include breakpoint(medium only) {
+    html, body {
+        p,
+        a,
+        li,
+        button {
+            font-size: .6rem;
+        };
+    }
+}

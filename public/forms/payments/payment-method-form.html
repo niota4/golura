@@ -1,0 +1,90 @@
+<div class="payment-method-choose-container create-edit-container">
+    <div 
+        class="callout success success-text sticky text-center fade" 
+        ng-if="UI.formSaved" 
+        data-sticky
+    >
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="payment-method-choose create-edit grid-container">
+        <h1>
+            <b>
+                Choose Payment Method
+            </b>
+        </h1>
+        <form 
+            class="payment-method-form golura-form" 
+            id="paymentMethodForm" 
+            name="paymentMethodForm" 
+            ng-submit="submitPaymentMethod($event, paymentData)"
+            golura-form-validation
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'disabled': estimate.dueNow < 0}"
+                    >
+                        <label>
+                            Amount
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            name="paymentAmount"
+                            placeholder="100.00"
+                            ng-model="paymentData.amount"
+                            autocomplete="off"
+                            ng-disabled="estimate.dueNow < 0"
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Payment Method
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="paymentMethodOptions"
+                            options="paymentMethods"
+                            id="estimatePaymentMethod"
+                            name="estimatePaymentMethod"
+                            ng-model="paymentData.paymentMethod" 
+                        >
+                        </selectize>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-12 large-12 text-right">
+                <button 
+                    class="payment-method-form-submit-button submit-button button" 
+                    id="paymentMethodFormSubmitButton" 
+                    type="submit"
+                    ng-class="{'form-saving': UI.formSaving}"
+                    ng-disabled="!paymentData.paymentMethod ||
+                    !paymentData.amount ||
+                    UI.formSaving"
+                >
+                    <span ng-if="!UI.formSaving">
+                        Continue <i class="fal fa-circle-arrow-right"></i>
+                    </span>
+                    <span ng-if="UI.formSaving">
+                        Please Wait...
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

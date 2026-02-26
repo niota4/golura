@@ -1,0 +1,540 @@
+<div class="event-admin-settings-container">
+    <div class="event-admin-settings">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <ul 
+                    class="event-admin-settings-list tabs-list tabs grid-x" 
+                    id="eventAdminSettingsTabs"
+                    ng-show="!UI.fullScreen"
+                    data-responsive-accordion-tabs="tabs small-accordion large-tabs" 
+                    data-deep-link="false"
+                    data-tabs 
+                >
+                    <li class="event-admin-settings-tabs-title tabs-title is-active cell auto text-center">
+                        <a 
+                            data-tabs-target="checklistSubmissions" 
+                            aria-selected="true"
+                        >
+                            <i class="fal fa-list-check"></i> Checklist Submissions
+                        </a>
+                    </li>
+                    <li class="event-admin-settings-tabs-title tabs-title cell auto text-center">
+                        <a data-tabs-target="toDoLists" >
+                            <i class="fal fa-clipboard-list-check"></i> To Do Lists
+                        </a>
+                    </li>
+                    <li class="event-admin-settings-tabs-title tabs-title cell auto text-center">
+                        <a data-tabs-target="timesheet">
+                            <i class="fal fa-timer"></i> Timesheet
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="cell auto">
+                <div 
+                    class="event-admin-settings-tabs-content tabs-content" 
+                    data-tabs-content="eventAdminSettingsTabs"
+                >
+                    <div 
+                        class="event-admin-settings-tabs-panel tabs-panel is-active" 
+                        id="checklistSubmissions"
+                    >
+                        <div class="event-admin-settings-checklist-submissions-container list-container">
+                            <div class="golura-block grid-y">
+                                <div class="cell shrink">
+                                    <div 
+                                        class="event-admin-settings-tabs-panel-options-container"
+                                        ng-class="{'text-right': !UI.fullScreen}"
+                                    >
+                                        <button 
+                                            class="event-admin-settings-checklist-submissions-options-button button white-text"
+                                            ng-class="{'warning': UI.fullScreen}"
+                                            type="button"
+                                            ng-click="UI.fullScreen = !UI.fullScreen"
+                                        >
+                                            <span ng-if="!UI.fullScreen">
+                                                <i class="fal fa-expand"></i> Full Screen
+                                            </span>
+                                            <span ng-if="UI.fullScreen">
+                                                <i class="fal fa-circle-arrow-left"></i> Close Full Screen
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="event-admin-settings-checklist-submissions-search-container list-search-container">
+                                        <div class="event-admin-settings-checklist-submissions-search list-search">
+                                            <div class="search-input-container">
+                                                <div class="grid-x align-middle">
+                                                    <div class="cell auto align-self-bottom">
+                                                        <input
+                                                            class="event-admin-settings-checklist-submissions-search-input search-input"
+                                                            id="eventAdminSettingsChecklistSubmissionsSearchInput" 
+                                                            type="text"
+                                                            placeholder="Search submissions..."
+                                                            ng-model="search.submission.value"
+                                                        />
+                                                    </div>
+                                                    <div class="cell shrink align-self-bottom">
+                                                        <span class="search-icon">
+                                                            <i class="fal fa-search"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell auto overflow-scroll">
+                                    <div class="event-admin-settings-checklist-submissions-list-container grid-container">
+                                        <ul 
+                                            class="event-admin-settings-checklist-submissions-list accordion"
+                                            id="eventAdminSettingsChecklistSubmissionsList"
+                                            data-accordion
+                                            data-deep-link="false"
+                                            data-allow-all-closed="true"
+                                        >
+                                            <li 
+                                                class="event-admin-settings-checklist-submissions-list-item accordion-item" 
+                                                data-accordion-item
+                                                ng-repeat="submission in filteredChecklistSubmissions =
+                                                (checklistSubmissions | filter: search.submission.value) track by $index"
+                                                ng-class="{'is-active': submission.show}"
+                                            >
+                                                <div format-users user="submission.User"></div>
+                                                <a 
+                                                    class="event-admin-settings-checklist-submissions-list-item-title accordion-title"
+                                                    href="#" 
+                                                    ng-click="submission.show = !submission.show"
+                                                >
+                                                    <div class="grid-x grid-padding-x align-middle">
+                                                        <div class="cell auto">
+                                                            <h6>
+                                                                <b>
+                                                                    {{submission.Form.name}}
+                                                                </b>
+                                                            </h6>
+                                                            <h6>
+                                                                {{submission.User.fullName}}
+                                                            </h6>
+                                                        </div>
+                                                        <div class="cell shrink text-right">
+                                                            <h6 class="event-admin-settings-checklist-submissions-list-item-date">
+                                                                <i>
+                                                                    {{submission.createdAt | DateTimeFormat}}
+                                                                </i>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <div 
+                                                    class="event-admin-settings-checklist-submissions-list-item-content accordion-content" 
+                                                    ng-class="{'visible': submission.show}"
+                                                    data-tab-content
+                                                >
+                                                    <div class="form-submission-container">
+                                                        <ul class="form-submission-list">
+                                                            <li 
+                                                                class="form-submission-list-item" 
+                                                                ng-repeat="item in submission.data track by $index"
+                                                            >
+                                                                <div class="grid-x grid-padding-x align-middle">
+                                                                    <div class="cell auto">
+                                                                        <h5>
+                                                                            {{$index + 1}}. <b ng-bind-html="item.label"></b>
+                                                                        </h5>
+                                                                        <div 
+                                                                            class="form-submission-list-item-value"
+                                                                            ng-repeat="value in item.userData track by $index"
+                                                                        >
+                                                                            <h6 
+                                                                                ng-if="item.type != 'Photo Select' && 
+                                                                                       item.type != 'Video Select' && 
+                                                                                       item.type != 'Document Select'"
+                                                                            > 
+                                                                                {{value}}
+                                                                            </h6>
+                                                                            <format-images 
+                                                                                class="container" 
+                                                                                images="item.userData"
+                                                                                ng-if="item.type == 'Photo Select'"
+                                                                            ></format-images>
+                                                                            <format-videos 
+                                                                                class="container" 
+                                                                                videos="item.userData"
+                                                                                ng-if="item.type == 'Video Select' ||
+                                                                                       item.type == 'Select Videos'"
+                                                                            ></format-videos>
+                                                                            <format-documents 
+                                                                                class="container" 
+                                                                                documents="item.userData"
+                                                                                ng-if="item.type == 'Document Select' ||
+                                                                                       item.type == 'Select Documents'"
+                                                                            ></format-documents>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-12 large-12">
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="event-admin-settings-tabs-panel tabs-panel" 
+                        id="toDoLists"
+                    >
+                        <div class="event-admin-settings-todo-lists-container list-container">
+                            <div class="golura-block grid-y">
+                                <div class="cell shrink">
+                                    <div 
+                                        class="event-admin-settings-tabs-panel-options-container"
+                                        ng-class="{'text-right': !UI.fullScreen}"
+                                    >
+                                        <button 
+                                            class="event-admin-settings-todo-lists-options-button button white-text"
+                                            ng-class="{'warning': UI.fullScreen}"
+                                            type="button"
+                                            ng-click="UI.fullScreen = !UI.fullScreen"
+                                        >
+                                            <span ng-if="!UI.fullScreen">
+                                                <i class="fal fa-expand"></i> Full Screen
+                                            </span>
+                                            <span ng-if="UI.fullScreen">
+                                                <i class="fal fa-circle-arrow-left"></i> Close Full Screen
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="event-admin-settings-todo-lists-create-button button white-text"
+                                            ng-class="{'success': !UI.showTodoForm,
+                                            'warning': UI.showTodoForm}"
+                                            type="button"
+                                            ng-click="initToDoListForm()"
+                                            ng-if="!UI.showTodoForm"
+                                        >
+                                            <i class="fal fa-layer-plus"></i> Create
+                                        </button>
+                                        <button 
+                                            class="event-admin-settings-todo-lists-cancel-button button warning white-text"
+                                            ng-if="UI.showTodoForm"
+                                            type="button"
+                                            ng-click="UI.showTodoForm = false"
+                                        >
+                                            <span>
+                                                <i class="fal fa-times-circle"></i> Cancel
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="!UI.showTodoForm"
+                                >
+                                    <div class="event-admin-settings-todo-lists-search-container list-search-container">
+                                        <div class="event-admin-settings-todo-lists-search list-search">
+                                            <div class="search-input-container">
+                                                <div class="grid-x align-middle">
+                                                    <div class="cell auto align-self-bottom">
+                                                        <input
+                                                            class="event-admin-settings-todo-lists-search-input search-input"
+                                                            id="eventAdminSettingsTodoListsSearchInput" 
+                                                            type="text"
+                                                            placeholder="Search To Do lists..."
+                                                            ng-model="search.toDos.value"
+                                                        />
+                                                    </div>
+                                                    <div class="cell shrink align-self-bottom">
+                                                        <span class="search-icon">
+                                                            <i class="fal fa-search"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell auto overflow-scroll"
+                                    ng-if="!UI.showTodoForm"
+                                >
+                                    <div ng-include="'dist/partials/general/to-dos.html'"></div>
+                                </div>
+                                <div 
+                                    class="cell auto overflow-scroll"
+                                    ng-if="UI.showTodoForm"
+
+                                >
+                                    <div class="event-admin-settings-todo-lists-form-container">
+                                        <div 
+                                            class="event-admin-settings-todo-lists-form"
+                                            ng-include="'dist/forms/general/to-do-form.html'"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="event-admin-settings-tabs-panel tabs-panel" 
+                        id="timesheet"
+                    >
+                        <div 
+                            class="event-admin-settings-tabs-panel tabs-panel is-active" 
+                            id="checklistSubmissions"
+                        >
+                            <div class="event-admin-settings-checklist-timesheet-container list-container">
+                                <div class="golura-block grid-y">
+                                    <div class="cell shrink">
+                                        <div class="event-admin-settings-checklist-timesheet-search-container list-search-container">
+                                            <div class="event-admin-settings-checklist-timesheet-search list-search">
+                                                <div class="search-input-container">
+                                                    <div class="grid-x align-middle">
+                                                        <div class="cell auto align-self-bottom">
+                                                            <input
+                                                                class="event-admin-settings-checklist-timesheet-search-input search-input"
+                                                                id="eventAdminSettingsChecklistTimesheetsSearchInput" 
+                                                                type="text"
+                                                                placeholder="Search timesheet..."
+                                                                ng-model="search.timesheet.value"
+                                                            />
+                                                        </div>
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto overflow-scroll">
+                                        <div class="timesheet-list-container list-container">
+                                            <ul 
+                                                class="timesheet-list list golura-form"
+                                                id="timesheetList"
+                                            >
+                                                <li ng-if="!UI.checkInsLoaded">
+                                                    <div class="ssc timesheets-ssc">
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-repeat="x in [].constructor(40) track by $index"
+                                                        ></div>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="timesheet-list-item list-item position-relative"
+                                                    ng-repeat="timesheet in filteredCheckins = 
+                                                    (checkIns | filter:search.timesheet.value) track by $index"
+                                                >
+                                                    <div format-users user="timesheet.user"></div>
+                                                    <div class="grid-x grid-margin-x align-top">
+                                                        <div class="cell small-6 medium-6 large-6">
+                                                            <h5>
+                                                                <b>
+                                                                    {{timesheet.User.fullName}}
+                                                                </b>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="cell small-6 medium-6 large-6 text-right">
+                                                            <h6 class="timesheet-list-item-time">
+                                                                <b>
+                                                                    Total Time:
+                                                                </b>
+                                                                <i>
+                                                                    {{timesheet.totalTime | TimeFormat}}
+                                                                </i>
+                                                            </h6>
+                                                        </div>
+                                                        <div class="cell small-12 medium-auto large-auto">
+                                                            <div 
+                                                                class="timesheet-input-container input-container"
+                                                                ng-class="{'disabled': !timesheet.edit}"
+                                                                ng-repeat="checkIn in timesheet.checkInTimes track by $index"
+                                                            >
+                                                                <label class="input-label">
+                                                                    Checked In
+                                                                </label>
+                                                                <input 
+                                                                    class="form-input"
+                                                                    type="text"
+                                                                    id="checkInTime-{{checkIn.id}}"
+                                                                    name="checkInTime-{{checkIn.id}}"
+                                                                    ng-model="checkIn.checkInTime"
+                                                                    default-date="{{checkIn.checkInTime}}"
+                                                                    flatpickr
+                                                                    twelve-hour="true"
+                                                                    placeholder="Edit Check In Time"
+                                                                    ng-disabled="!checkIn.edit"
+                                                                    required 
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="cell small-12 medium-auto large-auto">
+                                                            <div 
+                                                                class="timesheet-input-container input-container"
+                                                                ng-class="{'disabled': !timesheet.edit}"
+                                                                ng-repeat="checkOut in timesheet.checkOutTimes track by $index"
+                                                            >
+                                                                <label class="input-label">
+                                                                    Checked Out
+                                                                </label>
+                                                                <input 
+                                                                    class="form-input"
+                                                                    type="text"
+                                                                    id="checkOutTime-{{checkOut.id}}"
+                                                                    name="checkOutTime-{{checkOut.id}}"
+                                                                    ng-model="checkOut.checkOutTime"
+                                                                    default-date="{{checkOut.checkOutTime}}"
+                                                                    flatpickr
+                                                                    twelve-hour="true"
+                                                                    placeholder="Edit Check Out Time"
+                                                                    ng-disabled="!checkOut.edit"
+                                                                    required 
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="cell small-12 medium-auto large-auto align-self-middle">
+                                                            <div class="timesheet-list-item-times-container">
+                                                                <div 
+                                                                    class="timesheet-list-item-times"
+                                                                    ng-repeat="totalTime in timesheet.totalTimes track by $index"
+                                                                > 
+                                                                    <h6>
+                                                                        <b>Time: </b>
+                                                                        {{totalTime.time | TimeFormat}}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div 
+                                                            class="cell small-12 medium-auto large-auto text-right"
+                                                            ng-if="timesheet.edit"
+                                                        >
+                                                            <button 
+                                                                class="timesheet-list-item-delete-button button alert white-text"
+                                                                type="button"
+                                                                ng-repeat="totalTime in timesheet.totalTimes track by $index"
+                                                                ng-click="deleteCheckins(timesheet, $index)"
+                                                            >
+                                                                <i class="fal fa-archive"></i> Delete
+                                                            </button>
+                                                        </div>
+                                                        <div 
+                                                            class="cell small-12 medium-12 large-12"
+                                                            ng-if="timesheet.addCheckIn"
+                                                        >
+                                                            <div class="timesheet-add-checkin-container">
+                                                                <h6>
+                                                                    <b>Add Check In/Out Time</b>
+                                                                </h6>
+                                                                <div class="grid-x grid-margin-x align-middle">
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <div class="timesheet-input-container input-container">
+                                                                            <label class="input-label">
+                                                                                Check In
+                                                                                <span class="alert-text">*</span>
+                                                                            </label>
+                                                                            <input 
+                                                                                class="form-input"
+                                                                                type="text"
+                                                                                id="addCheckInTime-{{timesheet.id}}"
+                                                                                name="addCheckInTime-{{timesheet.id}}"
+                                                                                ng-model="timesheet.addCheckInTime"
+                                                                                flatpickr
+                                                                                twelve-hour="true"
+                                                                                placeholder="Add Check In Time"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <div class="timesheet-input-container input-container">
+                                                                            <label class="input-label">
+                                                                                Check Out
+                                                                            </label>
+                                                                            <input 
+                                                                                class="form-input"
+                                                                                type="text"
+                                                                                id="addCheckOutTime-{{timesheet.id}}"
+                                                                                name="addCheckOutTime-{{timesheet.id}}"
+                                                                                ng-model="timesheet.addCheckOutTime"
+                                                                                flatpickr
+                                                                                twelve-hour="true"
+                                                                                placeholder="Add Check Out Time"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-shrink large-shrink text-right">
+                                                                        <button 
+                                                                            class="timesheet-list-item-cancel-button button warning white-text"
+                                                                            type="button"
+                                                                            ng-click="timesheet.addCheckIn = !timesheet.addCheckIn"
+                                                                        >
+                                                                            <i class="fal fa-times-circle"></i> Cancel
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cell small-12 medium-12 large-12">
+                                                            <div class="timesheet-list-item-buttons-container text-right">
+                                                                <button 
+                                                                    class="timesheet-list-item-button button alert white-text"
+                                                                    type="button"
+                                                                    ng-click="updateCheckins(timesheet, true)"
+                                                                    ng-if="timesheet.edit && timesheet.currentlyCheckedIn"
+                                                                >
+                                                                    <i class="fal fa-check-double"></i> Check Out
+                                                                </button>
+                                                                <button 
+                                                                    class="timesheet-list-item-button button white-text"
+                                                                    type="button"
+                                                                    ng-click="timesheet.addCheckIn = !timesheet.addCheckIn"
+                                                                    ng-if="!timesheet.addCheckIn && timesheet.edit"
+                                                                >
+                                                                    <i class="fal fa-plus-circle"></i> Add Time
+                                                                </button>
+                                                                <button 
+                                                                    class="timesheet-list-item-button button success white-text"
+                                                                    type="button"
+                                                                    ng-click="updateCheckins(timesheet)"
+                                                                    ng-if="timesheet.edit"
+                                                                >
+                                                                    <i class="fal fa-save"></i> Save
+                                                                </button>
+                                                                <button 
+                                                                    class="timesheet-list-item-button button warning white-text"
+                                                                    type="button"
+                                                                    ng-click="timesheet.edit = !timesheet.edit"
+                                                                >
+                                                                    <span ng-if="timesheet.edit">
+                                                                        <i class="fal fa-times-circle"></i> Cancel
+                                                                    </span>
+                                                                    <span ng-if="!timesheet.edit">
+                                                                        <i class="fal fa-unlock"></i> Unlock & Edit
+                                                                    </span>
+                                                                </button>
+                                                            </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

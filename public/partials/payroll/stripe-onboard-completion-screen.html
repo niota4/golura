@@ -1,0 +1,29 @@
+<div 
+  class="stripe-onboarding-completetion-container grid-x grid-container align-middle"
+  ng-init="initStripeOnboardingCompletion()"
+>
+  <div class="stripe-onboarding-completetion cell small-12 medium-12 large-12 text-center">
+    <div class="stripe-onboarding-completetion-icon success-text">
+      <i class="fal fa-check-circle"></i>
+    </div>
+    <h1>
+      <b>
+        Direct Deposit Setup Complete
+      </b>
+    </h1>
+    <p>
+      Thank you for completing your direct deposit setup with Stripe. 
+      <br/>
+      Your information is being verified. You will be notified when your account is ready to receive payments.
+      <br/>
+      <br/>
+      You will be automatically redirected in <span>{{UI.countDown}}</span> seconds...
+    </p>
+    <button 
+      class="stripe-onboarding-completetion-button button sucess white-text"
+      ng-click="$root.goBack()"
+    >
+      <i class="fal fa-rotate-left"></i> Return
+    </button>
+  </div>
+</div>

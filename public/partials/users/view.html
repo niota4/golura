@@ -1,0 +1,280 @@
+<div 
+    class="view-user-container view-container"
+    ng-init="initUser()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="view-user view">
+        <div format-users user="worker"></div>
+        <div class="golura-block grid-y">
+            <div 
+                class="cell shrink"
+                ng-hide="!UI.copiedToClipboard"
+            >
+                <div class="callout success success-text text-center fade">
+                    Copied to clipboard.
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell auto">
+                        <div class="view-user-options-container view-options-container">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <a class="view-user-options-button back-button button warning white-text" >
+                                        <i class="fal fa-circle-arrow-left"></i> 
+                                        <span ng-if="!$root.UI.isMobile">
+                                            Back
+                                        </span>
+                                    </a>
+                                    <button 
+                                        class="view-user-options-reveal-button view-options-reveal-button button clear float-right"
+                                        type="button"
+                                        data-open="viewUserOptionsMobileReveal"
+                                        aria-label="Open User Options"
+                                    >
+                                        <i class="fal fa-bars"></i>
+                                    </button>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="button-group"
+                                        ng-if="!$root.UI.isMobile"
+                                    >
+                                        <a 
+                                            class="view-user-options-options-button button white-text"
+                                            ng-href="users/user/{{worker.id}}/edit"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i> Edit
+                                        </a>
+                                        <button 
+                                            class="delete-button button alert white-text" 
+                                            type="button"
+                                            ng-click="UI.userDeleteConfirmation = !UI.userDeleteConfirmation"
+                                            ng-if="permissions.canArchive"
+                                        >
+                                            <i class="fal fa-archive"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="golura-block grid-x grid-margin-x align-top">
+                    <div class="cell small-12 medium-3 large-3">
+                        <div class="view-user-details-container">
+                            <div 
+                                class="view-user-details grid-y"
+                                ng-class="{'golura-block': !$root.UI.isMobile,
+                                'golura-mobile-block': $root.UI.isMobile}"
+                            >
+                                <div class="cell shrink">
+                                    <user-icon user="worker"></user-icon>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="view-user-details-information text-center">
+                                        <h3 class="text-center">
+                                            {{worker.fullName}}
+                                            <span class="text-center">
+                                                {{worker.Role.name}}
+                                            </span>
+                                        </h3>
+                                        <h6>
+                                            <b>Phone: </b>
+                                            <button
+                                                class="phone-number-button"
+                                                ng-model="worker.phoneNumber"
+                                                ng-if="worker.phoneNumber"
+                                                ng-cloak
+                                                phone-number
+                                            >
+                                                {{worker.phoneNumber}}
+                                            </button>
+                                        </h6>
+                                        <h6 ng-if="worker.email">
+                                            <b>Email: </b>
+                                            <span>
+                                                {{worker.email}}
+                                            </span>
+                                        </h6>
+                                        <hr/>
+                                    </div>
+                                    <h6>
+                                        <b>
+                                            Last Seen: 
+                                        </b>
+                                        <span>
+                                            {{worker.lastSeen | TimeAgoFormat}}
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Created: 
+                                        </b>
+                                        <span>
+                                            {{worker.createdAt | DateTimeFormat}}
+                                        </span>
+                                    </h6>
+                                    <h6 ng-if="subPermissions.payroll.canView">
+                                        <b>
+                                            Pay Rates: 
+                                        </b>
+                                        <span 
+                                            ng-if="!worker.PayRates || !worker.PayRates.length"
+                                            ng-class="{'warning-text': !worker.PayRates || !worker.PayRates.length}"
+                                        >
+                                            Pay Rates Not Set
+                                        </span>
+                                        <div 
+                                            class="view-user-pay-rates-list-container list-container"
+                                            ng-if="worker.PayRates && worker.PayRates.length"
+                                        >
+                                            <ul class="view-user-pay-rates-list list">
+                                                <li 
+                                                    class="view-user-pay-rate-list-item list-item"
+                                                    ng-repeat="payRate in worker.PayRates"
+                                                >
+                                                    <span>
+                                                        <b class="text-capitalize">
+                                                            {{payRate.rateType}} 
+                                                        </b>
+                                                        ${{payRate.rate}}
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </h6>
+                                    <div class="view-user-options-container">
+                                        <button
+                                            class="view-user-create-reminder-button button expanded"
+                                            id="viewUserCreateReminderButton"
+                                            type="button"
+                                            ng-click="initUserReminderForm()"
+                                            ng-if="permissions.canEdit"
+                                            data-open="userReminderFormModal"
+                                        >
+                                            <i class="fal fa-plus"></i> Set Reminder For User
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="golura-block cell small-12 medium-auto large-auto">
+                        <div class="view-user-details-option-container">
+                            <div 
+                                class="grid-y"
+                                ng-class="{'golura-block': !$root.UI.isMobile,
+                                'golura-mobile-block': $root.UI.isMobile}"
+                            >
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <div ng-include="'/dist/navigations/user-navigation.html'"></div>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="golura-block"
+                                        ng-include="'dist/partials/users/statistics.html'"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-user-options-mobile-reveal view-options-mobile-reveal reveal large"
+    id="viewUserOptionsMobileReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewUserOptionsMobileReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-user-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="button-group stacked">
+                    <a 
+                        class="view-user-options-options-button button white-text"
+                        ng-href="users/user/{{worker.id}}/edit"
+                        ng-if="permissions.canEdit"
+                        ng-cloak
+                    >
+                        <i class="fal fa-edit"></i> Edit
+                    </a>
+                    <button 
+                        class="delete-button button alert white-text" 
+                        type="button"
+                        ng-click="UI.userDeleteConfirmation = !UI.userDeleteConfirmation"
+                        ng-if="permissions.canArchive"
+                    >
+                        <i class="fal fa-archive"></i> Delete
+                    </button>
+                </div>
+                <div ng-include="'/dist/navigations/user-navigation.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="user-reminder-reveal reveal" 
+    id="userReminderFormModal" 
+    data-reveal 
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserReminderFormModal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div ng-include="'dist/forms/users/user-reminder-form.html'"></div>
+</div>

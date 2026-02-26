@@ -1,0 +1,163 @@
+<div class="event-checklist-container">
+    <div 
+        class="event-checklist-list-container list-container"
+        ng-if="!UI.formView"
+    >
+        <h1
+            class="separator-left"
+            ng-class="{'ssc': !UI.eventLoaded}">
+            <div 
+                class="ssc-square"
+                ng-if="!UI.eventLoaded"
+            ></div>
+            <a 
+                ng-href="events/event/{{event.id}}"
+                ng-cloak
+            >
+                <b>
+                    {{event.title}}
+                </b>
+            </a>
+        </h1>
+        <div 
+            class="callout sticky text-center fade"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+        >
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div> 
+        <h2>
+            <b>
+                To-Do Lists
+            </b>
+        </h2>
+        <div ng-include="'dist/partials/general/to-dos.html'"></div>
+        <hr/>
+        <h2>
+            <b>
+                Forms
+            </b>
+        </h2>
+        <ul 
+            class="event-checklist-list list"
+            id="eventCheckListList"
+        >
+            <li ng-if="!UI.checklistLoaded">
+                <div class="ssc checklist-ssc">
+                    <div 
+                        class="ssc-square"
+                        ng-repeat="x in [].constructor(10) track by $index"
+                    ></div>
+                </div>
+            </li>
+            <li 
+                class="event-checklist-list-item list-item"
+                title="{{item.description}}"
+                ng-class="{'completed': item.completed}"
+                ng-repeat="item in checklist track by $index"
+                ng-click="initEventChecklistItem(item)"
+            >
+                <div class="grid-x grid-padding-x align-middle">
+                    <div class="cell auto">
+                        <h4>
+                            <b>
+                                {{item.name}}
+                            </b>
+                        </h4>
+                    </div>
+                    <div 
+                        class="cell shrink text-right"
+                        ng-if="item.completed"
+                        ng-mouseover="item.unlock = true"
+                        ng-mouseleave="item.unlock = false"
+                    >
+                        <button 
+                            class="unlock-button button alert white-text"
+                            type="button"
+                            ng-class="{'clear': !item.unlock}"
+                            ng-click="item.completed = !item.completed"
+                        >
+                            <span 
+                                class="completed-icon"
+                                ng-if="!item.unlock"
+                            >
+                                <i class="fal fa-circle-check"></i>
+                            </span>
+                            <span 
+                                class="unlock-icon"
+                                ng-if="item.unlock"
+                            >
+                                <i class="fal fa-unlock"></i> Unlock
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div 
+        class="event-checklist-form-view-container"
+        ng-show="UI.formView"
+    >
+        <div class="grid-x grid-margin-x align-middle">
+            <div class="cell shrink">
+                <button 
+                    class="view-estimator-options-button back-button button warning white-text"
+                    type="button"
+                    ng-click="initEventChecklist(event)"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> Back
+                </button>
+            </div>
+            <div class="cell auto">
+                <h3>
+                    <b>
+                        {{form.name}}
+                    </b>
+                </h3>
+            </div>
+        </div>
+        <div class="grid-container">
+            <div class="event-checklist-form-view-container">
+                <form
+                    class="event-checklist-form"
+                    id="eventChecklistForm"
+                    name="eventChecklistForm"
+                    ng-submit="submitEventChecklistForm($event, form)"
+                >
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-12 large-12">
+                            <div 
+                                class="event-checklist-form-view golura-form"
+                                id="eventChecklistFormView"
+                            ></div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12 text-right">
+                            <button 
+                                class="event-checklist-form-submit-button submit-button button" 
+                                id="eventChecklistFormSubmitButton" 
+                                type="submit" 
+                                ng-disabled="UI.formSaving" 
+                                ng-class="{'form-saving': UI.formSaving}"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-check-circle"></i> Submit
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

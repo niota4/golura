@@ -1,0 +1,103 @@
+
+<div class="media-options grid-x white-text">
+    <div format-users user="image.User"></div>
+    <div class="cell small-12 medium-6 large-6">
+        <button 
+            class="media-close-button button warning white-text"
+            type="button"
+            ng-click="image.options = !image.options"
+            ng-if="!userImage"
+        >
+            <b>
+                <i class="fal fa-times-circle"></i> Close
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-6 large-6 text-right">
+        <button 
+            class="delete-button button alert white-text"
+            type="button"
+            ng-click="image.delete = !image.delete"
+            ng-if="userImage"
+        >
+            <b>
+                <i class="fal fa-archive"></i> Delete
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-12 large-12">
+        <h4 class="separator-left">
+            <b>
+                Photo Details
+            </b>
+        </h4>
+        <h6>
+            <b>
+                Uploaded On: 
+            </b>
+            {{image.createdAt | DateTimeFormat}}
+        </h6>
+        <h6>
+            <b>
+                Uploaded By: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="users/user/{{image.userId}}"
+            >
+                {{image.User.firstName}} {{image.User.lastName}}
+            </a>
+        </h6>
+        <h6 ng-if="image.estimateId">
+            <b>
+                Related Estimate: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="estimates/estimate/{{image.estimateId}}"
+            >
+                {{image.Estimate.estimateId}}
+            </a>
+        </h6>
+        <h6 ng-if="image.eventId">
+            <b>
+                Related Event: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="events/event/{{image.Event.id}}"
+            >
+                {{image.Event.title}}
+            </a>
+        </h6>
+        <h6 ng-if="image.marketingId">
+            <b>
+                Related Marketing: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="marketings/marketing/{{image.marketingId}}"
+            >
+                {{image.Estimate.marketingId}}
+            </a>
+        </h6>
+        <h6>
+            <b>
+                Size: 
+            </b>
+            {{image.size ? (image.size | ByteFormat) : 'N/A'}}
+        </h6>
+        <h6>
+            <b>
+                Height: 
+            </b>
+            {{ image.height ? image.height + 'px' : 'N/A' }}
+        </h6>
+        <h6>
+            <b>
+                Width: 
+            </b>
+            {{ image.width ? image.width + 'px' : 'N/A' }}
+        </h6>
+    </div>
+</div>

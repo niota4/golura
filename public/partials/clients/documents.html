@@ -1,0 +1,371 @@
+<div 
+    class="view-client-documents-container view-client-container view-container"
+    ng-init="initClient();"
+>
+    <div format-clients client="client"></div>
+    <div class="view-client-documents view-client-media view-client view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="view-client-documents-folders-container view-client-media-folders-container">
+                    <div 
+                        class="grid-x grid-margin-x align-middle"
+                        ng-if="$root.UI.isMobile"
+                    >
+                        <div class="cell auto">
+                            <document-uploader 
+                                client-id="{{client.id}}" 
+                                ng-if="!UI.documentFolder"
+                            ></document-uploader>
+                        </div>
+                        <div class="cell shrink">
+                            <button
+                                class="select-document-button button"
+                                type="button"
+                                ng-click="toggleDocumentsOptions()"
+                                data-open="viewDocumentOptionsReveal"
+                            >      
+                                <i class="fal fa-cog"></i> 
+                            </button>
+                        </div>
+                    </div>
+                    <div class="button-group align-right"
+                        ng-if="!$root.UI.isMobile"
+                    >
+                        <document-uploader 
+                            client-id="{{client.id}}" 
+                            ng-if="!UI.documentFolder"
+                        ></document-uploader>
+                        <button
+                            class="view-client-documents-folders-button view-client-media-folders-button button warning white-text"
+                            type="button"
+                            ng-click="toggleDocumentFolder()"
+                            ng-if="UI.documentFolder"
+                        >
+                            <i class="fal fa-times-circle"></i> 
+                            Close
+                        </button>
+                        <button
+                            class="view-client-documents-folders-button view-client-media-folders-button button"
+                            ng-class="UI.documentFolder === 'events' ? 'is-active' : 'medium-gray-button white-text'"
+                            type="button"
+                            ng-click="toggleDocumentFolder('events')"
+                        >
+                            <i
+                                class="far"
+                                ng-class="{'fa-folder-open': UI.documentFolder == 'events', 
+                                'fa-folder': UI.documentFolder != 'events'}"
+                            ></i> 
+                            Events
+                        </button>
+                        <button
+                            class="view-client-documents-folders-button view-client-media-folders-button button"
+                            ng-class="UI.documentFolder === 'marketing' ? 'is-active' : 'medium-gray-button white-text'"
+                            type="button"
+                            ng-click="toggleDocumentFolder('marketing')"
+                        >
+                            <i
+                                class="far"
+                                ng-class="{'fa-folder-open': UI.documentFolder == 'marketing', 
+                                'fa-folder': UI.documentFolder != 'marketing'}"
+                            ></i> 
+                            Marketing
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <h2 class="text-capitalize">
+                    <b>
+                        <span>
+                            {{UI.documentFolder}} 
+                        </span>
+                        <span ng-if="!UI.documentFolder">
+                            Unassigned Documents
+                        </span>
+                    </b>
+                    <span ng-if="event.id">
+                        / #{{event.id}}
+                    </span>
+                    <span ng-if="marketing.id">
+                        / #{{marketing.id}}
+                    </span>
+                </h2>
+                <div class="grid-x">
+                    <div 
+                        class="cell small-12 medium-3 large-2"
+                        ng-show="UI.documentFolder && !$root.UI.isMobile"
+                    >
+                        <div 
+                            class="viw-client-documents-events-container"
+                            ng-if="UI.documentFolder == 'events'"
+                        >
+                            <ul class="view-client-documents-events-list view-client-media-option-list view-client-documents-option-list">
+                                <li class="text-center">
+                                    <h4 ng-if="UI.eventsLoaded && !events.length">
+                                        <b>
+                                            No Events!
+                                        </b>
+                                    </h4>
+                                </li>
+                                <li 
+                                    class="view-client-documents-option-list-item view-client-media-option-list-item"
+                                    ng-repeat="e in events track by $index"
+                                >
+                                    <button
+                                        class="view-client-documents-folders-button medium-gray-button button white-text"
+                                        ng-class="event === e ? 'is-active' : 'medium-gray-button white-text'"
+                                        type="button"
+                                        ng-click="initDocuments('events', e)"
+                                    >
+                                        <i
+                                            class="far"
+                                            ng-class="{'fa-folder-open': event == e, 
+                                            'fa-folder': event != e}"
+                                        ></i> 
+                                        <b>#{{e.id}}</b> - {{e.title}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div 
+                            class="viw-client-documents-events-containers"
+                            ng-if="UI.documentFolder == 'marketing'"
+                        >
+                            <ul class="view-client-documents-events-list view-client-media-option-list view-client-documents-option-list">
+                                <li class="text-center">
+                                    <h4 ng-if="UI.marketingsLoaded && !marketings.length">
+                                        <b>
+                                            No Marketing Projects!
+                                        </b>
+                                    </h4>
+                                </li>
+                                <li 
+                                    class="view-client-documents-option-list-item view-client-media-option-list-item"
+                                    ng-repeat="m in marketings track by $index"
+                                >
+                                    <button
+                                        class="view-client-documents-option-list-item medium-gray-button button white-text"
+                                        ng-class="marketing === m ? 'is-active' : 'medium-gray-button white-text'"
+                                        type="button"
+                                        ng-click="initDocuments('marketing', m)"
+                                    >
+                                        <i
+                                            class="far"
+                                            ng-class="{'fa-folder-open': marketing == m, 
+                                            'fa-folder': marketing != m}"
+                                        ></i> 
+                                        <b>#{{m.id}}</b> - {{m.title}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="call small-12 medium-auto large-auto">
+                        <div class="view-client-documents-documents-container view-client-media-items-container">
+                            <document-uploader 
+                                client-id="{{client.id}}" 
+                                event-id="{{event.id}}" 
+                                ng-if="UI.documentFolder == 'events' && event.id"
+                            ></document-uploader>
+                            <document-uploader 
+                                client-id="{{client.id}}" 
+                                marketing-id="{{marketing.id}}" 
+                                ng-if="UI.documentFolder == 'marketing' && marketing.id"
+                            ></document-uploader>
+                            <format-documents 
+                                class="container" 
+                                documents="unassignedDocuments"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="!UI.documentFolder && UI.documentsLoaded"
+                            ></format-documents>
+                            <format-documents 
+                                class="container" 
+                                documents="eventDocuments"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="UI.documentFolder == 'events' && UI.documentsLoaded"
+                            ></format-documents>
+                            <format-documents 
+                                class="container" 
+                                documents="marketingDocuments"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="UI.documentFolder == 'marketing' && UI.documentsLoaded"
+                            ></format-documents>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-documents-options-reveal reveal large"
+    id="viewDocumentOptionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewDocumentOptionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-client-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div 
+                    class="button-group stacked"
+                    ng-if="!UI.documentFolder"
+                >
+                    <button
+                        class="view-client-documents-unassigned-documents-button button" 
+                        id="viewClientDocumentsUnassignedDocumentsButton"
+                        type="button"
+                        ng-click="toggleDocumentFolder()"
+                        data-close
+                    >
+                        <i class="fal fa-folder-open"></i> Unassigned
+                    </button>
+                    <button
+                        class="view-client-documents-events-documents-button button" 
+                        id="viewClientDocumentsEventsDocumentsButton"
+                        type="button"
+                        ng-click="toggleDocumentFolder('events')"
+                    >
+                        <i class="fal fa-folder-open"></i> Event
+                    </button>
+                    <button
+                        class="view-client-documents-marketing-documents-button button" 
+                        id="viewClientDocumentsMarketingDocumentsButton"
+                        type="button"
+                        ng-click="toggleDocumentFolder('marketing')"
+                    >
+                        <i class="fal fa-folder-open"></i> Marketing
+                    </button>
+                </div>
+                <button
+                    class="view-client-documents-folders-button view-client-media-folders-button button warning white-text"
+                    type="button"
+                    ng-click="toggleDocumentFolder()"
+                    ng-if="UI.documentFolder"
+                >
+                    <i class="fal fa-times-circle"></i>
+                </button>
+                <div 
+                    class="viw-client-documents-events-container"
+                    ng-if="UI.documentFolder == 'events'"
+                >
+                    <h3 class="text-center">
+                        <b>
+                            Select Event
+                        </b>
+                    </h3>
+                    <ul class="view-client-documents-events-list view-client-media-option-list view-client-documents-option-list">
+                        <li class="text-center">
+                            <h4 ng-if="UI.eventsLoaded && !events.length">
+                                <b>
+                                    No Events!
+                                </b>
+                            </h4>
+                        </li>
+                        <li 
+                            class="view-client-documents-option-list-item view-client-media-option-list-item"
+                            ng-repeat="e in events track by $index"
+                        >
+                            <button
+                                class="view-client-documents-folders-button medium-gray-button button white-text"
+                                ng-class="event === e ? 'is-active' : 'medium-gray-button white-text'"
+                                type="button"
+                                ng-click="initDocuments('events', e)"
+                                data-close
+                            >
+                                <i
+                                    class="far"
+                                    ng-class="{'fa-folder-open': event == e, 'fa-folder': event != e}"
+                                ></i> 
+                                <b>#{{e.id}}</b> - {{e.title}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div 
+                    class="viw-client-documents-events-containers"
+                    ng-if="UI.documentFolder == 'marketing'"
+                >
+                    <h3 class="text-center">
+                        <b>
+                            Select a Marketing Project
+                        </b>
+                    </h3>
+                    <ul class="view-client-documents-events-list view-client-media-option-list view-client-documents-option-list">
+                        <li class="text-center">
+                            <h4 ng-if="UI.marketingsLoaded && !marketings.length">
+                                <b>
+                                    No Marketing Projects!
+                                </b>
+                            </h4>
+                        </li>
+                        <li 
+                            class="view-client-documents-option-list-item view-client-media-option-list-item"
+                            ng-repeat="m in marketings track by $index"
+                        >
+                            <button
+                                class="view-client-documents-option-list-item medium-gray-button button white-text"
+                                ng-class="marketing === m ? 'is-active' : 'medium-gray-button white-text'"
+                                type="button"
+                                ng-click="initDocuments('marketing', m)"
+                                data-close
+                            >
+                                <i
+                                    class="far"
+                                    ng-class="{'fa-folder-open': marketing == m, 'fa-folder': marketing != m}"
+                                ></i> 
+                                <b>#{{m.id}}</b> - {{m.title}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="invoice-creation-reveal reveal"
+    id="invoiceCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/invoices/ad-hoc-invoice-form.html'"></div>
+</div>

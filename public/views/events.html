@@ -1,0 +1,179 @@
+<div class="events-container off-canvas-wrapper">
+    <user-onboarding page-name="events" auto-start="true"></user-onboarding>
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div 
+        class="event-calendar-settings-off-canvas off-canvas position-right" 
+        id="eventCalendarSettingsOffCanvas" 
+        data-off-canvas
+        data-transition="overlap"
+        offcanvas-overlay-zindex="100012"
+    >
+        <div 
+            class="golura-block"
+            ng-include="'dist/partials/events/calendar-settings.html'"
+        ></div>
+    </div>
+    <div 
+        class="events off-canvas-content"
+        ng-init="initEvents()"
+    >
+        <div class="events-calendar-container">
+            <div 
+                class="event-calendar-ssc ssc"
+                ng-if="!eventCalendar"
+            >
+                <div class="golura-block grid-y grid-margin-y">
+                    <div class="cell shrink">
+                        <div class="event-calendar-ssc-top ssc-square">
+                        </div>
+                    </div>
+                    <div class="cell shrink">
+                        <div class="event-calendar-ssc-middle ssc-square">
+                        </div>
+                    </div>
+                    <div class="cell auto">
+                        <div class="golura-block grid-x grid-margin-x align-middle">
+                            <div 
+                                class="golura-block cell small-12 medium-1 large-1"
+                                ng-repeat="x in [].constructor(12) track by $index"
+                            >
+                                <div class="event-calendar-ssc-body ssc-square">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="events-calendar"
+                id="eventsCalendar"
+            >
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="events-create-event-reveal reveal"
+    id="eventsCreateEventReveal"
+    data-reveal
+    data-close-on-click="false"
+    ng-class="{'events-create-event-expanded': event.categoryType}"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsCreateEventReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        ng-include="'dist/forms/address-form.html'"
+        ng-if="UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/phone-number-form.html'"
+        ng-if="UI.createPhoneNumber && !UI.createAddress && !UI.createEmail"
+    ></div>
+    <div 
+        ng-include="'dist/forms/email-form.html'"
+        ng-if="UI.createEmail && !UI.createAddress && !UI.createPhoneNumber"
+    ></div>
+    <div 
+        ng-include="'dist/forms/events/event-create-form.html'"
+        ng-if="!UI.createAddress && !UI.createPhoneNumber && !UI.createEmail"
+    ></div>
+</div>
+<div 
+    class="event-reminder-reveal reveal"
+    id="eventReminderReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeReminderReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="grid-x grid-margin-x align-middle">
+        <div class="cell small-12 medium-auto large-auto">
+            <h2>
+                <i class="fal fa-bell"></i> 
+                <b>
+                    Reminder
+                </b>
+            </h2>
+        </div>
+        <div class="cell small-12 medium-shrink larger-shrink">
+            <button 
+                class="event-reminder-delete-button button alert white-text"
+                id="eventReminderDeleteButton"
+                type="button"
+                ng-click="reminder.delete = !reminder.delete"
+            >
+                <i class="fal fa-times-circle"></i> Delete
+            </button>
+        </div>
+        <div class="cell small-12 medium-12 larger-12">
+            <div 
+                class="golura-block"
+                ng-include="'dist/partials/general/reminder.html'"
+            >
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="events-calendar-reveal event-detail-reveal reveal large"
+    ng-class="{'full': UI.fullScreen}"
+    id="eventsCalendarEventReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeEventsCalendarEventReveal" 
+        type="button"
+        ng-click="UI.confirmComplete = false" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/events/preview.html'"
+    >
+    </div>
+</div>

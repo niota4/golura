@@ -1,0 +1,1391 @@
+<div
+    class="user-edit-form-container edit-container"
+    ng-init="initUserForm()"
+> 
+    <div format-users user="worker"></div>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="golura-block grid-y">
+        <div class="cell auto">
+            <div class="user-edit edit">
+                <form 
+                    class="user-edit-form golura-form"
+                    id="userForm"
+                    name="userForm"
+                    ng-submit="createUser($event, worker)"
+                >
+                    <div class="user-edit-form-tabs-container">
+                        <div class="golura-block grid-x">
+                            <div class="golura-block cell hide-for-small-only small-12 medium-2 large-2 tabs-container">
+                                <div class="user-edit-form-sidebar tabs-list-container">
+                                    <ul 
+                                        class="user-edit-form-side-bar-tabs-list tabs-list tabs vertical" 
+                                        id="eventFormSideBarTabs"
+                                        data-responsive-accordion-tabs="tabs small-accordion large-tabs" 
+                                        data-deep-link="false"
+                                        data-tabs 
+                                    >
+                                        <li class="user-edit-form-sider-bar-tabs-title tabs-title is-active">
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="general"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-info-circle"></i> General
+                                            </a>
+                                        </li>
+                                        <li class="user-edit-form-sider-bar-tabs-title tabs-title">
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="password"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-key"></i> Password
+                                            </a>
+                                        </li>
+                                        <li 
+                                            class="user-edit-form-sider-bar-tabs-title tabs-title"
+                                            ng-show="$root.user.id == worker.id"
+                                        >
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="preferences"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-cog"></i> Preferences
+                                            </a>
+                                        </li>
+                                        <li 
+                                            class="user-edit-form-sider-bar-tabs-title tabs-title"
+                                            ng-show="subPermissions.payroll.canView ||
+                                            $root.user.id == worker.id"
+                                        >
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="payStubs"
+                                                ng-click="initPaystubs()"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-money-bill"></i> Pay Stubs
+                                            </a>
+                                        </li>
+                                        <li 
+                                            class="user-edit-form-sider-bar-tabs-title tabs-title"
+                                            ng-show="subPermissions.payroll.canEdit"
+                                        >
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="payRates"
+                                                ng-click="initPayRates()"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-money-bill"></i> Pay Rates
+                                            </a>
+                                        </li>
+                                        <li 
+                                            class="user-edit-form-sider-bar-tabs-title tabs-title"
+                                            ng-show="permissions.canEdit"
+                                        >
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="permissions"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-lock"></i> Role & Permissions
+                                            </a>
+                                        </li>
+                                        <li class="user-edit-form-sider-bar-tabs-title tabs-title">
+                                            <a  
+                                                class="user-edit-form-sider-bar-tabs-title-link user-edit-form-sider-bar-tabs-details-link"
+                                                data-tabs-target="devices"
+                                                ng-cloak
+                                            >
+                                                <i class="fal fa-mobile-alt"></i> Devices
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="golura-block cell small-12 medium-auto large-auto">
+                                <div 
+                                    class="user-edit-form-tabs-content tabs-content" 
+                                    data-tabs-content="eventFormSideBarTabs"
+                                >
+                                    <div class="golura-block grid-y">
+                                        <div class="cell shrink">
+                                            <div class="user-edit-form-tabs-content-options-container">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                        <button 
+                                                            class="back-button button warning white-text" 
+                                                            type="button"
+                                                            ng-click="$root.goBack()"
+                                                        >
+                                                            <i class="fal fa-circle-arrow-left"></i> Back
+                                                        </button>
+                                                        <a
+                                                            class="user-edit-form-client-view-button button"
+                                                            ng-href="users/user/{{worker.id}}"
+                                                            ng-cloak
+                                                        >
+                                                            <i class="fal fa-search"></i> 
+                                                            View
+                                                        </a>
+                                                    </div>
+                                                    <div 
+                                                        class="cell small-12 medium-auto large-auto"
+                                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                                    >
+                                                        <h2>
+                                                            <b>
+                                                                Editing 
+                                                            </b>
+                                                            {{worker.fullName}}
+                                                        </h2>
+                                                    </div>
+                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                        <button 
+                                                            class="delete-button button alert white-text" 
+                                                            type="button"
+                                                            ng-click="UI.userDeleteConfirmation = !UI.userDeleteConfirmation"
+                                                            ng-if="permissions.canArchive"
+                                                        >
+                                                            <i class="fal fa-archive"></i> Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell auto">
+                                            <div 
+                                                class="user-edit-form-tabs-panel tabs-panel is-active" 
+                                                id="general"
+                                            >
+                                                <div class="grid-x grid-margin-x align-middle grid-container">
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h6>
+                                                            <b>
+                                                                General
+                                                            </b>
+                                                        </h6>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <div class="grid-x grid-marign-x align-middle">
+                                                            <div class="cell shrink">
+                                                                <div class="user-form-profile-photo-container">
+                                                                    <h4 
+                                                                        class="user-form-profile-photo-empty text-center"
+                                                                        ng-if="!worker.profilePictureUrl"
+                                                                    >
+                                                                        <b>No Profile Picture Uploaded</b>
+                                                                    </h4>
+                                                                    <div 
+                                                                        class="user-form-profile-photo"
+                                                                        ng-style="{'background-image': 'url(' + worker.profilePictureUrl + ')'}" 
+                                                                        ng-if="worker.profilePictureUrl"
+                                                                    ></div>
+                                                                    <button 
+                                                                        class="user-form-profile-photo-remove-button button clear alert"
+                                                                        type="button"
+                                                                        ng-click="removeProfilePicture()"
+                                                                        ng-if="worker.profilePictureUrl"
+                                                                    >
+                                                                        <i class="fal fa-times"></i> Remove
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell shrink">
+                                                                <button 
+                                                                    class="user-form-profile-photo-button button clear secondary" 
+                                                                    id="userSetupFormProfilePhotoButton"
+                                                                    type="button"
+                                                                    ng-click="uploadProfilePicture(worker)"
+                                                                >
+                                                                    <i class="fal fa-upload"></i> 
+                                                                    <span ng-if="!worker.profilePictureUrl">
+                                                                        Upload 
+                                                                    </span>
+                                                                    <span ng-if="worker.profilePictureUrl">
+                                                                        Change 
+                                                                    </span>
+                                                                    Profile Picture
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-6">
+                                                        <div class="input-container">
+                                                            <label>   
+                                                                First Name
+                                                                <span class="alert-text">
+                                                                    *
+                                                                </span>
+                                                            </label>
+                                                            <input
+                                                                class="form-input"
+                                                                type="text"
+                                                                name="firstName"
+                                                                placeholder="Johnny"
+                                                                ng-model="worker.firstName"
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-6">
+                                                        <div class="input-container">
+                                                            <label>   
+                                                                Last Name
+                                                                <span class="alert-text">
+                                                                    *
+                                                                </span>
+                                                            </label>
+                                                            <input
+                                                                class="form-input"
+                                                                type="text"
+                                                                name="lastName"
+                                                                placeholder="Appleseed"
+                                                                ng-model="worker.lastName"
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <span 
+                                                            class="alert-text"
+                                                            ng-show="UI.emailTaken"
+                                                        >
+                                                            Sorry, looks like this email is taken, try another.
+                                                        </span>
+                                                        <div class="input-container">
+                                                            <label>   
+                                                                Primary Email Address
+                                                            </label>
+                                                            <input
+                                                                class="form-input"
+                                                                type="email"
+                                                                name="email"
+                                                                placeholder="johnnyappleseed@carecenter.com"
+                                                                ng-model="worker.email"
+                                                                ng-keyup="UI.emailTaken = false"
+                                                                autocomplete="off"
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <div class="input-container">
+                                                            <label>   
+                                                                Primary Phone Number
+                                                            </label>
+                                                            <input
+                                                                class="form-input"
+                                                                type="text"
+                                                                name="phone"
+                                                                placeholder="(123) 456-7890"
+                                                                ng-model="worker.phoneNumber"
+                                                                ui-mask="(999) 999-9999"
+                                                                ui-mask-placeholder 
+                                                                ui-mask-placeholder-char="_"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12 text-right">
+                                                        <button 
+                                                            class="user-edit-form-edit-submit-button submit-button button" 
+                                                            id="userFormEditSubmitButton"
+                                                            type="button"
+                                                            ng-disabled="UI.formSaving"
+                                                            ng-class="{'form-saving': UI.formSaving}"
+                                                            ng-click="updateUser(worker)"
+                                                            ng-if="!UI.newUser"
+                                                        >
+                                                            <span ng-if="!UI.formSaving">
+                                                                <i class="fal fa-check-circle"></i> Update
+                                                            </span>
+                                                            <span ng-if="UI.formSaving">
+                                                                Please Wait...
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-tabs-panel tabs-panel grid-container" 
+                                                id="preferences"
+                                            >
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div 
+                                                        class="cell small-12 medium-shrink large-shrink"
+                                                        ng-if="!UI.newUser"
+                                                    >
+                                                        <div class="input-container color-picker-input-container">
+                                                            <label>   
+                                                                Color
+                                                            </label>
+                                                            <div
+                                                                class="color-picker-sample"
+                                                                ng-style="{'background': worker.Preferences.backgroundColor}"
+                                                                ng-model="worker.Preference.profileColor"
+                                                                color-picker 
+                                                                color-picker-model="worker.Preferences.backgroundColor"
+                                                                color-picker-output-format="'hex'"
+                                                            >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <div class="grid-x grid-margin-x">
+                                                            <div class="cell shrink">
+                                                                <div class="switch">
+                                                                    <input 
+                                                                        class="switch-input" 
+                                                                        id="darkModeToggle" 
+                                                                        type="checkbox" 
+                                                                        ng-click="updateDarkModeToggle()" 
+                                                                        ng-checked="worker.Preferences.darkMode"
+                                                                    />
+                                                                    <label 
+                                                                        class="switch-paddle" 
+                                                                        for="darkModeToggle"
+                                                                    >
+                                                                        <span class="show-for-sr">
+                                                                            Dark Mode Toggle
+                                                                        </span>
+                                                                        <span 
+                                                                            class="switch-active" 
+                                                                            aria-hidden="true"
+                                                                        >
+                                                                            <i class="fal fa-moon"></i>
+                                                                        </span>
+                                                                        <span 
+                                                                            class="switch-inactive warning-text" 
+                                                                            aria-hidden="true"
+                                                                        >
+                                                                            <i class="fal fa-sun"></i>
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell auto">
+                                                                <span>
+                                                                    <b>
+                                                                        Dark Mode?
+                                                                    </b>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                        <div class="user-edit-form-select-button-container select-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell shrink text-right">
+                                                                    <button 
+                                                                        class="user-edit-form-select-button select-button button"
+                                                                        type="button"
+                                                                        ng-click="worker.Preferences.notifyByEmail = !worker.Preferences.notifyByEmail"
+                                                                        ng-class="{'selected': worker.Preferences.notifyByEmail}"
+                                                                    >
+                                                                        <div 
+                                                                            class="check-icon"
+                                                                            ng-if="worker.Preferences.notifyByEmail"
+                                                                        >
+                                                                            <i class="fal fa-check"></i>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="cell auto">
+                                                                    <label>
+                                                                        Notify by Email
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-shrink large-shrink">
+                                                        <div class="user-edit-form-select-button-container select-container">
+                                                            <div class="grid-x align-middle">
+                                                                <div class="cell shrink text-right">
+                                                                    <button 
+                                                                        class="user-edit-form-select-button select-button button"
+                                                                        type="button"
+                                                                        ng-click="worker.Preferences.notifyByText = !worker.Preferences.notifyByText"
+                                                                        ng-class="{'selected': worker.Preferences.notifyByText}"
+                                                                    >
+                                                                        <div 
+                                                                            class="check-icon"
+                                                                            ng-if="worker.Preferences.notifyByText"
+                                                                        >
+                                                                            <i class="fal fa-check"></i>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="cell auto">
+                                                                    <label>
+                                                                        Notify by Text
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12 text-right">
+                                                        <button 
+                                                            class="user-edit-form-edit-submit-button submit-button button" 
+                                                            id="userFormEditSubmitButton"
+                                                            type="button"
+                                                            ng-disabled="UI.formSaving"
+                                                            ng-class="{'form-saving': UI.formSaving}"
+                                                            ng-click="updatePreferences(worker.Preferences)"
+                                                            ng-if="!UI.newUser"
+                                                        >
+                                                            <span ng-if="!UI.formSaving">
+                                                                <i class="fal fa-check-circle"></i> Update
+                                                            </span>
+                                                            <span ng-if="UI.formSaving">
+                                                                Please Wait...
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-tax-information-tabs-panel user-edit-form-tabs-panel tabs-panel grid-container" 
+                                                id="taxInformation"
+                                            >
+                                                <div class="golura-block grid-y">
+                                                    <div class="cell shrink">
+                                                        <div class="grid-x grid-margin-x align-middle">
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Personal Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Social Security Number
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="ssn"
+                                                                        placeholder="XXX-XX-XXXX"
+                                                                        ng-model="userCredentials.ssn"
+                                                                        ui-mask="999-99-9999"
+                                                                        ui-mask-placeholder 
+                                                                        ui-mask-placeholder-char="-"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Date of Birth
+                                                                    </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-input"
+                                                                        id="birthDate"
+                                                                        name="birthDate"
+                                                                        ng-model="userCredentials.birthDate"
+                                                                        flatpickr
+                                                                        date-only="true"
+                                                                        allow-past="true"
+                                                                        required
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Address Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Street Address
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="street1"
+                                                                        placeholder="123 Main Street"
+                                                                        ng-model="userCredentials.street1"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Street Address Line 2
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="street2"
+                                                                        placeholder="Apt, Suite, Unit, etc."
+                                                                        ng-model="userCredentials.street2"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        City
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="city"
+                                                                        placeholder="City"
+                                                                        ng-model="userCredentials.city"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        State
+                                                                    </label>
+                                                                    <selectize
+                                                                        class="user-credentials-form-state-input form-input"
+                                                                        id="userCredentialsStateInput"
+                                                                        config="stateOptions"
+                                                                        options="states"
+                                                                        ng-model="userCredentials.stateId"
+                                                                        ng-cloak
+                                                                    >
+                                                                    </selectize>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        ZIP Code
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="zipCode"
+                                                                        placeholder="12345"
+                                                                        ng-model="userCredentials.zipCode"
+                                                                        maxlength="10"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Emergency Contact
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Emergency Contact Name
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="emergencyContactName"
+                                                                        placeholder="John Doe"
+                                                                        ng-model="userCredentials.emergencyContactName"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Emergency Contact Phone
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="emergencyContactPhone"
+                                                                        placeholder="(555) 123-4567"
+                                                                        ng-model="userCredentials.emergencyContactPhone"
+                                                                        mask="(999) 999-9999"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Relationship
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="emergencyContactRelationship"
+                                                                        placeholder="Spouse, Parent, etc."
+                                                                        ng-model="userCredentials.emergencyContactRelationship"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Employment Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Hire Date
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="hireDate"
+                                                                        placeholder="MM/DD/YYYY"
+                                                                        ng-model="userCredentials.hireDate"
+                                                                        flatpickr
+                                                                        fp-opts="{dateFormat: 'Y-m-d', allowInput: true}"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Employment Status
+                                                                    </label>
+                                                                    <selectize
+                                                                        class="user-credentials-form-employment-status-input form-input"
+                                                                        id="userCredentialsEmploymentStatusInput"
+                                                                        config="statusOptions"
+                                                                        options="employmentStatuses"
+                                                                        ng-model="userCredentials.employmentStatus"
+                                                                        ng-cloak
+                                                                    >
+                                                                    </selectize>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Termination Date
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="terminationDate"
+                                                                        placeholder="MM/DD/YYYY"
+                                                                        ng-model="userCredentials.terminationDate"
+                                                                        flatpickr
+                                                                        fp-opts="{dateFormat: 'Y-m-d', allowInput: true}"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Tax Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Tax Filing Status
+                                                                    </label>
+                                                                    <selectize
+                                                                        class="user-credentials-form-tax-filing-status-input form-input"
+                                                                        id="userCredentialsTaxFilingStatusInput"
+                                                                        config="statusOptions"
+                                                                        options="taxFilingStatuses"
+                                                                        ng-model="userCredentials.taxFilingStatus"
+                                                                        ng-cloak
+                                                                    >
+                                                                    </selectize>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-3 large-3">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Federal Allowances
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="number"
+                                                                        name="federalAllowances"
+                                                                        placeholder="0"
+                                                                        ng-model="userCredentials.federalAllowances"
+                                                                        min="0"
+                                                                        step="1"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-3 large-3">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        State Allowances
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="number"
+                                                                        name="stateAllowances"
+                                                                        placeholder="0"
+                                                                        ng-model="userCredentials.stateAllowances"
+                                                                        min="0"
+                                                                        step="1"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Additional Federal Withholding
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="number"
+                                                                        name="additionalFederalWithholding"
+                                                                        placeholder="0.00"
+                                                                        ng-model="userCredentials.additionalFederalWithholding"
+                                                                        min="0"
+                                                                        step="0.01"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Additional State Withholding
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="number"
+                                                                        name="additionalStateWithholding"
+                                                                        placeholder="0.00"
+                                                                        ng-model="userCredentials.additionalStateWithholding"
+                                                                        min="0"
+                                                                        step="0.01"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Banking Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Bank Name
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="bankName"
+                                                                        placeholder="Bank of America"
+                                                                        ng-model="userCredentials.bankName"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Account Type
+                                                                    </label>
+                                                                    <selectize
+                                                                        class="user-credentials-form-bank-account-type-input form-input"
+                                                                        id="userCredentialsBankAccountTypeInput"
+                                                                        config="typeOptions"
+                                                                        options="bankAccountTypes"
+                                                                        ng-model="userCredentials.bankAccountType"
+                                                                        ng-cloak
+                                                                    >
+                                                                    </selectize>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Routing Number
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="routingNumber"
+                                                                        placeholder="123456789"
+                                                                        ng-model="userCredentials.routingNumber"
+                                                                        mask="999999999"
+                                                                        maxlength="9"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Account Number
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="accountNumber"
+                                                                        placeholder="Account Number"
+                                                                        ng-model="userCredentials.accountNumber"
+                                                                        maxlength="20"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Driver License Information
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Driver License Number
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="driverLicenseNumber"
+                                                                        placeholder="License Number"
+                                                                        ng-model="userCredentials.driverLicenseNumber"
+                                                                        maxlength="50"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        License State
+                                                                    </label>
+                                                                    <selectize
+                                                                        class="user-credentials-form-license-state-input form-input"
+                                                                        id="userCredentialsLicenseStateInput"
+                                                                        config="stateOptions"
+                                                                        options="states"
+                                                                        ng-model="userCredentials.driverLicenseStateId"
+                                                                        ng-cloak
+                                                                    >
+                                                                    </selectize>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-4 large-4">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        License Expiration
+                                                                    </label>
+                                                                    <input
+                                                                        class="form-input"
+                                                                        type="text"
+                                                                        name="driverLicenseExpiration"
+                                                                        placeholder="MM/DD/YYYY"
+                                                                        ng-model="userCredentials.driverLicenseExpiration"
+                                                                        flatpickr
+                                                                        fp-opts="{dateFormat: 'Y-m-d', allowInput: true}"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <h6>
+                                                                    <b>
+                                                                        Forms & Documents
+                                                                    </b>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="user-edit-form-select-button-container select-container">
+                                                                    <div class="grid-x align-middle">
+                                                                        <div class="cell shrink text-right">
+                                                                            <button 
+                                                                                class="user-edit-form-select-button select-button button"
+                                                                                type="button"
+                                                                                ng-click="userCredentials.w4OnFile = !userCredentials.w4OnFile"
+                                                                                ng-class="{'selected': userCredentials.w4OnFile}"
+                                                                            >
+                                                                                <div 
+                                                                                    class="check-icon"
+                                                                                    ng-if="userCredentials.w4OnFile"
+                                                                                >
+                                                                                    <i class="fal fa-check"></i>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="cell auto">
+                                                                            <label>
+                                                                                W-4 Form on File
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-6 large-6">
+                                                                <div class="user-edit-form-select-button-container select-container">
+                                                                    <div class="grid-x align-middle">
+                                                                        <div class="cell shrink text-right">
+                                                                            <button 
+                                                                                class="user-edit-form-select-button select-button button"
+                                                                                type="button"
+                                                                                ng-click="userCredentials.i9OnFile = !userCredentials.i9OnFile"
+                                                                                ng-class="{'selected': userCredentials.i9OnFile}"
+                                                                            >
+                                                                                <div 
+                                                                                    class="check-icon"
+                                                                                    ng-if="userCredentials.i9OnFile"
+                                                                                >
+                                                                                    <i class="fal fa-check"></i>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="cell auto">
+                                                                            <label>
+                                                                                I-9 Form on File
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12">
+                                                                <div class="input-container">
+                                                                    <label>   
+                                                                        Notes
+                                                                    </label>
+                                                                    <textarea
+                                                                        class="form-input"
+                                                                        name="notes"
+                                                                        placeholder="Additional notes or comments..."
+                                                                        ng-model="userCredentials.notes"
+                                                                        rows="4"
+                                                                    ></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cell small-12 medium-12 large-12 text-right">
+                                                                <button 
+                                                                    class="user-edit-form-edit-submit-button submit-button button" 
+                                                                    id="userCredentialsFormSubmitButton"
+                                                                    type="button"
+                                                                    ng-disabled="UI.formSaving"
+                                                                    ng-class="{'form-saving': UI.formSaving}"
+                                                                    ng-click="updateUserCredentials(userCredentials)"
+                                                                    ng-if="!UI.newUser"
+                                                                >
+                                                                    <span ng-if="!UI.formSaving">
+                                                                        <i class="fal fa-check-circle"></i> Update
+                                                                    </span>
+                                                                    <span ng-if="UI.formSaving">
+                                                                        Please Wait...
+                                                                    </span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-pay-stubs-tabs-panel user-edit-form-tabs-panel tabs-panel" 
+                                                id="payStubs"
+                                            >
+                                                <div 
+                                                    class="golura-block"
+                                                    ng-include="'dist/partials/users/paystubs.html'"
+                                                ></div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-pay-rate-tabs-panel user-edit-form-tabs-panel tabs-panel" 
+                                                id="payRates"
+                                            >
+                                                <div class="golura-block grid-y">
+                                                    <div class="cell shrink">
+                                                        <div class="user-pay-rates-search-container list-search-container">
+                                                            <div class="user-pay-rates-search list-search">
+                                                                <div class="search-input-container">
+                                                                    <div class="grid-x align-middle">
+                                                                        <div class="cell auto align-self-bottom">
+                                                                            <input
+                                                                                class="user-pay-rates-search-input search-input"
+                                                                                id="userPayRatesSearchInput" 
+                                                                                type="text"
+                                                                                placeholder="Search pay rates..."
+                                                                                autocomplete="off"
+                                                                                ng-model="search.payRates"
+                                                                            />
+                                                                        </div>
+                                                                        <div class="cell shrink align-self-bottom">
+                                                                            <span class="search-icon">
+                                                                                <i class="fal fa-search"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div 
+                                                                            class="cell shrink"
+                                                                            ng-if="subPermissions.payroll.canEdit"
+                                                                        >
+                                                                            <div class="user-pay-rates-search-create-button-container create-button-container">
+                                                                                <button 
+                                                                                    class="user-pay-rate-create-button create-button submit-button button success white-text" 
+                                                                                    id="userPayRateCreateButton"
+                                                                                    type="button"
+                                                                                    data-open="userPayRateFormReveal"
+                                                                                    ng-click="initUserPayRateForm()"
+                                                                                >
+                                                                                    <i class="fal fa-plus-circle"></i> Add Pay Rate
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell shrink">
+                                                        <div class="user-pay-rates-list-header-container list-header-container">
+                                                            <div class="user-pay-rates-list-header list-header">
+                                                                <div class="grid-x grid-margin-x align-middle">
+                                                                    <div class="cell small-12 medium-2 large-2">
+                                                                        <h3>
+                                                                            <b>
+                                                                                Rate Type
+                                                                            </b>
+                                                                        </h3>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-2 large-2">
+                                                                        <h3>
+                                                                            <b>
+                                                                                Rate
+                                                                            </b>
+                                                                        </h3>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-2 large-2">
+                                                                        <h3>
+                                                                            <b>
+                                                                                Overtime Rate
+                                                                            </b>
+                                                                        </h3>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h3>
+                                                                            <b>
+                                                                                Effective Date
+                                                                            </b>
+                                                                        </h3>
+                                                                    </div>
+                                                                    <div class="cell small-12 medium-auto large-auto">
+                                                                        <h3>
+                                                                            <b>
+                                                                                Actions
+                                                                            </b>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-auto large-auto overflow-scroll">
+                                                        <div class="user-pay-rates-list-container list-container">
+                                                            <ul class="user-pay-rates-list list">
+                                                                <li 
+                                                                    class="user-pay-rate-list-item list-item"
+                                                                    ng-repeat="payRate in filteredPayRates = ( worker.PayRates | 
+                                                                    filter: search.payRates ) track by $index"
+                                                                    ng-class="{'list-item-inactive': !payRate.isActive}"
+                                                                >
+                                                                    <div class="grid-x grid-margin-x align-middle">
+                                                                        <div class="cell small-12 medium-2 large-2">
+                                                                            <div class="user-pay-rate-type">
+                                                                                <h6 class="text-capitalize">
+                                                                                    {{payRate.rateType}}
+                                                                                </h6>
+                                                                                <h6 
+                                                                                    class="label success white-text"
+                                                                                    ng-if="payRate.isPrimary"
+                                                                                >
+                                                                                    Primary
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-2 large-2">
+                                                                            <div class="user-pay-rate-amount">
+                                                                                <h6>
+                                                                                    ${{payRate.rate}}
+                                                                                    <span ng-if="payRate.rateType === 'hourly'">/hr</span>
+                                                                                    <span ng-if="payRate.rateType === 'daily'">/day</span>
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-2 large-2">
+                                                                            <div class="user-pay-rate-overtime">
+                                                                                <h6 ng-if="payRate.overtimeRate">
+                                                                                    ${{payRate.overtimeRate}}/hr
+                                                                                </h6>
+                                                                                <h6 
+                                                                                    class="text-muted"
+                                                                                    ng-if="!payRate.overtimeRate"
+                                                                                >
+                                                                                    N/A
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-auto large-auto">
+                                                                            <div class="user-pay-rate-effective-date">
+                                                                                <h6>
+                                                                                    {{payRate.effectiveDate | EventDateFormat}}
+                                                                                </h6>
+                                                                                <h6 
+                                                                                    class="user-pay-rate-sub-list-item"
+                                                                                    ng-if="payRate.endDate"
+                                                                                >
+                                                                                    Until: {{payRate.endDate | EventDateFormat}}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cell small-12 medium-auto large-auto">
+                                                                            <div 
+                                                                                class="user-pay-rate-actions"
+                                                                                ng-if="subPermissions.payroll.canEdit"
+                                                                            >
+                                                                                <button 
+                                                                                    class="user-pay-rate-edit-button button white-text"
+                                                                                    type="button"
+                                                                                    ng-click="initUserPayRateForm(payRate)"
+                                                                                    data-open="userPayRateFormReveal"
+                                                                                    title="Edit Pay Rate"
+                                                                                >
+                                                                                    <i class="fal fa-edit"></i> Edit
+                                                                                </button>
+                                                                                <button 
+                                                                                    class="user-pay-rate-remove-button button alert white-text"
+                                                                                    type="button"
+                                                                                    ng-click="removeUserPayRate(payRate)"
+                                                                                    ng-if="payRate.isActive"
+                                                                                    title="Remove Pay Rate"
+                                                                                >
+                                                                                    <i class="fal fa-archive"></i> Remove
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div 
+                                                                class="user-pay-rates-empty-state empty-state"
+                                                                ng-if="!worker.PayRates || worker.PayRates.length === 0"
+                                                            >
+                                                                <div class="grid-x grid-margin-x align-center text-center">
+                                                                    <div class="cell small-12 medium-8 large-6">
+                                                                        <h4>No Pay Rates Found</h4>
+                                                                        <p class="text-muted">
+                                                                            This user doesn't have any pay rates configured yet.
+                                                                        </p>
+                                                                        <button 
+                                                                            class="user-pay-rate-create-button create-button submit-button button success white-text" 
+                                                                            type="button"
+                                                                            data-open="userPayRateFormReveal"
+                                                                            ng-click="initUserPayRateForm()"
+                                                                            ng-if="subPermissions.payroll.canEdit"
+                                                                        >
+                                                                            <i class="fal fa-plus-circle"></i> Add First Pay Rate
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-tabs-panel tabs-panel grid-container" 
+                                                id="permissions"
+                                            >
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell small-12 medium-auto large-auto" >
+                                                        <div class="input-container">
+                                                            <legend>   
+                                                                Role
+                                                                <span class="alert-text">
+                                                                    *
+                                                                </span>
+                                                            </legend>
+                                                            <selectize
+                                                                class="user-edit-form-roles-input form-input"
+                                                                id="userFormRoleInput"
+                                                                config="rolesOptions"
+                                                                options="roles"
+                                                                ng-model="worker.roleId"
+                                                                ng-change="updateUserRolePermissions(worker.roleId)"
+                                                                ng-cloak
+                                                                required
+                                                            >
+                                                            </selectize>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <button 
+                                                            class="user-edit-form-button submit-button button" 
+                                                            id="userFormButton"
+                                                            type="button"
+                                                            data-open="userPermissionsReveal"
+                                                            ng-if="permissions.canEdit"
+                                                        >
+                                                            <span ng-if="!UI.formSaving">
+                                                                <i class="fal fa-search"></i> View Permissions
+                                                            </span>
+                                                            <span ng-if="UI.formSaving">
+                                                                Please Wait...
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12 text-right">
+                                                        <button 
+                                                            class="user-edit-form-edit-submit-button submit-button button" 
+                                                            id="userFormEditSubmitButton"
+                                                            type="button"
+                                                            ng-disabled="UI.formSaving"
+                                                            ng-class="{'form-saving': UI.formSaving}"
+                                                            ng-click="updateUser(worker)"
+                                                            ng-if="!UI.newUser"
+                                                        >
+                                                            <span ng-if="!UI.formSaving">
+                                                                <i class="fal fa-check-circle"></i> Update
+                                                            </span>
+                                                            <span ng-if="UI.formSaving">
+                                                                Please Wait...
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="user-edit-form-tabs-panel tabs-panel" 
+                                                id="devices"
+                                            >
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div 
+                                                        class="cell small-12 medium-12 large-12"
+                                                        ng-if="worker.id"
+                                                    >
+                                                        <h2>
+                                                            <b>Devices</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <div class="user-edit-form-devices-container">
+                                                            <div class="grid-x grid-margin-x align-middle">
+                                                                <div 
+                                                                    class="cell small-12 medium-4 large-4"
+                                                                    ng-repeat="device in devices track by $index"
+                                                                >
+                                                                    <div class="user-edit-form-device-container">
+                                                                        <div class="grid-x text-center">
+                                                                            <div class="small-12 medium-12 large-12">
+                                                                                <h2>
+                                                                                    <i                                                    
+                                                                                        ng-class="{'fab fa-apple': device.type === 'Mac',
+                                                                                        'fab fa-tablet-button': device.type === 'iPad',
+                                                                                        'fab fa-windows': device.type === 'web',
+                                                                                        'fab fa-android': device.type === 'Android',
+                                                                                        'fal fa-mobile-alt': device.type === 'Mobile',
+                                                                                        'fal fa-tablet': device.type === 'Tablet',
+                                                                                        'fal fa-mobile-button': device.type === 'ios'}"
+                                                                                    ></i>
+                                                                                </h3>
+                                                                            </div>
+                                                                            <div class="small-12 medium-12 large-12">
+                                                                                <h4>
+                                                                                    <b>
+                                                                                        {{device.ipAddress}}
+                                                                                    </b>
+                                                                                </h3>
+                                                                                <h6>
+                                                                                    {{device.type}}
+                                                                                </h6>
+                                                                                <h6 class="user-edit-form-device-last-seen">
+                                                                                    <b>Last Seen</b>
+                                                                                    <br/>
+                                                                                    {{device.lastLogin | DateTimeFormat}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="small-12 medium-12 large-12 text-right">
+                                                                                <button 
+                                                                                    class="user-edit-form-device-delete-button button alert white-text"
+                                                                                    type="button"
+                                                                                    ng-click="removeDevice(device)"
+                                                                                >
+                                                                                    <i class="fal fa-archive"></i> Remove
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="user-permissions-reveal reveal"
+    id="userPermissionsReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserPermissionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/users/user-permissions-form.html'"
+    ></div>
+</div>
+<div
+    class="user-pay-rate-form-reveal reveal"
+    id="userPayRateFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserPayRateFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/users/user-pay-rate-form.html'"
+    ></div>
+</div>

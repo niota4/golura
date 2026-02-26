@@ -1,0 +1,253 @@
+<div 
+    class="view-warehouse-container inventory-container"
+    id="viewWarehouseContainer"
+    ng-init="initWarehouse()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="view-warehouse inventory grid-y">
+        <div class="cell shrink position-relative">
+            <div 
+                class="view-warehouse-search-container list-search-container"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="view-warehouse-search list-search">
+                    <div class="search-input-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink">
+                                <div class="view-warehouse-search-create-button-container create-button-container">
+                                    <a 
+                                        class="view-warehouse-create-button create-button submit-button button warning white-text" 
+                                        ng-click="$root.goBack()"
+                                    >
+                                        <i class="fal fa-circle-arrow-left"></i>
+                                        <span ng-if="!$root.UI.isMobile">
+                                            Back
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cell auto align-self-bottom">
+                                <input
+                                    class="inventory-warehouse-search-input search-input"
+                                    id="inventoryWarehouseSearchInput" 
+                                    type="text"
+                                    placeholder="Search warehouse..."
+                                    ng-model="search.inventoryWarehouse.value"
+                                    ng-change="filterTreeGrid(search.inventoryWarehouse.value)"
+                                />
+                            </div>
+                            <div class="cell shrink align-self-bottom">
+                                <span class="search-icon">
+                                    <i class="fal fa-search"></i>
+                                </span>
+                            </div>
+                            <div class="cell shrink">
+                                <div class="view-warehouse-create-button-container create-button-container">
+                                    <button 
+                                        class="view-warehouse-create-button create-button button success white-text" 
+                                        id="viewWarehouseSearchCreateButton"
+                                        type="button"
+                                        data-open="viewWarehouseCreationReveal"
+                                    >
+                                        <i class="fal fa-layer-plus"></i> 
+                                        <span ng-if="!$root.UI.isMobile">
+                                            Create
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell small-12 medium-12 large-12">
+            <div 
+                class="warehouse golura-form"
+                id="warehouse"
+                ng-if="!$root.UI.isMobile"
+            ></div>
+            <div
+                class="golura-block"
+                ng-if="$root.UI.isMobile"
+                ng-include="'dist/partials/inventory/areas.html'"
+            >
+            </div>
+            <div 
+                class="view-warehouse-delete-container"
+                ng-if="UI.inventoryDragging"
+            >
+                <button 
+                    class="view-warehouse-delete-button button alert white-text"
+                    id="viewWarehouseDeleteButton"
+                    type="button"
+                >
+                    <i class="fal fa-archive"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="view-warehouse-creation-reveal reveal"
+    id="viewWarehouseCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewWarehouseFormReveal" 
+        type="button" 
+        data-close
+        ng-click="UI.createInventory = !UI.createInventory"
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <button 
+        class="estimate-creation-options-back-button back-button button warning white-text"
+        type="button"
+        ng-click="UI.createInventory = !UI.createInventory"
+        ng-if="UI.createInventory == 'Area' ||
+        UI.createInventory == 'Aisle' ||
+        UI.createInventory == 'Row' ||
+        UI.createInventory == 'Shelf' ||
+        UI.createInventory == 'Rack' ||
+        UI.createInventory == 'Section'"
+    >
+        <i class="fal fa-circle-arrow-left"></i> Back
+    </button>
+    <h2 ng-if="!UI.createInventory.length">
+        <b>
+            Select One to Create
+        </b>
+    </h2>
+    <div 
+        class="view-warehouse-creation-options-container grid-x grid-margin-x align-middle text-center"
+        ng-if="!UI.createInventory.length"
+    >
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventoryAreaForm()"
+                ng-click="UI.createInventory = 'Area'"
+            >
+                <span>
+                    <i class="fal fa-objects-column"></i>
+                </span>
+                Area
+            </div>
+        </div>
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventoryAisleForm()"
+                ng-click="UI.createInventory = 'Aisle'"
+            >
+                <span>
+                    <i class="fal fa-xmarks-lines"></i>
+                </span>
+                Aisle
+            </div>
+        </div>
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventoryRowForm()"
+                ng-click="UI.createInventory = 'Row'"
+            >
+                <span>
+                    <i class="fal fa-table-rows"></i>
+                </span>
+                Row
+            </div>
+        </div>
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventoryShelfForm()"
+                ng-click="UI.createInventory = 'Shelf'"
+            >
+                <span>
+                    <i class="fal fa-shelves-empty"></i>
+                </span>
+                Shelf
+            </div>
+        </div>
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventoryRackForm()"
+                ng-click="UI.createInventory = 'Rack'"
+            >
+                <span>
+                    <i class="fal fa-pallet-boxes"></i>
+                </span>
+                Rack
+            </div>
+        </div>
+        <div class="cell small-6 medium-4 large-4">
+            <div
+                class="view-warehouse-creation-option"
+                ng-init="initInventorySectionForm()"
+                ng-click="UI.createInventory = 'Section'"
+            >
+                <span>
+                    <i class="fal fa-grid-round-5"></i>
+                </span>
+                Section
+            </div>
+        </div>
+    </div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-area-form.html'"
+        ng-if="UI.createInventory == 'Area'"
+    ></div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-aisle-form.html'"
+        ng-if="UI.createInventory == 'Aisle'"
+    ></div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-row-form.html'"
+        ng-if="UI.createInventory == 'Row'"
+    ></div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-shelf-form.html'"
+        ng-if="UI.createInventory == 'Shelf'"
+    ></div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-rack-form.html'"
+        ng-if="UI.createInventory == 'Rack'"
+    ></div>
+    <div 
+        ng-include="'dist/forms/inventory/inventory-section-form.html'"
+        ng-if="UI.createInventory == 'Section'"
+    ></div>
+</div>

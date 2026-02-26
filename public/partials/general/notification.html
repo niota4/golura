@@ -1,0 +1,74 @@
+<div class="notification-container">
+    <div 
+        format-notifications 
+        notification="notification"
+        users="users"
+    ></div>
+    <div class="notification">
+        <div class="grid-x grid-margin-x">
+            <div 
+                class="cell small-shrink medium-shrink large-shrink"
+                ng-if="UI.selectNotifications"
+            >
+                <div class="notification-select-button-container select-container">
+                    <button 
+                        class="notification-select-button select-button button"
+                        type="button"
+                        ng-click="notification.selected = !notification.selected"
+                        ng-class="{'selected': notification.selected}"
+                    >
+                        <div 
+                            class="check-icon"
+                            ng-if="notification.selected"
+                        >
+                            <i class="fal fa-check"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div 
+                    format-users 
+                    user="notification.User"
+                    ng-if="notification.User"
+                ></div>
+                <h6>
+                    <b>
+                        {{notification.relatedModel}}
+                    </b>
+                </h6>
+            </div>
+            <div class="cell small-12 medium-6 large-6 text-right">
+                <span class="notification-time-container">
+                    <i ng-if="!notification.readAt">
+                        {{notification.createdAt | TimeAgoFormat}}
+                    </i>
+                    <i ng-if="notification.readAt">
+                        <b class="alert-text">Read </b>
+                        {{notification.readAt | TimeAgoFormat}}
+                    </i>
+                </span>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <p>
+                    <b>
+                        {{notification.title}}
+                    </b>
+                </p>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <p>
+                    {{notification.formattedMessage}}
+                </p>
+            </div>
+        </div>
+        <a 
+            class="notification-link"
+            ng-href="{{notification.formattedUrl}}"
+            ng-click="readNotification(notification)"
+            data-close
+            ng-cloak
+        >
+        </a>
+    </div>
+</div>

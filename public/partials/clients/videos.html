@@ -1,0 +1,400 @@
+<div 
+    class="view-client-videos-container view-client-container view-container"
+    ng-init="initClient();"
+>
+    <div format-clients client="client"></div>
+    <div class="view-client-videos view-client-media view-client view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="view-client-videos-folders-container view-client-media-folders-container">
+                    <div class="button-group align-right" ng-if="!$root.UI.isMobile">
+                        <button
+                            class="select-video-button button"
+                            type="button"
+                            ng-click="toggleVideoSelection()"
+                            ng-class="{'warning white-text': UI.selectVideos}"
+                            ng-if="videos.length"
+                        >      
+                            <span ng-if="!UI.selectVideos">
+                                <i class="fal fa-check-circle"></i>
+                                Select
+                            </span>
+                            <span ng-if="UI.selectVideos">
+                                <i class="fal fa-times-circle"></i>
+                                Cancel
+                            </span>
+                        </button>
+                        <video-uploader 
+                            client-id="{{client.id}}" 
+                            ng-if="!UI.videoFolder"
+                        ></video-uploader>
+                        <button
+                            class="view-client-videos-folders-button view-client-media-folders-button button warning white-text"
+                            type="button"
+                            ng-click="toggleVideoFolder()"
+                            ng-if="UI.videoFolder"
+                        >
+                            <i class="fal fa-times-circle"></i> 
+                            Close
+                        </button>
+                        <button
+                            class="view-client-videos-folders-button view-client-media-folders-button button"
+                            ng-class="UI.videoFolder === 'events' ? 'is-active' : 'medium-gray-button white-text'"
+                            type="button"
+                            ng-click="toggleVideoFolder('events')"
+                        >
+                            <i class="far" ng-class="{'fa-folder-open': UI.videoFolder == 'events', 'fa-folder': UI.videoFolder != 'events'}"></i> 
+                            Events
+                        </button>
+                        <button
+                            class="view-client-videos-folders-button view-client-media-folders-button button"
+                            ng-class="UI.videoFolder === 'marketing' ? 'is-active' : 'medium-gray-button white-text'"
+                            type="button"
+                            ng-click="toggleVideoFolder('marketing')"
+                        >
+                            <i class="far" ng-class="{'fa-folder-open': UI.videoFolder == 'marketing', 'fa-folder': UI.videoFolder != 'marketing'}"></i> 
+                            Marketing
+                        </button>
+                    </div>
+                    <div class="grid-x grid-margin-x align-middle" ng-if="$root.UI.isMobile">
+                        <div class="cell auto">
+                            <video-uploader 
+                                client-id="{{client.id}}" 
+                                ng-if="!UI.videoFolder"
+                            ></video-uploader>
+                        </div>
+                        <div class="cell shrink">
+                            <button
+                                class="select-video-button button"
+                                type="button"
+                                ng-click="toggleVideosOptions()"
+                                data-open="viewVideoOptionsReveal"
+                            >
+                                <i class="fal fa-cog"></i>
+                            </button>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12" ng-if="UI.selectVideos">
+                            <button
+                                class="select-video-button button expanded warning white-text"
+                                type="button"
+                                ng-click="toggleVideoSelection()"
+                            >
+                                <i class="fal fa-times-circle"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <h2 
+                    class="text-capitalize"
+                    ng-class="{'h2': !event.id && !marketing.id,
+                    'h6': event.id || marketing.id}"
+                >
+                    <b>
+                        <span>
+                            {{UI.videoFolder}} 
+                        </span>
+                        <span ng-if="!UI.videoFolder">
+                            Unassigned Videos
+                        </span>
+                    </b>
+                    <span ng-if="event.id">
+                        / {{event.title}}
+                    </span>
+                    <span ng-if="marketing.id">
+                        / #{{marketing.id}}
+                    </span>
+                </h2>
+                <div class="grid-x">
+                    <div 
+                        class="cell small-12 medium-3 large-2"
+                        ng-show="UI.videoFolder && !$root.UI.isMobile"
+                    >
+                        <div 
+                            class="viw-client-videos-events-container"
+                            ng-if="UI.videoFolder == 'events'"
+                        >
+                            <ul class="view-client-videos-events-list view-client-media-option-list view-client-videos-option-list">
+                                <li class="text-center">
+                                    <h4 ng-if="UI.eventsLoaded && !events.length">
+                                        <b>
+                                            No Events!
+                                        </b>
+                                    </h4>
+                                </li>
+                                <li 
+                                    class="view-client-videos-option-list-item view-client-media-option-list-item"
+                                    ng-repeat="e in events track by $index"
+                                >
+                                    <button
+                                        class="view-client-videos-folders-button medium-gray-button button white-text"
+                                        ng-class="event === e ? 'is-active' : 'medium-gray-button white-text'"
+                                        type="button"
+                                        ng-click="initVideos('events', e)"
+                                    >
+                                        <i
+                                            class="far"
+                                            ng-class="{'fa-folder-open': event == e, 
+                                            'fa-folder': event != e}"
+                                        ></i> 
+                                        <b>{{e.title}}</b>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div 
+                            class="viw-client-videos-events-containers"
+                            ng-if="UI.videoFolder == 'marketing'"
+                        >
+                            <ul class="view-client-videos-events-list view-client-media-option-list view-client-videos-option-list">
+                                <li class="text-center">
+                                    <h4 ng-if="UI.marketingsLoaded && !marketings.length">
+                                        <b>
+                                            No Marketing Projects!
+                                        </b>
+                                    </h4>
+                                </li>
+                                <li 
+                                    class="view-client-videos-option-list-item view-client-media-option-list-item"
+                                    ng-repeat="m in marketings track by $index"
+                                >
+                                    <button
+                                        class="view-client-videos-option-list-item medium-gray-button button white-text"
+                                        ng-class="marketing === m ? 'is-active' : 'medium-gray-button white-text'"
+                                        type="button"
+                                        ng-click="initVideos('marketing', m)"
+                                    >
+                                        <i
+                                            class="far"
+                                            ng-class="{'fa-folder-open': marketing == m, 
+                                            'fa-folder': marketing != m}"
+                                        ></i> 
+                                        <b>#{{m.id}}</b> - {{m.title}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="call small-12 medium-auto large-auto">
+                        <div class="view-client-videos-videos-container view-client-media-items-container">
+                            <video-uploader 
+                                client-id="{{client.id}}" 
+                                event-id="{{event.id}}" 
+                                ng-if="UI.videoFolder == 'events' && event.id"
+                            ></video-uploader>
+                            <video-uploader 
+                                client-id="{{client.id}}" 
+                                marketing-id="{{marketing.id}}" 
+                                ng-if="UI.videoFolder == 'marketing' && marketing.id"
+                            ></video-uploader>
+                            <format-videos 
+                                class="container" 
+                                videos="unassignedVideos"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="!UI.videoFolder && UI.videosLoaded"
+                            ></format-videos>
+                            <format-videos 
+                                class="container" 
+                                videos="eventVideos"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="UI.videoFolder == 'events' && UI.videosLoaded"
+                            ></format-videos>
+                            <format-videos 
+                                class="container" 
+                                videos="marketingVideos"
+                                events="events"
+                                estimates="estimates"
+                                marketing="marketing"
+                                ng-if="UI.videoFolder == 'marketing' && UI.videosLoaded"
+                            ></format-videos>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="view-videos-options-reveal reveal large"
+    id="viewVideoOptionsReveal"
+    data-reveal
+    data-close-on-click="false"
+    ng-if="$root.UI.isMobile"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeViewVideoOptionsReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div class="view-client-options-mobile golura-block">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div 
+                    class="button-group stacked"
+                    ng-if="!UI.videoFolder"
+                >
+                    <button
+                        class="view-client-videos-select-videos-button submit-button create-button button success white-text" 
+                        id="viewClientVideosSelectVideosButton"
+                        type="button"
+                        ng-if="videos.length"
+                        ng-click="toggleVideoSelection()"
+                        data-close
+                    >
+                        <i class="fal fa-check-circle"></i> 
+                        <span ng-if="!UI.selectVideos">Select Videos</span>
+                        <span ng-if="UI.selectVideos">Cancel Selection</span>
+                    </button>
+                    <button
+                        class="view-client-videos-unassigned-videos-button button" 
+                        id="viewClientVideosUnassignedVideosButton"
+                        type="button"
+                        ng-click="toggleVideoFolder()"
+                        data-close
+                    >
+                        <i class="fal fa-folder-open"></i> Unassigned
+                    </button>
+                    <button
+                        class="view-client-videos-events-videos-button button" 
+                        id="viewClientVideosEventsVideosButton"
+                        type="button"
+                        ng-click="toggleVideoFolder('events')"
+                    >
+                        <i class="fal fa-folder-open"></i> Event
+                    </button>
+                    <button
+                        class="view-client-videos-marketing-videos-button button" 
+                        id="viewClientVideosMarketingVideosButton"
+                        type="button"
+                        ng-click="toggleVideoFolder('marketing')"
+                    >
+                        <i class="fal fa-folder-open"></i> Marketing
+                    </button>
+                </div>
+                <button
+                    class="view-client-videos-folders-button view-client-media-folders-button button warning white-text"
+                    type="button"
+                    ng-click="toggleVideoFolder()"
+                    ng-if="UI.videoFolder"
+                >
+                    <i class="fal fa-times-circle"></i>
+                </button>
+                <div 
+                    class="viw-client-videos-events-container"
+                    ng-if="UI.videoFolder == 'events'"
+                >
+                    <h3 class="text-center">
+                        <b>
+                            Select Event
+                        </b>
+                    </h3>
+                    <ul class="view-client-videos-events-list view-client-media-option-list view-client-videos-option-list">
+                        <li class="text-center">
+                            <h4 ng-if="UI.eventsLoaded && !events.length">
+                                <b>
+                                    No Events!
+                                </b>
+                            </h4>
+                        </li>
+                        <li 
+                            class="view-client-videos-option-list-item view-client-media-option-list-item"
+                            ng-repeat="e in events track by $index"
+                        >
+                            <button
+                                class="view-client-videos-folders-button medium-gray-button button white-text"
+                                ng-class="event === e ? 'is-active' : 'medium-gray-button white-text'"
+                                type="button"
+                                ng-click="initVideos('events', e)"
+                                data-close
+                            >
+                                <i
+                                    class="far"
+                                    ng-class="{'fa-folder-open': event == e, 'fa-folder': event != e}"
+                                ></i> 
+                                {{e.title}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div 
+                    class="viw-client-videos-events-containers"
+                    ng-if="UI.videoFolder == 'marketing'"
+                >
+                    <h3 class="text-center">
+                        <b>
+                            Select a Marketing Project
+                        </b>
+                    </h3>
+                    <ul class="view-client-videos-events-list view-client-media-option-list view-client-videos-option-list">
+                        <li class="text-center">
+                            <h4 ng-if="UI.marketingsLoaded && !marketings.length">
+                                <b>
+                                    No Marketing Projects!
+                                </b>
+                            </h4>
+                        </li>
+                        <li 
+                            class="view-client-videos-option-list-item view-client-media-option-list-item"
+                            ng-repeat="m in marketings track by $index"
+                        >
+                            <button
+                                class="view-client-videos-option-list-item medium-gray-button button white-text"
+                                ng-class="marketing === m ? 'is-active' : 'medium-gray-button white-text'"
+                                type="button"
+                                ng-click="initVideos('marketing', m)"
+                                data-close
+                            >
+                                <i
+                                    class="far"
+                                    ng-class="{'fa-folder-open': marketing == m, 'fa-folder': marketing != m}"
+                                ></i> 
+                                <b>#{{m.id}}</b> - {{m.title}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="invoice-creation-reveal reveal"
+    id="invoiceCreationReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeInvoiceCreationReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div ng-include="'/dist/forms/invoices/ad-hoc-invoice-form.html'"></div>
+</div>

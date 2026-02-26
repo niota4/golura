@@ -1,0 +1,101 @@
+<div class="admin-rule-container admin-form-container create-edit-container">
+    <div class="admin-rule admin-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newRule">
+                Create Rule
+            </b>
+            <b ng-if="!UI.newRule">
+                Edit Rule
+            </b>
+        </h1>
+        <form 
+            class="rule-form admin-form golura-form"
+            id="ruleForm"
+            name="ruleForm"
+            ng-submit="addRule($event, rule)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.ruleLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.ruleLoaded"
+                        ></div>
+                        <label for="ruleName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="ruleName"
+                            name="ruleName"
+                            placeholder="Rule name"
+                            ng-model="rule.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="ruleDescription"
+                                name="ruleDescriptionTextarea"
+                                ng-model="rule.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="rule-form-submit-button submit-button button" 
+                        id="ruleFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.ruleLoaded && UI.newRule"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="rule-form-edit-submit-button submit-button button" 
+                        id="ruleFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateRule(rule)"
+                        ng-if="UI.ruleLoaded && !UI.newRule"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

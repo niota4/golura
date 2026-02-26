@@ -1,0 +1,71 @@
+<div 
+    class="report-spreadsheet-container report-container desktop"
+>
+    <div class="grid-y report">
+        <div class="cell shrink">
+            <div class="report-spreadsheet-header-container report-header-container">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell medium-2">
+                        <button 
+                            class="back-button button warning" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> Back
+                        </button>  
+                    </div>
+                    <div class="cell medium-8 text-center">
+                        <h4>
+                            <b>{{report.name}}</b>
+                        </h4>
+                    </div>
+                    <div class="cell medium-2 text-right">
+                        <div class="button-group">
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'spreadsheet'}"
+                                ng-click="UI.type = 'spreadsheet'"
+                                ng-if="hasOptions('spreadsheet')"
+                            >
+                                <i class="fal fa-table-cells"></i> Spreadsheet
+                            </button>
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'summary'}"
+                                ng-click="UI.type = 'summary'"
+                                ng-if="hasOptions('summary')"
+                            >
+                                <i class="fal fa-file-chart-pie"></i> Summary
+                            </button>
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'dashboard'}"
+                                ng-click="UI.type = 'dashboard'"
+                                ng-if="hasOptions('dashboard')"
+                            >
+                                <i class="fal fa-grid"></i> Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell auto">
+            <div class="report-spreadsheet-content-container report-content-container">
+                <div 
+                    class="callout warning warning-text text-center"
+                    ng-if="UI.reportLoaded && (!report.data.spreadsheetData || !report.data.headers)"
+                >
+                    <p>No spreadsheet data available for this report.</p>
+                </div>
+                <div 
+                    id="reportSpreadsheet"
+                    class="report-spreadsheet"
+                ></div>
+            </div>
+        </div>
+    </div>
+</div>

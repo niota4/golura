@@ -1,0 +1,159 @@
+<div class="inventory-section-container inventory-form-container create-edit-container">
+    <div class="inventory-section inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventorySection">
+                Create Inventory Section
+            </b>
+            <b ng-if="!UI.newInventorySection">
+                Edit Inventory Section
+            </b>
+        </h1>
+        <form 
+            class="inventory-section-form inventory-form golura-form"
+            id="inventorySectionForm"
+            name="inventorySectionForm"
+            ng-submit="createInventorySection($event, inventorySection)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventorySectionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventorySectionLoaded"
+                        ></div>
+                        <label for="sectionName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="sectionName"
+                            name="sectionName"
+                            placeholder="Section name"
+                            ng-model="inventorySection.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventorySectionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventorySectionLoaded"
+                        ></div>
+                        <label>
+                            Rack
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="inventoryOptions"
+                            options="inventoryRacks"
+                            id="inventoryRack"
+                            name="inventoryRack"
+                            type="text"
+                            ng-model="inventorySection.inventoryRackId"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="!UI.newInventorySection"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventorySectionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventorySectionLoaded"
+                        ></div>
+                        <label for="sectionStep">   
+                            Step
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="sectionStep"
+                            name="sectionStep"
+                            placeholder="Section step"
+                            ng-model="inventorySection.step"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="sectionDescription"
+                                name="sectionDescriptionTextarea"
+                                ng-model="inventorySection.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-section-form-submit-button submit-button button" 
+                        id="inventorySectionFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventorySectionLoaded && UI.newInventorySection"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-section-form-edit-submit-button submit-button button" 
+                        id="inventorySectionFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventorySection(inventorySection)"
+                        ng-if="UI.inventorySectionLoaded && !UI.newInventorySection"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

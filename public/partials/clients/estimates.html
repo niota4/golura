@@ -1,0 +1,350 @@
+<div 
+    class="view-client-estimates-container view-client-container view-container"
+    ng-init="initClient()"
+>
+    <div format-clients client="client"></div>
+    <div class="view-client-estimates view-client view">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-4">
+                        <div ng-include="'dist/partials/clients/top-bar.html'"></div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-auto">
+                        <div 
+                            ng-include="'/dist/navigations/client-navigation.html'"
+                            ng-if="!$root.UI.isMobile"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell auto"
+                ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+            >
+                <div class="golura-block grid-x grid-padding-x">
+                    <div class="golura-block cell small-12 medium-4 large-4">
+                        <div class="golura-block view-client-estimates-list-container list-container">  
+                            <div 
+                                class="grid-y"
+                                ng-class="{'golura-block': !$root.UI.isMobile,
+                                'golura-mobile-block': $root.UI.isMobile}"
+                            >
+                                <div class="cell shrink">
+                                    <h3>
+                                        <b>
+                                            <span ng-if="UI.archiveEstimates">
+                                                Archived 
+                                            </span>
+                                            Estimates
+                                        </b>
+                                    </h3> 
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="list-search-container list-container">
+                                        <div class="list-search">
+                                            <div class="search-input-container">
+                                                <div class="grid-x align-middle">
+                                                    <div class="cell auto align-self-bottom">
+                                                        <input
+                                                            class="view-client-estimates-search-input search-input"
+                                                            id="viewClientEstimatesSearchInput" 
+                                                            type="text"
+                                                            placeholder="Search Estimates..."
+                                                            ng-model="search.Estimates.value"
+                                                        />
+                                                    </div>
+                                                    <div class="cell shrink align-self-bottom">
+                                                        <span class="search-icon">
+                                                            <i class="fal fa-search"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <ul class="view-client-estimates-list list">
+                                        <li 
+                                            class="view-client-estimates-list-item"
+                                            ng-if="!filteredEstimates.length &&
+                                            UI.estimatesLoaded"
+                                        >
+                                            <h5>
+                                                <b>No Estimate Found</b>
+                                            </h5>
+                                        </li>
+                                        <li 
+                                            class="view-client-estimates-list-item list-item position-relative"
+                                            ng-class="{'is-active': e.id == estimate.id}"
+                                            ng-repeat="e in filteredEstimates = 
+                                            (estimates | filter: search.Estimates.value) |
+                                            orderBy: sort.default.value track by $index"
+                                        >                       
+                                            <div format-users user="e.Creator"></div>
+                                            <div format-users user="e.AssignedUser"></div>
+                                            <div format-clients client="e.Client"></div>
+                                            <div 
+                                                format-users 
+                                                user="e.AssignedUser"
+                                                ng-if="e.AssignedUser"
+                                            ></div>
+                                            <div class="grid-x">
+                                                <div class="small-12 medium-auto large-auto">
+                                                    <h4 class="separator-left">
+                                                        <b>
+                                                            #{{e.estimateNumber}}
+                                                        </b>
+                                                    </h4>
+                                                </div>
+                                                <div class="small-12 medium-shrink large-shrink">
+                                                    <h6 class="text-right">
+                                                        <i>
+                                                            Created {{e.createdAt | DateTimeFormat}}
+                                                        </i>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <h6>
+                                                <b>
+                                                    Total: 
+                                                </b>
+                                                ${{e.total | number}}
+                                            </h6>
+                                            <h6>
+                                                <b>
+                                                    Status: 
+                                                </b>
+                                                {{e.EstimateStatus.name}}
+                                            </h6>
+                                            <h6>
+                                                <b>
+                                                    Assigned to: 
+                                                </b>
+                                                <a 
+                                                    ng-if="e.AssignedUser"
+                                                    href="users/user/{{e.AssignedUser.id}}"
+                                                >
+                                                    {{e.AssignedUser.fullName}}
+                                                </a>
+                                                <span ng-if="!e.AssignedUser">
+                                                    No one
+                                                </span>
+                                            </h6>
+                                            <h6>
+                                                <b>
+                                                    Paid: 
+                                                </b>
+                                                <span 
+                                                    class="success-text"
+                                                    ng-if="e.won"
+                                                >   
+                                                    <b>
+                                                        Deposit Paid
+                                                    </b>
+                                                </span>
+                                                <span ng-if="!e.won">
+                                                    Not Paid
+                                                </span>
+                                            </h6>
+                                            <h6>
+                                                <b>
+                                                    Converted: 
+                                                </b>
+                                                <span 
+                                                    class="success-text"
+                                                    ng-if="e.converted"
+                                                >
+                                                    <b>
+                                                        Converted
+                                                    </b>
+                                                </span>
+                                                <span 
+                                                    class="warning-text"
+                                                    ng-if="!e.converted"
+                                                >
+                                                    <b>
+                                                        Not Converted
+                                                    </b>
+                                                </span>
+                                            </h6>
+                                            <h6 ng-if="e.eventId">
+                                                <b>
+                                                    Related Event: 
+                                                </b>    
+                                                <a href="events/event/{{e.eventId}}">
+                                                    e.Event.title
+                                                </a>
+                                            </h6>
+                                            <h6>
+                                                <b>
+                                                    Signed: 
+                                                </b>
+                                                <span 
+                                                    class="success-text"
+                                                    ng-if="e.EstimateSignature"
+                                                >
+                                                    Signed
+                                                </span>
+                                                <span ng-if="!e.EstimateSignature">
+                                                    Not Signed
+                                                </span>
+                                            </h6>
+                                            <div class="grid-x align-bottom">
+                                                <div class="small-12 medium-auto large-auto">
+                                                    <h6>
+                                                        <i>
+                                                            Created by
+                                                            <a 
+                                                                href="users/user/{{e.Creator.id}}"
+                                                                ng-if="e.Creator"
+                                                            >
+                                                                {{e.Creator.fullName}}
+                                                            </a>
+                                                            <span ng-if="!e.Creator">
+                                                                No one
+                                                            </span>
+                                                        </i>
+                                                    </h6>
+                                                </div>
+                                                <div class="small-12 medium-shrink large-shrink">
+                                                    <div class="button-group align-right">
+                                                        <button
+                                                            class="estimate-button button"
+                                                            type="button"
+                                                            ng-click="initEstimate(e)"
+                                                            ng-if="!$root.UI.isMobile"
+                                                        >
+                                                            <i class="fal fa-search"></i> View
+                                                        </button>
+                                                        <a 
+                                                            class="view-user-estimate-button button"
+                                                            ng-href="estimates/estimate/{{e.id}}"
+                                                            ng-if="$root.UI.isMobile"
+                                                        >
+                                                            <i class="fal fa-search"></i>
+                                                        </a>
+                                                        <a 
+                                                            class="view-client-estimate-edit-button button success white-text"
+                                                            ng-href="estimates/estimate/{{e.id}}/edit"
+                                                            ng-if="!e.won && !UI.archiveEstimates"
+                                                        >
+                                                            <i class="fal fa-edit"></i> 
+                                                            <span ng-if="!$root.UI.isMobile">
+                                                                Edit
+                                                            </span>
+                                                        </a>
+                                                        <button
+                                                            class="view-client-estimate-button button warning white-text"
+                                                            type="button"
+                                                            ng-click="e.restore = !e.restore"
+                                                            ng-if="UI.archiveEstimates"
+                                                        >
+                                                            <i class="fal fa-undo"></i>
+                                                            <span ng-if="!$root.UI.isMobile">
+                                                                Restore
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div 
+                                                class="list-item-delete-container list-item-delete-container black-overlay"
+                                                ng-if="e.restore"
+                                            >
+                                                <div class="golura-block grid-x grid-padding-x align-middle text-center">
+                                                    <div class="cell small-12 medium-12 large-12">
+                                                        <h4>
+                                                            <b class="alert-text">Warning: </b>
+                                                            <span class="white-text">Are you sure you want <br/>
+                                                                to restore this Estimate?
+                                                            </span>
+                                                        </h4>
+                                                        <button 
+                                                            class="list-item-options-button button alert white-text"
+                                                            type="button"
+                                                            ng-disabled="UI.formSaving"
+                                                            ng-class="{'form-alert': e.restoring}"
+                                                            ng-click="restoreEstimate(e)"
+                                                        >
+                                                            <span ng-if="!e.restoring">
+                                                                <i class="fal fa-check-circle"></i> Confirm
+                                                            </span>
+                                                            <span ng-if="e.restoring">
+                                                                Please Wait...
+                                                            </span>
+                                                        </button>
+                                                        <button 
+                                                            class="list-item-options-button button warning white-text"
+                                                            type="button"
+                                                            ng-click="e.restore = !e.restore"
+                                                        >
+                                                            <i class="fal fa-times-circle"></i> Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="golura-block small-12 medium-auto large-auto"
+                        ng-if="!$root.UI.isMobile"
+                    >
+                        <div class="golura-block grid-y">
+                            <div class="cell shrink">
+                                <div class="button-group align-right">
+                                    <button
+                                        class="view-client-estimates-create-estimate-button submit-button create-button button success white-text" 
+                                        id="viewClientEstimatesCreateEstimateButton"
+                                        type="button"
+                                        data-open="estimateCreationReveal"
+                                        ng-click="initEstimators()"
+                                        ng-if="subPermissions.estimates.canCreate"
+                                    >
+                                        <i class="fal fa-layer-plus"></i> Create Estimate
+                                    </button>
+                                    <button
+                                        class="view-client-work-orders-create-estimate-button submit-button create-button button white-text"
+                                        ng-class="{'alert': !UI.archiveEstimates}"
+                                        id="viewClientEstimatesCreateEstimateButton"
+                                        type="button"
+                                        ng-if="subPermissions.workOrders.canArchive"
+                                        ng-click="initEstimates(!UI.archiveEstimates)"
+                                    >
+                                        <span ng-if="!UI.archiveEstimates">
+                                            <i class="fal fa-box-archive"></i> View Archived
+                                        </span>
+                                        <span ng-if="UI.archiveEstimates">
+                                            <i class="fal fa-search"></i> View Active
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cell auto">
+                                <div 
+                                    class="golura-block"
+                                    ng-if="!UI.estimateLoaded ||
+                                    !estimate"
+                                    ng-include="'/dist/partials/estimates/preview.html'"
+                                ></div>
+                                <div 
+                                    class="golura-block"
+                                    ng-include="'/dist/partials/estimates/view.html'"
+                                    ng-if="UI.estimateLoaded"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

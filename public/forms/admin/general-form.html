@@ -1,0 +1,794 @@
+<div class="admin-general-container admin-form-container">
+    <div class="admin-general admin-form-details">
+        <h1>
+            <b>
+                General Settings
+            </b>
+        </h1>
+        <form 
+            class="general-form admin-form golura-form"
+            id="generalForm"
+            name="generalForm"
+            ng-submit="updateGeneralSettings($event, general)"
+        >
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Company Logo</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-marign-x align-bottom">
+                        <div class="cell shrink">
+                            <div class="general-company-logo-container">
+                                <h4 
+                                    class="general-company-logo-empty text-center"
+                                    ng-if="!general.logoUrl"
+                                >
+                                    <b>No Logo Uploaded</b>
+                                </h4>
+                                <div 
+                                    class="general-company-logo"
+                                    ng-style="{'background-image': 'url(' + general.logoUrl + ')'}" 
+                                    ng-if="general.logoUrl"
+                                ></div>
+                                <button 
+                                    class="general-company-logo-remove-button button clear alert"
+                                    type="button"
+                                    ng-click="removeCompanyLogo()"
+                                    ng-if="general.logoUrl"
+                                >
+                                    <i class="fal fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cell shrink">
+                            <button 
+                                class="general-company-logo-button button clear secondary" 
+                                id="generalCompanyLogoButton"
+                                type="button"
+                                ng-click="uploadCompanyLogo()"
+                            >
+                                <i class="fal fa-upload"></i> 
+                                <span ng-if="!general.logoUrl">
+                                    Upload 
+                                </span>
+                                <span ng-if="general.logoUrl">
+                                    Change 
+                                </span>
+                                Logo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>About</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label for="companyName">   
+                            Company Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="companyName"
+                            name="companyName"
+                            placeholder="Care Center"
+                            ng-model="general.name"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label for="companyAddress1">
+                            Street 1
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            name="address1"
+                            id="companyAddress1"
+                            name="companyAddress1"
+                            ng-model="general.street1"
+                            placeholder="Company address"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label for="companyAddress2">
+                            Street 2
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            id="companyAddress2"
+                            name="companyAddress2"
+                            ng-model="general.street2"
+                            placeholder="Company address"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label for="companyCity">
+                            City
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            id="companyCity"
+                            name="companyCity"
+                            ng-model="general.city"
+                            placeholder="Company city"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x">
+                        <div 
+                            class="cell small-12 medium-4 large-4" 
+                            data-id="{{address.State.name}}"
+                        >
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.generalSettingsLoaded"
+                                ></div>
+                                <label for="companyState">
+                                    State
+                                </label>
+                                <selectize
+                                    class="general-states-input form-input"
+                                    config="stateOptions"
+                                    options="states"
+                                    id="companyState"
+                                    name="companyState"
+                                    ng-model="general.stateId"
+                                >
+                                </selectize>
+                            </div>
+                        </div>
+                        <div class="cell auto">
+                            <div 
+                                class="input-container"
+                                ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                            >
+                                <div 
+                                    class="ssc-square"
+                                    ng-if="!UI.generalSettingsLoaded"
+                                ></div>
+                                <label for="companyZipCode">
+                                    Zip Code
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-input"
+                                    id="companyZipCode"
+                                    name="companyZipCode"
+                                    ng-model="general.zipCode"
+                                    placeholder="Company zip code"
+                                    ui-mask="99999"
+                                    ui-mask-placeholder 
+                                    ui-mask-placeholder-char="_"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label>
+                            Primary Color
+                        </label>
+                        <div
+                            class="color-picker-sample"
+                            ng-style="{'background': general.primaryColor}"
+                            ng-model="general.primaryColor"
+                            color-picker 
+                            color-picker-model="general.primaryColor"
+                            color-picker-output-format="'hex'"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label>
+                            Secondary Color
+                        </label>
+                        <div
+                            class="color-picker-sample"
+                            ng-style="{'background': general.secondaryColor}"
+                            ng-model="general.secondaryColor"
+                            color-picker 
+                            color-picker-model="general.secondaryColor"
+                            color-picker-output-format="'hex'"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.generalSettingsLoaded"
+                        ></div>
+                        <label>
+                            Tertiary Color
+                        </label>
+                        <div
+                            class="color-picker-sample"
+                            ng-style="{'background': general.tertiaryColor}"
+                            ng-model="general.tertiaryColor"
+                            color-picker 
+                            color-picker-model="general.tertiaryColor"
+                            color-picker-output-format="'hex'"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="general-form-submit-button submit-button button" 
+                        id="generalFormSubmitButton"
+                        type="submit"
+                        ng-disabled="!UI.generalSettingsLoaded ||
+                        UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Preferences</b>
+                    </h2>
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell auto">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.generalSettingsLoaded"
+                                        ></div>
+                                        <label for="companyDefaultEmailTemplateId">
+                                            Default Email Template
+                                        </label>
+                                        <selectize
+                                            class="form-input"
+                                            config="templateOptions"
+                                            options="emailTemplates"
+                                            id="companyDefaultEmailTemplateId"
+                                            name="companyDefaultEmailTemplateId"
+                                            ng-model="general.companyDefaultEmailTemplateId"
+                                        >
+                                        </selectize>
+                                    </div>
+                                </div>
+                                <div class="cell shrink">
+                                    <button
+                                        class="admin-templates-button admin-button success button white-text"
+                                        type="button"
+                                        ng-click="initEmailTemplatePreview(template)"
+                                        data-open="emailTemplatePreviewReveal"
+                                        ng-if="permissions.canView"
+                                    >
+                                        <i class="fal fa-file-magnifying-glass"></i> Preview
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell auto">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.generalSettingsLoaded"
+                                        ></div>
+                                        <label for="companyDefaultPdfTemplateId">
+                                            Default PDF Template
+                                        </label>
+                                        <selectize
+                                            class="form-input"
+                                            config="templateOptions"
+                                            options="pdfTemplates"
+                                            id="companyDefaultPdfTemplateId"
+                                            name="companyDefaultPdfTemplateId"
+                                            ng-model="general.companyDefaultPdfTemplateId"
+                                        >
+                                        </selectize>
+                                    </div>
+                                </div>
+                                <div class="cell shrink">
+                                    <button
+                                        class="admin-templates-button admin-button success button white-text"
+                                        type="button"
+                                        ng-click="initPdfTemplatePreview(template)"
+                                        data-open="pdfTemplatePreviewReveal"
+                                        ng-if="permissions.canView"
+                                    >
+                                        <i class="fal fa-file-magnifying-glass"></i> Preview
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell auto">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.generalSettingsLoaded"
+                                        ></div>
+                                        <label for="companyDefaultSmsTemplateId">
+                                            Default SMS Template
+                                        </label>
+                                        <selectize
+                                            class="form-input"
+                                            config="templateOptions"
+                                            options="smsTemplates"
+                                            id="companyDefaultSmsTemplateId"
+                                            name="companyDefaultSmsTemplateId"
+                                            ng-model="general.companyDefaultSmsTemplateId"
+                                        >
+                                        </selectize>
+                                    </div>
+                                </div>
+                                <div class="cell shrink">
+                                    <button
+                                        class="admin-templates-button admin-button success button white-text"
+                                        type="button"
+                                        ng-click="initSmsTemplatePreview(template)"
+                                        data-open="smsTemplatePreviewReveal"
+                                        ng-if="permissions.canView"
+                                    >
+                                        <i class="fal fa-file-magnifying-glass"></i> Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="general-form-submit-button submit-button button" 
+                        id="generalFormSubmitButton"
+                        type="submit"
+                        ng-disabled="!UI.generalSettingsLoaded ||
+                        UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Hours</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-6 medium-auto large-auto">
+                            <ul class="general-form-hours-list">
+                                <li 
+                                    class="general-form-hours-list-item"
+                                    ng-repeat="hour in general.hours | limitTo: 4 track by $index"
+                                >
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div 
+                                            class="cell shrink"
+                                            ng-if="!$root.UI.isMobile"
+                                        >
+                                            <div class="general-form-hours-closed">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="general-form-select-button select-button button"
+                                                            type="button"
+                                                            id="buttonOpeningLeft-{{hour.id}}"
+                                                            aria-label="hour button"
+                                                            ng-click="hour.closed = !hour.closed;
+                                                            hour.open = null;
+                                                            hour.closeTime = null;"
+                                                            ng-class="{'selected': hour.closed}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="hour.closed"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <span>
+                                                            Closed?
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell auto">
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                                ng-readonly="hour.closed"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.generalSettingsLoaded"
+                                                ></div>
+                                                <label for="day-opening-left-{{hour.id}}">
+                                                    {{hour.name}} (Opening)
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    class="general-form-hours-input form-input"
+                                                    id="day-opening-left-{{hour.id}}"
+                                                    name="day-opening-left-{{hour.id}}"
+                                                    ng-model="hour.openTime"
+                                                    ng-attr-placeholder="{{hour.close ? '9:00am' : ''}}"
+                                                    ng-readonly="hour.closed"
+                                                    ng-disabled="hour.closed"
+                                                    flatpickr
+                                                    default-time="8:00"
+                                                    time-only="true"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div 
+                            class="cell medium-shrink large-shrink"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <span 
+                                class="general-form-hours-to"
+                                ng-repeat="x in [].constructor(4) track by $index"
+                            >
+                                TO
+                            </span>
+                        </div>
+                        <div class="cell small-6 medium-auto large-auto">
+                            <ul class="general-form-hours-list">
+                                <li 
+                                    class="general-form-hours-list-item"
+                                    ng-repeat="hour in general.hours | limitTo: 4 track by $index"
+                                >
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                        ng-readonly="hour.closed"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.generalSettingsLoaded"
+                                        ></div>
+                                        <label for="day-closing-left-{{hour.id}}">
+                                            (Closing)
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            class="general-form-hours-input form-input"
+                                            id="day-closing-left-{{hour.id}}"
+                                            name="day-closing-left-{{hour.id}}"
+                                            ng-model="hour.closeTime"
+                                            ng-attr-placeholder="{{hour.closed ? '5:00pm' : ''}}"
+                                            ng-readonly="hour.closed"
+                                            ng-disabled="hour.closed"
+                                            flatpickr
+                                            default-time="17:30"
+                                            time-only="true"
+                                        />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto large-auto">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-6 medium-auto large-auto">
+                            <ul class="general-form-hours-list">
+                                <li 
+                                    class="general-form-hours-list-item"
+                                    ng-repeat="hour in general.hours | limitTo: -3 track by $index"
+                                >
+                                    <div class="grid-x grid-margin-x align-middle">
+                                        <div 
+                                            class="cell shrink"
+                                            ng-if="!$root.UI.isMobile"
+                                        >
+                                            <div class="general-form-hours-closed">
+                                                <div class="grid-x grid-margin-x align-middle">
+                                                    <div class="cell shrink text-right">
+                                                        <button 
+                                                            class="general-form-select-button select-button button"
+                                                            type="button"
+                                                            id="buttonOpeningRight-{{hour.id}}"
+                                                            aria-label="hour button"
+                                                            ng-click="hour.closed = !hour.closed;
+                                                            hour.open = null;
+                                                            hour.closeTime = null;"
+                                                            ng-class="{'selected': hour.closed}"
+                                                        >
+                                                            <div 
+                                                                class="check-icon"
+                                                                ng-if="hour.closed"
+                                                            >
+                                                                <i class="fal fa-check"></i>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cell auto">
+                                                        <span>
+                                                            Closed?
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cell auto"> 
+                                            <div 
+                                                class="input-container"
+                                                ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                                ng-readonly="hour.closed"
+                                            >
+                                                <div 
+                                                    class="ssc-square"
+                                                    ng-if="!UI.generalSettingsLoaded"
+                                                ></div>
+                                                <label for="day-opening-right-{{hour.id}}">
+                                                    {{hour.name}} (Opening)
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    class="general-form-hours-input form-input"
+                                                    id="day-opening-right-{{hour.id}}"
+                                                    name="day-opening-right-{{hour.id}}"
+                                                    ng-model="hour.open"
+                                                    ng-attr-placeholder="{{hour.close ? '9:00am' : ''}}"
+                                                    ng-readonly="hour.closed"
+                                                    ng-disabled="hour.closed"
+                                                    flatpickr
+                                                    default-time="8:00"
+                                                    time-only="true"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div 
+                            class="cell medium-shrink large-shrink"
+                            ng-if="!$root.UI.isMobile"
+                        >
+                            <span 
+                                class="general-form-hours-to"
+                                ng-repeat="x in [].constructor(3) track by $index"
+                            >
+                                TO
+                            </span>
+                        </div>
+                        <div class="cell small-6 medium-5 large-5">
+                            <ul class="general-form-hours-list">
+                                <li 
+                                    class="general-form-hours-list-item"
+                                    ng-repeat="hour in general.hours | limitTo: -3 track by $index"
+                                >
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.generalSettingsLoaded}"
+                                        ng-readonly="hour.closed"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.generalSettingsLoaded"
+                                        ></div>
+                                        <label for="day-closing-right-{{hour.id}}">
+                                            (Closing)
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            class="general-form-hours-input form-input"
+                                            id="day-closing-right-{{hour.id}}"
+                                            name="day-closing-right-{{hour.id}}"
+                                            ng-model="hour.closeTime"
+                                            ng-attr-placeholder="{{hour.close ? '5:00pm' : ''}}"
+                                            ng-readonly="hour.closed"
+                                            ng-disabled="hour.closed"
+                                            flatpickr
+                                            default-time="17:30"
+                                            time-only="true"
+                                        />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="general-form-hours-submit-button submit-button button" 
+                        id="generalFormHoursSubmitButton"
+                        type="button"
+                        ng-disabled="!UI.generalSettingsLoaded ||
+                        UI.formSaving"
+                        ng-class="{'form-saving': UI.hoursSaving}"
+                        ng-click="updateGeneralSettingsHours(general)"
+                    >
+                        <span ng-if="!UI.hoursSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.hoursSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="general.multi"
+                >
+                    <hr/>
+                    <div class="grid-x align-middle">
+                        <div class="cell auto">
+                            <h2>
+                                <b>Representative Companies</b>
+                            </h2>
+                        </div>
+                        <div class="cell auto text-right">
+                            <a
+                                class="button warning white-text" 
+                                ng-href="/admin/representative/add"
+                            >
+                                <i class="fal fa-plus-circle"></i> Add
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-y">
+                        <div 
+                            class="cell shrink"
+                            ng-repeat="company in general.companies track by $index"
+                        >
+                            <div class="general-form-representative-companies-container">
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell auto">
+                                        <div class="input-container">
+                                            <label for="representative-name-{{company.id}}">
+                                                Representative Company Name
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                class="form-input"
+                                                name="representative-name-{{company.id}}"
+                                                ng-model="company.name"
+                                                placeholder="Name of company that you represent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <div class="input-container">
+                                            <label for="representative-email-{{company.id}}">
+                                                Confirmation Email
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                class="form-input"
+                                                name="representative-email-{{company.id}}"
+                                                ng-model="company.email"
+                                                placeholder="confirmation email of company that you represent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <div class="input-container">
+                                            <label for="representative-phone-number-{{company.id}}">
+                                                Confirmation Phone Number
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                class="form-input"
+                                                name="representative-phone-number-{{company.id}}"
+                                                ng-model="company.phone_number"
+                                                placeholder="confirmation phone number of company that you represent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <button 
+                                            class="general-form-representative-companies-delete-button button alert white-text"
+                                            type="button"
+                                            ng-click="company.remove = !company.remove"
+                                        >
+                                            <i class="fal fa-archive"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

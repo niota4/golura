@@ -1,0 +1,261 @@
+<div class="activity-summary-widget-container widget-container">
+    <div class="activity-summary-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <div class="cell small-12 medium-auto large-auto">
+                            <h3 class="activity-summary-title">
+                                <b>
+                                    <i class="fal fa-chart-line"></i> Activity Summary
+                                </b>
+                            </h3>
+                            <span class="widget-period">
+                                <i ng-if="widgetData.activitySummary.period">
+                                    Last {{ widgetData.activitySummary.period.hours }}
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="activity-summary-options-button button clear" 
+                            type="button"
+                            data-toggle="activitySummaryOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="activity-summary-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="activitySummaryOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="activity-summary-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('activitySummary', { period: widgetData.activitySummary.period, limit: widgetData.activitySummary.limit })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="activitySummaryTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="activitySummaryTimeRange"
+                                        name="activitySummaryTimeRange"
+                                        ng-model="widgetData.activitySummary.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="input-container">
+                                    <label for="activitySummaryLimit">
+                                        Limit
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="limitOptions"
+                                        options="limits"
+                                        id="activitySummaryLimit"
+                                        name="activitySummaryLimit"
+                                        ng-model="widgetData.activitySummary.limit"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="activity-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.activitySummary.totalActivities || 0 }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Activities
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.activitySummary.topActivityCount || 0 }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Active Users
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-4 large-4">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ getTopActivityType(widgetData.activitySummary.activityCounts) || 'None' }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Top Activity Type
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.activitySummary.recentActivities && widgetData.activitySummary.recentActivities.length > 0"
+            >
+                <div class="activity-summary-search-container list-search-container">
+                    <div class="activity-summary-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="activity-summary-search-input search-input"
+                                        id="activitySummarySearchInput" 
+                                        type="text"
+                                        placeholder="Search activities..."
+                                        autocomplete="off"
+                                        ng-model="search.activitySummary"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-auto large-auto overflow-scroll" 
+                ng-if="widgetData.activitySummary.recentActivities && widgetData.activitySummary.recentActivities.length > 0"
+            >
+                <div class="recent-activities-section">
+                    <h5>
+                        <b>
+                            Recent Activities
+                        </b>
+                    </h5>
+                    <div class="golura-block">
+                        <div class="recent-activities-list-container list-container">
+                            <ul class="recent-activities-list list no-bullet">
+                                <li 
+                                    class="recent-activity-list-item list-item" 
+                                    ng-repeat="activity in filteredActivities = (widgetData.activitySummary.recentActivities | 
+                                    filter:search.activitySummary |
+                                    limitTo: widgetData.activitySummary.limit || 5) | 
+                                    orderBy: '-createdAt' track by $index"
+                                >
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell auto">
+                                            <h6 class="activity-user">
+                                                <b>
+                                                    {{ activity.user }}
+                                                </b>
+                                            </h6>
+                                            <div class="activity-details">
+                                                <span class="activity text-capitalize">
+                                                    {{ activity.action }}
+                                                </span>
+                                                a
+                                                <span class="activity-type text-capitalize">
+                                                    {{ activity.type }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <p class="activity-time text-muted">
+                                                <small>{{ activity.time | date:'h:mm a' }}</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-shrink large-shrink text-center" 
+                ng-if="widgetData.activitySummary.activityCounts"
+            >
+                <div class="activity-breakdown-section">
+                    <div class="golura-block">
+                        <div class="breakdown-list-container list-container">
+                            <ul class="breakdown-list list no-bullet">
+                                <li 
+                                    class="breakdown-item list-item" 
+                                    ng-repeat="(type, count) in widgetData.activitySummary.activityCounts"
+                                    ng-if="!search.activitySummary || type.toLowerCase().indexOf(search.activitySummary.toLowerCase()) !== -1"
+                                >
+                                    <div class="grid-x grid-padding-x align-middle">
+                                        <div class="cell auto">
+                                            <h6 class="breakdown-type text-capitalize">
+                                                {{ type }}
+                                            </h6>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <span class="breakdown-count">
+                                                <b>{{ count }}</b>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-shrink large-shrink text-center" 
+                ng-if="!widgetData.activitySummary.totalActivities || widgetData.activitySummary.totalActivities === 0"
+            >
+                <div class="empty-state">
+                    <i class="fal fa-chart-line fa-3x text-muted"></i>
+                    <p class="text-muted">
+                        No recent activity
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

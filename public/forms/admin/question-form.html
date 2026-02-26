@@ -1,0 +1,525 @@
+<div class="admin-question-container admin-form-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <div class="admin-question admin-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newQuestion">
+                Create Question
+            </b>
+            <b ng-if="!UI.newQuestion">
+                Edit Question
+            </b>
+        </h1>
+        <form 
+            class="question-form admin-form golura-form"
+            id="questionForm"
+            name="questionForm"
+            ng-submit="createQuestion($event, question)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label for="questionText">
+                            Question Text
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="questionText"
+                            name="questionText"
+                            placeholder="Question text"
+                            ng-model="question.questionText"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label for="inputType">
+                            Input Type
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="inputOptions"
+                            options="inputs"
+                            id="questionInputType"
+                            name="questionInputType"
+                            ng-model="question.inputType"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="question.inputType == 'select' ||
+                    question.inputType == 'multi-select' ||
+                    question.inputType == 'checkbox' ||
+                    question.inputType == 'radio'"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label title="Add options for the question by separating them with a comma. and using || to seperate the name and value. Example: Option 1||1, Option 2||2, Option 3||3">
+                            Options
+                            <span class="alert-text">
+                                *
+                            </span>
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="options"
+                                name="options"
+                                placeholder="Options (comma separated)"
+                                ng-model="question.options"
+                                ng-required="question.inputType == 'select' ||
+                                question.inputType == 'multi-select' ||
+                                question.inputType == 'checkbox' ||
+                                question.inputType == 'radio'"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label>
+                            Default Answer
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="defaultAnswer"
+                            name="defaultAnswer"
+                            placeholder="Default Answer"
+                            ng-model="question.defaultAnswer"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label>
+                            Help Text
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="helpText"
+                                name="helpText"
+                                placeholder="Help Text"
+                                ng-model="question.helpText"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.questionLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.questionLoaded"
+                        ></div>
+                        <label>
+                            Formula Reference
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="formulaReference"
+                            name="formulaReference"
+                            placeholder="Enter formula reference"
+                            ng-model="question.formulaReference"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="question-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="question-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="question.isRequired = !question.isRequired"
+                                    ng-class="{'selected': question.isRequired}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="question.isRequired"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <label>
+                                        Is Required
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="question-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="question-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="question.isVisible = !question.isVisible"
+                                    ng-class="{'selected': question.isVisible}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="question.isVisible"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <label>
+                                        Is Visible
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="question-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="question-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="question.isEditable = !question.isEditable"
+                                    ng-class="{'selected': question.isEditable}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="question.isEditable"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    <label>
+                                        Is Editable
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell auto">
+                            <h2>
+                                <b>
+                                    Validations     
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="cell shrink">
+                            <button 
+                                class="list-item-options-button add-button button"
+                                ng-class="{'warning white-text': question.valitions}"
+                                type="button"
+                                ng-click="question.valitions = !question.valitions"
+                                ng-if="!question.valitions"
+                            >
+                                <i class="fal fa-plus-circle"></i> Add Validation
+                            </button>
+                        </div>
+                        <div 
+                            class="cell small-12 medium-12 large-12"
+                            ng-if="question.valitions"
+                        >
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-12 large-12">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.questionLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.questionLoaded"
+                                        ></div>
+                                        <label for="validationType">
+                                            Validation Type
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <selectize
+                                            class="form-input"
+                                            config="validationTypeOptions"
+                                            options="validationTypes"
+                                            id="validationType"
+                                            name="validationType"
+                                            ng-model="question.validationType"
+                                            required
+                                        >
+                                        </selectize>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Min/Max Range Validation -->
+                            <div class="grid-x grid-margin-x align-middle" ng-if="question.validationType === 'range'">
+                                <div class="cell small-12 medium-shrink large-shrink"> 
+                                    <p>
+                                        <b>
+                                            Value must be between
+                                        </b>
+                                    </p>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.questionLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.questionLoaded"
+                                        ></div>
+                                        <label for="validationMin">
+                                            Minimum Value
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="number"
+                                            id="validationMin"
+                                            name="validationMin"
+                                            placeholder="Enter minimum value"
+                                            ng-model="question.validationMin"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink text-center">
+                                    <p><b>and</b></p>
+                                </div>
+                                <div class="cell small-12 medium-4 large-4">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.questionLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.questionLoaded"
+                                        ></div>
+                                        <label for="validationMax">
+                                            Maximum Value
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="number"
+                                            id="validationMax"
+                                            name="validationMax"
+                                            placeholder="Enter maximum value"
+                                            ng-model="question.validationMax"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div 
+                                    class="small-12 medium-shrink large-shrink"
+                                    ng-class="{'text-right': $root.UI.isMobile}"
+                                >
+                                    <button 
+                                        class="remove-rule-action-button button alert white-text"
+                                        type="button" 
+                                        ng-click="removeQuestionValidation()"
+                                    >
+                                        <i class="fal fa-times-circle"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Single Value Validation (Legacy) -->
+                            <div class="grid-x grid-margin-x align-middle" ng-if="question.validationType === 'single'">
+                                <div class="cell small-12 medium-shrink large-shrink"> 
+                                    <p>
+                                        <b>
+                                            Answer must be
+                                        </b>
+                                    </p>
+                                </div>
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.questionLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.questionLoaded"
+                                        ></div>
+                                        <label for="addConditionOperator">
+                                            Operator
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <selectize
+                                            class="form-input"
+                                            config="operatorOptions"
+                                            options="operators"
+                                            id="addRuleValidationOperator"
+                                            name="addRuleValidationOperator"
+                                            ng-model="question.validationOperator"
+                                            required
+                                        >
+                                        </selectize>
+                                    </div>  
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.questionLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.questionLoaded"
+                                        ></div>
+                                        <label for="addConditionValue">
+                                            Value
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="text"
+                                            id="addRuleValidationValue"
+                                            name="addRuleValidationValue"
+                                            placeholder="Enter a value"
+                                            ng-model="question.validationValue"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="small-12 medium-shrink large-shrink">
+                                    <button 
+                                        class="remove-rule-action-button button alert white-text"
+                                        type="button" 
+                                        ng-click="removeQuestionValidation()"
+                                    >
+                                        <i class="fal fa-times-circle"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="question-form-submit-button submit-button button" 
+                        id="questionFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.questionLoaded && UI.newQuestion"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-form-edit-submit-button submit-button button" 
+                        id="questionFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateQuestion(question)"
+                        ng-if="UI.questionLoaded && !UI.newQuestion"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

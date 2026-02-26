@@ -1,0 +1,138 @@
+<div class="chat-room-form-container create-edit-container">
+    <div format-users users="users"></div>
+    <div class="chat-room create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newRoom">
+                Create Chat
+            </b>
+            <b ng-if="!UI.newRoom">
+                Edit Chat
+            </b>
+        </h1>
+        <form 
+            class="chat-room-form chat-form golura-form"
+            id="chatRoomForm"
+            name="chatRoomForm"
+            ng-submit="createChatRoom($event, room)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div format-users user="room.Creator"></div>
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                    <h6>
+                        <b>
+                            Created By: 
+                        </b>
+                        {{room.Creator.fullName}}
+                    </h6>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.chatRoomLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.chatRoomLoaded"
+                        ></div>
+                        <label for="roomName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="roomName"
+                            name="roomName"
+                            placeholder="Room name"
+                            ng-model="room.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="roomDescription"
+                                name="roomDescriptionTextarea"
+                                ng-model="room.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>   
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.usersLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.usersLoaded"
+                        ></div>
+                        <label>
+                            Users
+                        </label>
+                        <selectize
+                            class="chat-room-user-input form-input"
+                            config="usersOptions"
+                            options="users"
+                            id="chatRoomChatParticipants"
+                            name="chatRoomChatParticipants"
+                            type="text"
+                            ng-model="room.ChatParticipants"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>             
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="chat-room-form-submit-button submit-button button" 
+                        id="chatRoomFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving || 
+                            chatRoomForm.$invalid || 
+                            (room.ChatParticipants && room.ChatParticipants.length < 1)"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.chatRoomLoaded && UI.newRoom"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-form-edit-submit-button submit-button button" 
+                        id="chatRoomFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving || 
+                            chatRoomForm.$invalid || 
+                            (room.ChatParticipants && room.ChatParticipants.length < 1)"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateChatRoom(room)"
+                        ng-if="UI.chatRoomLoaded && !UI.newRoom"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

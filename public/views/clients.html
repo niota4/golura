@@ -1,0 +1,392 @@
+<div 
+    class="clients-container"
+    ng-init="initClients()"
+>
+    <user-onboarding page-name="clients" auto-start="true"></user-onboarding>
+    <div class="clients">
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="clients-search-container list-search-container">
+                    <div class="clients-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="clients-search-input search-input"
+                                        id="clientsSearchInput" 
+                                        type="text"
+                                        placeholder="Search clients..."
+                                        ng-model="search.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div 
+                                    class="cell shrink"
+                                    ng-if="permissions.canCreate"
+                                >
+                                    <div class="clients-search-create-button-container create-button-container">
+                                        <button 
+                                            class="clients-search-create-button create-button submit-button button success white-text" 
+                                            id="clientSearchCreateButton"
+                                            type="button"
+                                            data-open="clientCreateReveal"
+                                        >
+                                            <i class="fal fa-layer-plus"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Create
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="clients-list-header-container list-header-container">
+                    <div class="clients-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>
+                                        Name
+                                    </b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Phone Number</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Email</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Address</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3 class="clients-list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="clients-list-container list-container">
+                    <div format-clients clients="clients"></div>
+                    <ul 
+                        class="clients-list list"
+                        id="clientsList"
+                    >
+                        <li ng-show="!UI.clientsLoaded">
+                            <div class="ssc clients-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="clients-list-item list-item position-relative"
+                            ng-repeat="c in filteredClients = 
+                            (clients | filter:search.value) |
+                            orderBy: sort.clients.value track by $index"
+                        >
+                            <div format-phone-numbers phone-number="c.primaryPhoneNumber"></div>
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-8 medium-2 large-2">
+                                    <h6 class="clients-list-item-name">
+                                        <a ng-href="clients/client/{{c.id}}">
+                                            <b>
+                                                {{c.fullName}}
+                                            </b>
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-4 text-right"
+                                    ng-if="$root.UI.isMobile"
+                                >
+                                    <h6>
+                                        {{c.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Phone: </b>
+                                        </span>
+                                        <span>
+                                            {{c.primaryPhoneNumber.formattedNumber}}
+                                        </span>
+                                        <span ng-if="!c.primaryPhoneNumber.number">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <button
+                                        class="view-more-button button clear"
+                                        type="button"
+                                        ng-click="toggleClientsDetails(c, 'phoneNumbers')"
+                                        ng-if="!$root.UI.isMobile ||
+                                        $root.UI.isMobile && c.ClientPhoneNumbers.length > 1"
+                                    >
+                                        view ({{c.ClientPhoneNumbers.length}}) more
+                                    </button>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="clients-list-item-email">
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Email: </b>
+                                        </span>
+                                        <span ng-if="c.primaryEmail.email">
+                                            {{c.primaryEmail.email}}
+                                        </span>
+                                        <span ng-if="!c.primaryEmail.email">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <button
+                                        class="view-more-button button clear"
+                                        type="button"
+                                        ng-click="toggleClientsDetails(c, 'emails')"
+                                        ng-if="!$root.UI.isMobile ||
+                                        $root.UI.isMobile && c.ClientEmails.length > 1"
+                                    >
+                                        view ({{c.ClientEmails.length}}) more
+                                    </button>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <span ng-if="$root.UI.isMobile">
+                                            <b>Address: </b>
+                                        </span>
+                                        <span ng-if="c.primaryAddress.street1">
+                                            {{c.primaryAddress.street1}} {{c.primaryAddress.street2}} <br/>
+                                            {{c.primaryAddress.city}}, {{c.primaryAddress.State.abbreviation}}
+                                            {{c.primaryAddress.zipCode}}
+                                        </span>
+                                        <span ng-if="!c.primaryAddress.street1">
+                                            N/A
+                                        </span>
+                                        <br/>
+                                        <button
+                                            class="view-more-button button clear"
+                                            type="button"
+                                            ng-click="toggleClientsDetails(c, 'addresses')"
+                                            ng-if="!$root.UI.isMobile ||
+                                            $root.UI.isMobile && c.ClientAddresses.length > 1"
+                                        >
+                                            view ({{c.ClientAddresses.length}}) more
+                                        </button>
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-auto large-auto"
+                                    ng-if="!$root.UI.isMobile"
+                                >
+                                    <h6>
+                                        {{c.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="list-item-options-container"
+                                        ng-class="{'text-right': $root.UI.isMobile}"
+                                    >
+                                        <a 
+                                            class="list-item-options-button button success white-text"
+                                            ng-href="clients/client/{{c.id}}"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-search"></i> 
+                                            <span ng-if="!$root.UI.isMobile">
+                                                View
+                                            </span>
+                                        </a>
+                                        <a 
+                                            class="list-item-options-button button white-text"
+                                            ng-href="clients/client/{{c.id}}/edit"
+                                            ng-if="permissions.canEdit"
+                                            ng-cloak
+                                        >
+                                            <i class="fal fa-edit"></i>
+                                            <span ng-if="!$root.UI.isMobile">
+                                                Edit
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-12 large-12"
+                                    ng-if="c.showPhoneNumbers ||
+                                    c.showEmails ||
+                                    c.showAddresses"
+                                >
+                                    <div class="clients-list-item-details-container list-item-details-container">
+                                        <button 
+                                            class="close-button button clear dark-gray-text text-right" 
+                                            type="button" 
+                                            ng-click="toggleClientsDetails(c)"
+                                        >
+                                            <span aria-hidden="true">
+                                                <i class="fal fa-times-circle"></i>
+                                            </span>
+                                        </button>
+                                        <h4 class="text-capitalize">
+                                            <b ng-if="c.showPhoneNumbers">
+                                                Phone Numbers
+                                            </b>
+                                            <b ng-if="c.showEmails">
+                                                Emails
+                                            </b>
+                                            <b ng-if="c.showAddresses">
+                                                Addresses
+                                            </b>
+                                        </h4>
+                                        <div class="clients-list-item-details-search-container list-search-container">
+                                            <div class="list-search search-input-container">
+                                                <div class="grid-x align-middle">
+                                                    <div class="cell auto">
+                                                        <input
+                                                            class="clients-search-input search-input"
+                                                            type="text"
+                                                            placeholder="Search details..."
+                                                            ng-model="c.value"
+                                                        />
+                                                    </div>
+                                                    <div class="cell shrink">
+                                                        <div class="cell shrink align-self-bottom">
+                                                            <span class="search-icon">
+                                                                <i class="fal fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul 
+                                            class="clients-list-item-details-list list-item-details-list"
+                                            ng-if="c.showPhoneNumbers"
+                                        >
+                                            <li 
+                                                class="clients-list-item-details-list-item list-item-details-list-item"
+                                                ng-repeat="phoneNumber in filteredPhoneNumbers = 
+                                                (c.ClientPhoneNumbers | filter: c.value) |
+                                                orderBy: createdAt track by $index"
+                                            >
+                                                <b>{{$index + 1}}. </b>
+                                                <span phone-number>
+                                                    {{phoneNumber.number}}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <ul 
+                                            class="clients-list-item-details-list list-item-details-list"
+                                            ng-if="c.showEmails"
+                                        >
+                                            <li 
+                                                class="clients-list-item-details-list-item list-item-details-list-item"
+                                                ng-repeat="email in filteredEmails = 
+                                                (c.ClientEmails | filter: c.value) |
+                                                orderBy: createdAt track by $index"
+                                            >
+                                                <b>{{$index + 1}}. </b>
+                                                <span>
+                                                    {{email.email}}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <ul 
+                                            class="clients-list-item-details-list list-item-details-list"
+                                            ng-if="c.showAddresses"
+                                        >
+                                            <li 
+                                                class="clients-list-item-details-list-item list-item-details-list-item"
+                                                ng-repeat="address in filteredAddresses = 
+                                                (c.ClientAddresses | filter: c.value) |
+                                                orderBy: createdAt track by $index"
+                                            >
+                                                <b>{{$index + 1}}. </b>
+                                                <span>
+                                                    {{address.street1}} {{address.street2}} <br/>
+                                                    {{address.city}}, {{address.State.abbreviation}}
+                                                    {{address.zipCode}}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="clients-list-infinite-scroll text-center"
+                            id="clientsListInfiniteScroll"
+                            ng-init="initInfiniteScroll()"
+                            ng-show="filteredClients.length > 20"
+                            ng-click="updateUsersDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-if="filteredClients.length == 0 &&
+                            UI.clientsLoaded"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the User you're looking, 
+                                    try to double check your spelling!
+                                    
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div 
+    class="client-create-reveal reveal large"
+    id="clientCreateReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeClientCreateReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'/dist/forms/clients/client-create-form.html'"
+    ></div>
+</div>

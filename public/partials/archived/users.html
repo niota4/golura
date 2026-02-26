@@ -1,0 +1,218 @@
+<div 
+    class="users-container"
+    ng-init="initArchivedUsers()"
+>
+    <div class="users">
+        <div format-users users="users"></div>
+        <div class="golura-block grid-y">
+            <div class="cell shrink position-relative">
+                <div class="users-search-container list-search-container">
+                    <div class="users-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell small-10 medium-auto large-auto align-self-bottom">
+                                    <input
+                                        class="users-search-input search-input"
+                                        id="usersSearchInput" 
+                                        type="text"
+                                        placeholder="Search Users..."
+                                        ng-model="search.users.value"
+                                    />
+                                </div>
+                                <div class="cell small-2 medium-shrink large-shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="!$root.UI.isMobile"
+            >
+                <div class="users-list-header-container list-header-container">
+                    <div class="users-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Name</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Role</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Last Seen</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Created</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-auto large-auto"
+                                ng-if="permissions.canCreate"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="users-list-container list-container">
+                    <ul 
+                        class="users-list list"
+                        id="usersList"
+                    >
+                        <li ng-if="!UI.usersLoaded">
+                            <div class="ssc users-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(40) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="users-list-item list-item position-relative"
+                            ng-repeat="user in filteredUsers = 
+                            (users | filter:search.users.value) |
+                            orderBy: sort.users.value |
+                            limitTo: UI.usersDisplayed track by $index"
+                            ng-class="{'selected': user.selected}"
+                        >
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink">
+                                            <user-icon user="user"></user-icon>
+                                        </div>
+                                        <div class="cell auto">
+                                            <h6 class="users-list-item-name list-item-name">
+                                                <a ng-href="users/user/{{user.id}}">
+                                                    {{user.fullName}}
+                                                </a>
+                                                <span 
+                                                    class="user-online-icon"
+                                                    ng-class="{
+                                                        'success-background': user.online,
+                                                        'light-gray-background': !user.online
+                                                    }"
+                                                ></span>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 class="users-list-item-role text-capitalize">
+                                        {{user.Roluser.name}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        <span ng-if="user.lastSeen">
+                                            {{user.lastSeen | DateTimeFormat}}
+                                        </span>
+                                        <span ng-if="!user.lastSeen">
+                                            never
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6>
+                                        {{user.createdAt | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="list-item-options-container">
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="user.restore = !user.restore"
+                                        >
+                                            <i class="fal fa-undo"></i> Restore
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="user.restore"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to restore
+                                                this User?
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="restoreUser(user)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="user.restore = !user.restore"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li 
+                            class="users-list-infinite-scroll text-center"
+                            id="usersListInfiniteScroll"
+                            ng-init="initInfiniteScroll()"
+                            ng-show="filteredUsers.length > 20"
+                            ng-click="updateUsersDisplayed()"
+                        >
+                            <div class="dispatch-loader"></div>
+                        </li>
+                        <li 
+                            class="list-empty text-center"
+                            ng-show="!filteredUsers.length"
+                        >
+                            <div class="grid-container">
+                                <h3>
+                                    <b>Oops! </b>
+                                    Looks like we can't find them!
+                                    <br/>
+                                    if you still can't find the User you're looking, 
+                                    try to double check your spelling!
+                                    
+                                </h3>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+<div class="sub-navigation-container">
+    <ul 
+        class="sub-navigation-list grid-x grid-margin-x text-center"
+        ng-class="{'align-middle': !$root.UI.isMobile, 'align-center-middle': $root.UI.isMobile}"
+    >
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': !UI.subPage}"
+            ng-if="$root.UI.isMobile"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-search"></i>
+                </span>
+                View
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'activity'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/activity"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-wave-pulse"></i>
+                </span>
+                Activity
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'contact history'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/contact"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-walkie-talkie"></i>
+                </span>
+                Contact
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'photos'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/photos"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-images"></i>
+                </span>
+                Photos
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'videos'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/videos"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-video"></i>
+                </span>
+                Videos
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'documents'}"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/documents"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file"></i>
+                </span>
+                Documents
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'events'}"
+            ng-if="subPermissions.events.canView &&
+            $root.isSubscribed('events')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/events"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-calendar-days"></i>
+                </span>
+                Events
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'estimates'}"
+            ng-if="subPermissions.estimates.canView &&
+            $root.isSubscribed('estimates')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/estimates"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-memo-circle-info"></i>
+                </span>
+                Estimates
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'work-orders'}"
+            ng-if="subPermissions.workOrders.canView &&
+            $root.isSubscribed('work orders')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/work-orders"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file-word"></i>
+                </span>
+                Work Orders
+            </a>
+        </li>
+        <li 
+            class="sub-navigation-list-item cell small-12 medium-4 large-auto"
+            ng-class="{'is-active': UI.subPage == 'invoices'}"
+            ng-if="subPermissions.invoices.canView &&
+            $root.isSubscribed('invoices')"
+        >
+            <a
+                class="sub-navigation-list-item-button"
+                ng-href="clients/client/{{client.id}}/invoices"
+                ng-cloak
+            >
+                <span>
+                    <i class="fal fa-file-invoice-dollar"></i>
+                </span>
+                Invoices
+            </a>
+        </li>
+    </ul>
+</div>

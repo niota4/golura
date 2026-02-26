@@ -1,0 +1,9 @@
+@include breakpoint(small only) {
+    .add-images-button,
+    .add-videos-button {
+        width: 100%;
+    }
+    .submit-button  {
+        width: 100%;
+    }
+}

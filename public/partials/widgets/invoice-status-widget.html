@@ -1,0 +1,277 @@
+<div class="invoice-status-widget-container widget-container">
+    <div class="invoice-status-widget widget">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-10 medium-auto large-auto">
+                        <h3 class="activity-summary-title">
+                            <b>
+                                <i class="fal fa-file-invoice"></i> Invoice Status
+                            </b>
+                        </h3>
+                        <span class="widget-period">
+                            <i ng-if="widgetData.invoiceStatus.period">
+                                Last {{ widgetData.invoiceStatus.period.replace('d', ' days') }}
+                            </i>
+                        </span>
+                    </div>
+                    <div class="cell small-2 medium-shrink large-shrink">
+                        <button 
+                            class="invoice-status-options-button button clear" 
+                            type="button"
+                            data-toggle="invoiceStatusOptions"
+                        >
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div 
+                            class="invoice-status-options-dropdown-pane widget-dropdown-pane dropdown-pane" 
+                            id="invoiceStatusOptions" 
+                            data-dropdown 
+                            data-auto-focus="true"
+                            data-position="bottom" 
+                            data-alignment="right"
+                            data-close-on-click="true"
+                        >
+                            <div class="invoice-status-options golura-form">
+                                <div class="text-right">
+                                    <button 
+                                        class="apply-button button clear" 
+                                        type="button"
+                                        ng-click="updateWidgetPreferences('invoiceStatus', { period: widgetData.invoiceStatus.period, includeAllUsers: widgetData.invoiceStatus.includeAllUsers })"
+                                    >
+                                        <i class="fal fa-check-circle"></i> Apply
+                                    </button>
+                                </div>
+                                <div class="input-container">
+                                    <label for="invoiceStatusTimeRange">
+                                        Time Range
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="widgetTimeRangeOptions"
+                                        options="widgetTimeTypes"
+                                        id="invoiceStatusTimeRange"
+                                        name="invoiceStatusTimeRange"
+                                        ng-model="widgetData.invoiceStatus.period"
+                                    >
+                                    </selectize>
+                                </div>
+                                <div class="invoice-status-select-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="invoice-status-select-button select-button button"
+                                                type="button"
+                                                ng-click="widgetData.invoiceStatus.includeAllUsers = !widgetData.invoiceStatus.includeAllUsers"
+                                                ng-class="{'selected': widgetData.invoiceStatus.includeAllUsers}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="widgetData.invoiceStatus.includeAllUsers"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                Include all Users?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="invoice-stats">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.invoiceStatus.data.total }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Total Invoices
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center" ng-class="{'success-text': widgetData.invoiceStatus.data.paid > 0}">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.invoiceStatus.data.paid }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Paid
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center" ng-class="{'warning-text': widgetData.invoiceStatus.data.pending > 0}">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.invoiceStatus.data.pending }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Pending
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-3 large-3">
+                            <div class="golura-block stat-card text-center white-text" ng-class="{'alert-background': widgetData.invoiceStatus.data.overdue > 0}">
+                                <div class="stat-number">
+                                    <h4>
+                                        <b>
+                                            {{ widgetData.invoiceStatus.data.overdue }}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="stat-label">
+                                    <h6>
+                                        <b>
+                                            Overdue
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="payment-summary">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-6 large-6">
+                            <div class="golura-block summary-item text-center">
+                                <h5>
+                                    <b>{{ widgetData.invoiceStatus.data.totalValue | currency }}</b>
+                                </h5>
+                                <h6 class="text-muted">Total Value</h6>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-6 large-6">
+                            <div class="golura-block summary-item text-center">
+                                <h5 ng-class="{'success-text': widgetData.invoiceStatus.data.paidPercentage > 0}">
+                                    <b>{{ widgetData.invoiceStatus.data.paidPercentage }}%</b>
+                                </h5>
+                                <h6 class="text-muted">Paid Percentage</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto" ng-if="widgetData.invoiceStatus.data.aging">
+                <div class="aging-section">
+                    <h4 class="aging-section-titl text-center">
+                        <b>
+                            Aging Report
+                        </b>
+                    </h4>
+                    <div class="golura-block">
+                        <div class="aging-stats">
+                            <div class="grid-x grid-margin-x">
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="golura-block aging-card text-center">
+                                        <div class="aging-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.invoiceStatus.data.aging.current }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="aging-label">
+                                            <h6>
+                                                <b>
+                                                    Current
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="golura-block aging-card text-center" ng-class="{'warning-text': widgetData.invoiceStatus.data.aging.days30 > 0}">
+                                        <div class="aging-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.invoiceStatus.data.aging.days30 }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="aging-label">
+                                            <h6>
+                                                <b>
+                                                    30+ Days
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="golura-block aging-card text-center" ng-class="{'alert-text': widgetData.invoiceStatus.data.aging.days60 > 0}">
+                                        <div class="aging-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.invoiceStatus.data.aging.days60 }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="aging-label">
+                                            <h6>
+                                                <b>
+                                                    60+ Days
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="golura-block aging-card text-center" ng-class="{'alert-text': widgetData.invoiceStatus.data.aging.days90Plus > 0}">
+                                        <div class="aging-number">
+                                            <h5>
+                                                <b>
+                                                    {{ widgetData.invoiceStatus.data.aging.days90Plus }}
+                                                </b>
+                                            </h5>
+                                        </div>
+                                        <div class="aging-label">
+                                            <h6>
+                                                <b>
+                                                    90+ Days
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

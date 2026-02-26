@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimate</title>
+    <style type="text/css">
+        body {
+            margin: 0px !important;
+            padding: 0px !important;
+            display: block !important;
+            min-width: 100% !important;
+            width: 100% !important;
+            -webkit-text-size-adjust: none;
+            word-break: break-word;
+            font-family: 'Poppins', Arial, sans-serif !important;
+            background: #ffffff;
+        }
+        table {
+            border-spacing: 0;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        table td {
+            border-collapse: collapse;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        strong {
+            font-weight: bold !important;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-header {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 0;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-info {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-table th,
+        .estimate-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-table th {
+            background-color: #f8f9fa;
+            font-weight: 800;
+            color: #495057;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .estimate-total {
+            background-color: #e9ecef;
+            font-weight: 800;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .text-right {
+            text-align: right;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .text-center {
+            text-align: center;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #495057;
+            margin: 20px 0 10px 0;
+            font-family: 'Poppins', Arial, sans-serif !important;
+        }
+        .terms-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .nowrap {
+            white-space: nowrap;
+        }
+        .estimate-table th.text-right,
+        .estimate-table td.text-right {
+            white-space: nowrap;
+        }
+        .signature-section {
+            margin-top: 40px;
+            padding: 24px 0 0 0;
+            width: 100%;
+            max-width: 800px;
+        }
+        .signature-section-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 40px;
+        }
+        .signature-section-table td {
+            padding: 0 24px 8px 0;
+            vertical-align: bottom;
+        }
+        .signature-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .signature-line {
+            border-bottom: 1px solid #495057;
+            width: 600px;
+            height: 32px;
+            display: inline-block;
+            margin-bottom: 0;
+        }
+        .date-line {
+            border-bottom: 1px solid #495057;
+            width: 190px;
+            height: 32px;
+            display: inline-block;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; width: 100%!important; min-width: 100%!important; max-width: 100%!important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+    <center>
+        <!-- Header : Estimate Title -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;min-width:100%;max-width:100%;">
+            <tr>
+                <td valign="middle" bgcolor="#ffffff" align="center" style="background-color: #ffffff;">
+                    <table width="800" cellpadding="0" cellspacing="0" class="row" border="0" align="center" style="width:800px;max-width:800px;">
+                        <tr>
+                            <td align="center" bgcolor="#3f3faa" style="background-color: var(--primary-color, #3f3faa); border-radius: .25rem;">
+                                <table width="800" cellpadding="0" cellspacing="0" class="row" border="0" align="center" style="width:800px;max-width:800px;">
+                                    <tr>
+                                        <td align="center" class="container-padding">
+                                            <table style="width:100%; max-width:100%;">
+                                                <tr>
+                                                    <td class="estimate-header">
+                                                        Estimate
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center" style="color:#fff; font-size:18px; font-weight:600;">
+                                                        {{estimate.estimateNumber}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <!-- Info Section -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:100%;">
+            <tr>
+                <td valign="middle" bgcolor="#ffffff" align="center" style="background-color: #ffffff;">
+                    <table width="800" cellpadding="0" cellspacing="0" class="row" border="0" align="center" style="width:800px;max-width:800px;">
+                        <tr>
+                            <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF;">
+                                <table width="800" cellpadding="0" cellspacing="0" class="row" border="0" align="center" style="width:800px;max-width:800px;">
+                                    <tr>
+                                        <td align="center" class="container-padding" style="padding: 20px;">
+                                            <!-- Estimate & Client Info -->
+                                            <div class="estimate-info">
+                                                <table style="width: 100%;">
+                                                    <tr>
+                                                        <td style="width: 50%; vertical-align: top;">
+                                                            <p><strong>Estimate Number:</strong> {{estimate.estimateNumber}}</p>
+                                                            <p><strong>Sub Total:</strong> ${{estimate.subTotal || '0.00'}}</p>
+                                                            <p><strong>Discounts Total:</strong> -${{estimate.discountTotal || '0.00'}}</p>
+                                                            <p><strong>Total:</strong> ${{estimate.total || '0.00'}}</p>
+                                                            <p><strong>Billing Address:</strong> {{estimate.billingAddress.fullAddress}}</p>
+                                                        </td>
+                                                        <td style="width: 50%; vertical-align: top;">
+                                                            <p><strong>Client Name:</strong> {{estimate.Client.fullName}}</p>
+                                                            <p><strong>Email:</strong> {{estimate.clientEmail.email}}</p>
+                                                            <p><strong>Phone:</strong> {{estimate.clientPhoneNumber.formattedNumber}}</p>
+                                                            <p><strong>Address:</strong> {{estimate.clientAddress.fullAddress}}</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <!-- Memo Section -->
+                                            {{#if estimate.memo}}
+                                            <div class="section-title">Memo</div>
+                                            <div class="estimate-info">{{{estimate.memo}}}</div>
+                                            {{/if}}
+                                            <!-- Line Items Section -->
+                                            <div class="section-title">Line Items</div>
+                                            <table class="estimate-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Description</th>
+                                                        {{#if estimate.lineItemPrice}}
+                                                        <th class="text-right nowrap">Price</th>
+                                                        {{/if}}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#each estimate.EstimateLineItems}}
+                                                    <tr>
+                                                        <td>{{this.name}}</td>
+                                                        <td>{{this.description}}</td>
+                                                        {{#if ../lineItemPrice}}
+                                                        <td class="text-right nowrap">${{this.totalPrice}}</td>
+                                                        {{/if}}
+                                                    </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                            <!-- Discounts Section -->
+                                            {{#if estimate.discounts.length}}
+                                            <div class="section-title">Discounts</div>
+                                            <table class="estimate-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th class="text-right">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                        {{#each estimate.discounts}}
+                                                        <tr>
+                                                            <td>{{this.name}}</td>
+                                                            <td class="text-right nowrap">-${{this.total}}</td>
+                                                        </tr>
+                                                        {{/each}}
+                                                </tbody>
+                                            </table>
+                                             {{/if}}
+                                            <!-- Terms Section -->
+                                            {{#if estimate.estimateTermsAndConditions}}
+                                            <div class="section-title">Terms and Conditions</div>
+                                            <div class="terms-section">{{{estimate.estimateTermsAndConditions}}}</div>
+                                            {{/if}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </center>
+    <div class="signature-section">
+        <table class="signature-section-table">
+            <tr>
+                <td><span class="signature-label">Signature</span></td>
+                <td><span class="signature-label">Date</span></td>
+            </tr>
+            <tr>
+                <td><span class="signature-line"></span></td>
+                <td><span class="date-line"></span></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<div class="event-assign-group-form-container event-form-container form-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div class="golura-block event-assign-group event-form-details">
+        <form 
+            class="event-assign-group-form event-form golura-form form"
+            id="eventAssignGroup"
+            name="eventAssignGroup"
+            ng-submit="createEvent($event, event)"
+        >
+            <h1>
+                <b>
+                    Assign Event to Group
+                </b>
+            </h1>
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.groupsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.groupsLoaded"
+                        ></div>
+                        <label>
+                            Group
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="event-input form-input" 
+                            id="eventFormGroup" 
+                            name="eventFormGroup" 
+                            config="groupOptions" 
+                            options="groups" 
+                            ng-model="event.groupId"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="event-assign-group-form-submit-button submit-button button" 
+                        id="eventAssignGroupSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            Continue <i class="fal fa-circle-arrow-right"></i>
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+        

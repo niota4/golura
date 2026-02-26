@@ -1,0 +1,74 @@
+<div 
+    class="report-spreadsheet-container report-container mobile"
+>
+    <div class="golura-mobile-block grid-y report">
+        <div class="cell shrink">
+            <div class="report-spreadsheet-header-container report-header-container">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell shrink text-center">
+                        <button 
+                            class="back-button button warning white-text" 
+                            type="button"
+                            ng-click="$root.goBack()"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i>
+                        </button>  
+                    </div>
+                    <div class="cell auto text-center">
+                        <h4>
+                            <b>{{report.name}}</b>
+                        </h4>
+                    </div>
+                    <div class="cell small-12">
+                        <div class="button-group expanded">
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'spreadsheet'}"
+                                ng-click="UI.type = 'spreadsheet'"
+                                ng-if="hasOptions('spreadsheet')"
+                            >
+                                <i class="fal fa-table-cells"></i>
+                            </button>
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'summary'}"
+                                ng-click="UI.type = 'summary'"
+                                ng-if="hasOptions('summary')"
+                            >
+                                <i class="fal fa-file-chart-pie"></i>
+                            </button>
+                            <button
+                                class="spreadsheet-button button white-text"
+                                type="button"
+                                ng-class="{'success': UI.type == 'dashboard'}"
+                                ng-click="UI.type = 'dashboard'"
+                                ng-if="hasOptions('dashboard')"
+                            >
+                                <i class="fal fa-grid"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell auto">
+            <div class="report-spreadsheet-content-container report-content-container">
+                <div 
+                    class="callout warning warning-text text-center"
+                    ng-if="UI.reportLoaded && (!report.data.spreadsheetData || !report.data.headers)"
+                >
+                    <p>No spreadsheet data available for this report.</p>
+                </div>
+                <!-- Mobile-optimized table with horizontal scroll -->
+                <div class="table-scroll-container">
+                    <div 
+                        id="reportSpreadsheet"
+                        class="report-spreadsheet mobile-table"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

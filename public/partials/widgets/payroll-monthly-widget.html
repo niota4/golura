@@ -1,0 +1,223 @@
+<div class="payroll-monthly-widget-container widget-container">
+    <div class="payroll-monthly-widget widget">
+        <div 
+            class="grid-y"
+            ng-class="{'golura-block': !$root.UI.isMobile, 'golura-mobile-block': $root.UI.isMobile}"
+        >
+            <div class="cell shrink">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-auto large-auto">
+                        <div class="cell small-12 medium-auto large-auto">
+                            <h3 class="payroll-monthly-title">
+                                <b>
+                                    <i class="fal fa-money-check"></i> Monthly Payroll
+                                </b>
+                            </h3>
+                            <span class="widget-period">
+                                <i ng-if="widgetData.payrollExpenses.period">
+                                    Last 30 days
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="payroll-monthly-content">
+                    <div 
+                        ng-if="!widgetData.payrollMonthly.loaded" 
+                        class="widget-loading"
+                    >
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading payroll data...
+                        </div>
+                    </div>
+                    <div 
+                        ng-if="widgetData.payrollMonthly.loaded && widgetData.payrollMonthly.data.length === 0" 
+                        class="no-data-message"
+                    >
+                        <div class="text-center">
+                            <i class="fal fa-money-check fa-3x"></i>
+                            <p>No payroll data found for the selected period.</p>
+                        </div>
+                    </div>
+                    <div class="payroll-stats">
+                        <div 
+                            class="grid-x grid-margin-x align-top text-center"
+                            ng-if="widgetData.payrollMonthly.loaded && widgetData.payrollMonthly.data.length > 0"
+                        >
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollMonthly.summary.totalGrossPay | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Gross Pay
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollMonthly.summary.totalDeductions | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Deductions
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <div class="payroll-summary-card">
+                                    <h4>
+                                        <b>
+                                            ${{widgetData.payrollMonthly.summary.totalNetPay | number:2}}
+                                        </b>
+                                    </h4>
+                                    <h6>
+                                        <b>
+                                            Net Pay
+                                        </b>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+            <div 
+                class="cell shrink"
+                ng-if="widgetData.payrollMonthly.loaded && widgetData.payrollMonthly.data.length > 0"
+            >
+                <div class="payroll-monthly-search-container list-search-container">
+                    <div class="payroll-monthly-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="payroll-monthly-search-input search-input"
+                                        id="upcomingEventsSearchInput" 
+                                        type="text"
+                                        placeholder="Search upcoming events..."
+                                        autocomplete="off"
+                                        ng-model="search.upcomingEvents"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto  overflow-scroll">
+                <div class="payroll-monthly-list-container list-container">
+                    <ul class="payroll-list list">
+                        <li 
+                            class="payroll-list-item list-item" 
+                            ng-repeat="payroll in filteredPayrolls = (widgetData.payrollMonthly.data | 
+                            filter:search.upcomingEvents | orderBy: '-startDate') | 
+                            orderBy: '-createdAt' track by $index"
+                        >
+                            <div class="grid-x grid-margin-x align-top">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h4 class="payroll-period">
+                                        <b>
+                                            {{payroll.startDate | DateTimeFormat}} - {{payroll.endDate | DateTimeFormat}}
+                                        </b>
+                                    </h4>
+                                </div>
+                                <div class="cell small-12 medium-shrink large-shrink">
+                                    <div class="payroll-status">
+                                        <span 
+                                            class="label white-text"
+                                            ng-class="{'warning': payroll.status === 'approved',
+                                            'success': payroll.status === 'paid'}"
+                                        >
+                                            {{payroll.status}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12" >
+                                    <h6>
+                                        <b>
+                                            Net Pay: 
+                                        </b>
+                                        ${{payroll.totalNetPay}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Gross Pay: 
+                                        </b>
+                                        ${{payroll.totalGrossPay}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Created By: 
+                                        </b>
+                                        <a href="/users/user/{{payroll.creatorId}}">
+                                            {{payroll.creator}}
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12 text-right">
+                                    <a 
+                                        class="view-payroll-button button"
+                                        href="/payroll/{{payroll.id}}" 
+                                    >
+                                        <i class="fal fa-search"></i> View
+                                    </a>
+                                </div>
+                        </div>
+                        <div 
+                            class="payroll-items" 
+                            ng-if="widgetData.payrollMonthly.includeItems && payroll.PayrollItems && payroll.PayrollItems.length > 0"
+                        >
+                            <div class="payroll-item-header">
+                                <h6>
+                                    Employee Details:
+                                </h6>
+                            </div>
+                            <div class="payroll-item-list">
+                                <div 
+                                    class="payroll-item-detail" 
+                                    ng-repeat="item in payroll.PayrollItems | limitTo:5"
+                                >
+                                    <div 
+                                        class="grid-x grid-margin-x align-middle"
+                                    >
+                                        <div class="cell auto">
+                                            <span class="employee-name">{{item.Employee.firstName}} {{item.Employee.lastName}}</span>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <span class="item-hours">{{item.totalHours}}h</span>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <span class="item-pay">${{item.netPay | number:2}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div 
+                                    class="more-items" 
+                                    ng-if="payroll.PayrollItems.length > 5"
+                                >
+                                    <span class="text-muted">+{{payroll.PayrollItems.length - 5}} more employees</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

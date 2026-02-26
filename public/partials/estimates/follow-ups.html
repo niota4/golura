@@ -1,0 +1,111 @@
+<div class="follow-ups-container list-container">
+    <h2>
+        <b>
+            <i class="fal fa-walkie-talkie"></i> Follow Ups
+        </b>
+    </h2>
+    <ul class="follow-ups-list list">
+        <li 
+            class="follow-ups-list-item-container list-item position-relative"
+            ng-class="{
+                'follow-up-completed': followUp.completedAt,
+                'follow-up-pending': !followUp.completedAt
+            }"
+            ng-repeat="followUp in estimate.EstimateFollowUps | orderBy: '-completedAt'
+            track by followUp.id"
+        >
+            <div format-users user="followUp.CompletedBy"></div>
+            <div format-users user="followUp.Creator"></div>
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-auto large-auto">
+                    <h4>
+                        <b class="follow-up-type text-capitalize">
+                            <i 
+                                class="fal" 
+                                ng-class="{
+                                    'fa-phone': followUp.type === 'call',
+                                    'fa-envelope': followUp.type === 'email',
+                                    'fa-sms': followUp.type === 'text',
+                                    'fa-calendar': followUp.type === 'in person'
+                                }"
+                                aria-hidden="true"
+                            ></i>
+                            {{followUp.type}}
+                        </b>
+                    </h6>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <span class="follow-up-date">
+                        <i>
+                            {{followUp.createdAt | DateTimeFormat}}
+                        </i>
+                    </span>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="follow-up-dates">
+                        <h6 class="follow-up-status">
+                            <b>Status: </b>
+                            <span 
+                                class="success-text"
+                                ng-if="followUp.completedAt"
+                            >
+                                <i class="fal fa-check-circle"></i> Completed
+                            </span>
+                            <span ng-if="!followUp.completedAt">
+                                Pending
+                            </span>
+                        </h6>
+                        <h6 
+                            class="follow-up-scheduled-date"
+                            ng-if="followUp.scheduledDate && !followUp.completedAt"
+                        >
+                            <b>Scheduled Date: </b>
+                            <i>
+                                {{followUp.scheduledDate | DateTimeFormat}}
+                            </i>
+                        </h6>
+                        <h6 
+                            class="follow-up-completed-date"
+                            ng-if="followUp.completedAt"
+                        >
+                            <b>Completed On: </b>
+                            <i>
+                                {{followUp.completedAt | DateTimeFormat}}
+                            </i>
+                        </h6>
+                        <h6 
+                            class="follow-up-completed-by"
+                            ng-if="followUp.CompletedBy"
+                        >
+                            <b>Completed By: </b>
+                            <a href="users/user/{{followUp.CompletedBy.id}}">
+                                {{followUp.CompletedBy.fullName}}
+                            </a>
+                        </h6>
+                    </div>
+                    <div 
+                        class="follow-up-notes"
+                        ng-if="followUp.notes.length"
+                    >
+                        <h6>
+                            <b>
+                                Notes:
+                            </b>
+                        </h6>
+                        <div ng-bind-html="followUp.notes"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div 
+        class="follow-ups-empty-container text-center"
+        ng-if="UI.followUpsLoaded && !followUps.length"
+    >
+        <h4>
+            <b>Wow!</b> There are no Follow Ups. 
+            <br/>
+            Create one!
+        </h4>
+    </div>
+</div>

@@ -1,0 +1,250 @@
+<div class="template-form-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div> 
+    <form 
+        class="template-form admin-form golura-form"
+        id="templateForm"
+        name="templateForm"
+        ng-submit="createTemplate($event, template)"
+    >
+        <div 
+            class="grid-x grid-padding-x align-middle"
+            ng-if="!UI.templateImport"
+        >
+            <div class="cell small-12 medium-12 large-12">
+                <h1>
+                    <b ng-if="UI.newTemplate">
+                        Create Template
+                    </b>
+                    <b ng-if="!UI.newTemplate">
+                        Edit Template
+                    </b>
+                </h1>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <div class="input-container">
+                    <label>   
+                        Name
+                        <span>*</span>
+                    </label>
+                    <input
+                        class="form-input"
+                        type="text"
+                        id="templateName"
+                        name="templateName"
+                        placeholder="Template's name"
+                        ng-model="template.name"
+                        required
+                    />
+                </div>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <div class="input-container">
+                    <label>   
+                        Description
+                    </label>
+                    <div class="form-textarea-container">
+                        <textarea 
+                            class="form-textarea" 
+                            id="templateDescription" 
+                            name="templateDescription" 
+                            placeholder="Template description" 
+                            ng-model="template.description"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <div class="input-container">
+                    <label>   
+                        Type
+                    </label>
+                    <selectize
+                        class="form-input"
+                        config="detailTypeOptions"
+                        options="templateTypes"
+                        id="templateType"
+                        name="templateType"
+                        ng-model="template.type"
+                        required
+                    >
+                    </selectize>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12"
+                ng-if="template.type == 'SMS'"
+            >
+                <div class="input-container">
+                    <label>   
+                        Text
+                    </label>
+                    <div class="form-textarea-container">
+                        <textarea 
+                            class="form-textarea" 
+                            id="templateBody" 
+                            name="templateBody" 
+                            placeholder="Template text body" 
+                            ng-model="template.body"
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="cell small-12 medium-12 large-12 text-center"
+                ng-if="template.type == 'EMAIL' || template.type == 'PDF'"
+            >
+                <h4>
+                    <b class="alert-text">Warning: </b>
+                    <span>
+                        Make sure to add the short code 
+                        <b ng-non-bindable>{{Content}} </b>
+                        <br/>
+                        where you want the text body.
+                    </span>
+                </h4>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <button 
+                    class="download-button button white-button" 
+                    type="button" 
+                    ng-click="initEmailTemplatePreview(template)"
+                    data-open="emailTemplatePreviewReveal"
+                    ng-if="template.url"
+                >
+                    <i class="fal fa-file-magnifying-glass"></i> 
+                    Preview Design
+                </button>
+                <button 
+                    class="template-form-import-button success button white-text" 
+                    ng-class="{'expanded': !template.url}"
+                    id="templateFormImportButton"
+                    type="button"
+                    ng-click="UI.templateImport = !UI.templateImport"
+                    ng-if="template.type == 'EMAIL' || template.type == 'PDF'"
+                >
+                    <i class="fal fa-file-import"></i> Import Design
+                </button>
+            </div>
+            <div class="cell small-12 medium-12 large-12">
+                <div class="template-options-container text-right">
+                    <button 
+                        class="template-form-submit-button submit-button button" 
+                        id="templateFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.templateLoaded && UI.newTemplate"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="template-form-edit-submit-button submit-button button" 
+                        id="templateFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateTemplate(null, template)"
+                        ng-if="UI.templateLoaded && !UI.newTemplate"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div 
+            class="file-uploader-container uploader-container"
+            ng-show="UI.templateImport"
+        >
+            <button 
+                class="back-button button warning white-text" 
+                type="button"
+                ng-click="UI.templateImport = !UI.templateImport"
+            >
+                <i class="fal fa-circle-arrow-left"></i> Back
+            </button>                    
+            <h3 class="text-center">
+                <b>Upload File</b>
+            </h3>
+            <div class="file-preview-container preview-container">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div 
+                        class="cell small-12 medium-12 large-12 text-center" 
+                        ng-if="file"
+                    >
+                        <div class="file-container">
+                            <div class="file-name">
+                                <h4>
+                                    <span>
+                                        <i class="fal fa-file"></i>
+                                    </span>
+                                    <b>
+                                        {{file.name}}
+                                    </b>
+                                </h4>
+                            </div>
+                            <div 
+                                class="progress success" 
+                                role="progressbar" 
+                                ng-if="uploadProgress[file.name] !== undefined"
+                            >
+                                <div 
+                                    class="progress-meter" 
+                                    ng-style="{'width': uploadProgress[file.name] + '%'}"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-auto large-auto">
+                    <label class="file-uploader button expanded">
+                        <input 
+                            id="fileUploader" 
+                            type="file" 
+                            ng-attr-accept="{{template.type === 'EMAIL' ? 'text/html' : template.type === 'PDF' ? 'application/pdf' : '*'}}" 
+                            ng-model="file" 
+                            ng-change="initTemplateFilePrevew(file)"
+                        />                                        
+                            <i class="fal fa-plus-circle"></i> 
+                            <span ng-if="template.type === 'EMAIL'">Add HTML</span>
+                            <span ng-if="template.type === 'PDF'">Add PDF</span>
+                    </label>
+                </div>
+                <div class="cell small-12 medium-auto large-auto" ng-if="file">
+                    <button 
+                        class="upload-file-button upload button expanded success white-text" 
+                        type="button" 
+                        ng-click="uploadTemplate()"
+                    >
+                        Upload File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

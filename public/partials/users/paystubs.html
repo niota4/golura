@@ -1,0 +1,147 @@
+
+<div class="view-user-paystubs-container">
+    <div class="view-user-paystubs">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="paystubs-search-container list-search-container">
+                    <div class="paystubs-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="paystubs-search-input search-input"
+                                        id="paystubSearchInput" 
+                                        type="text"
+                                        placeholder="Search paystubs..."
+                                        autocomplete="off"
+                                        ng-model="search.payStubs"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="view-user-paystubs-list-header-container list-header-container">
+                    <div class="view-user-paystubs-list-header list-header">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h6>
+                                    <b>
+                                        Rate
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h6>
+                                    <b>
+                                        Gross Pay
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h6>
+                                    <b>
+                                        Net Pay
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h6>
+                                    <b>
+                                        Actions
+                                    </b>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto overflow-scroll">
+                <div class="view-user-paystubs-list-container list-container">
+                    <ul class="view-user-paystubs-list list">
+                        <li 
+                            class="view-user-paystubs-list-item list-item position-relative"
+                            ng-repeat="item in filteredPayStubs = ( payStubs | 
+                            filter: search.payStubs ) track by $index"
+                        >
+                            <div format-users user="item.Employee"></div>
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell small-12 medium-3 large-3">
+                                    <div class="view-user-paystubs-info view-info">
+                                        <h6>
+                                            <b>
+                                                {{item.Employee.fullName}}
+                                            </b>
+                                        </h6>
+                                        <div class="view-user-paystubs-hours view-hours">
+                                            <h6 class="label success white-text">
+                                                {{item.PayrollItem.totalHours}}hrs
+                                            </h6>
+                                            <h6 
+                                                class="label alert white-text" 
+                                                ng-if="item.overtimeHours > 0"
+                                            >
+                                                ({{item.PayrollItem.overtimeHours}}hrs OT)
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="view-user-paystubs-rate view-rate">
+                                        <h6>
+                                            ${{item.PayrollItem.rate}}/hr
+                                        </h6>
+                                        <h6
+                                            class="view-user-paystubs-sub-list-item" 
+                                            ng-if="item.overtimeRate && item.overtimeHours > 0"
+                                        >
+                                            (${{item.PayrollItem.overtimeRate}}/hr OT)
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="view-user-paystubs-gross view-gross">
+                                        <h6>
+                                            ${{item.PayrollItem.grossPay}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="view-user-paystubs-net view-net">
+                                        <h6>
+                                            ${{item.PayrollItem.netPay}}
+                                        </h6>
+                                        <h6
+                                            class="view-user-paystubs-sub-list-item"
+                                            ng-if="item.deductions > 0"
+                                        >
+                                            (-${{item.PayrollItem.deductions}})
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div class="view-user-paystubs-actions view-actions button-group">
+                                        <a 
+                                            class="view-user-paystubs-edit-button button white-text"
+                                            type="button"
+                                            ng-href="users/user/{{worker.id}}/pay-stub/{{item.id}}"
+                                        >
+                                            <i class="fal fa-search"></i> View
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

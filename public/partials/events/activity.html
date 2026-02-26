@@ -1,0 +1,270 @@
+<div 
+    class="view-event-activity-container view-event-container view-container"
+    ng-init="initEvent();"
+>
+    <div format-events event="event"></div>
+    <div class="view-event-activity view-event view">
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <div class="view-event-activity-top-bar-container">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell small-12 medium-4 large-4">
+                            <div ng-include="'dist/partials/events/top-bar.html'"></div>
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <div ng-include="'/dist/navigations/event-navigation.html'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink position-relative">
+                <div class="view-event-activity-search-container list-search-container">
+                    <div class="view-event-activity-search list-search">
+                        <div class="search-input-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell auto align-self-bottom">
+                                    <input
+                                        class="view-event-activity-search-input search-input"
+                                        id="viewEventActivitySearchInput" 
+                                        type="text"
+                                        placeholder="Search activities..."
+                                        ng-model="search.eventActivity.value"
+                                    />
+                                </div>
+                                <div class="cell shrink align-self-bottom">
+                                    <span class="search-icon">
+                                        <i class="fal fa-search"></i>
+                                    </span>
+                                </div>
+                                <div class="cell shrink">
+                                    <div class="cell shrink">
+                                        <div class="sort-input-container">
+                                            <div class="grid-x">
+                                                <div class="cell auto">
+                                                    <selectize
+                                                        class="view-event-activity-search-sort-input form-input sort-input"
+                                                        id="eventActivitySearchSortInput"
+                                                        config="sortOptions"
+                                                        options="viewEventActivityOptions"
+                                                        ng-model="sort.eventActivity.id"
+                                                        ng-change="orderBy(sort.eventActivity.id)"
+                                                        ng-cloak
+                                                    >
+                                                    </selectize>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <span class="sort-icon">
+                                                        <i class="fal fa-sort"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell shrink">
+                <div class="view-event-activity-list-header-container list-header-container">
+                    <div class="view-event-activity-list-header list-header">
+                        <div class="grid-x grid-padding-x align-middle align-left">
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Changed By</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Action</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-1 large-1">
+                                <h3>
+                                    <b>Type</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-auto large-auto">
+                                <h3>
+                                    <b>Description</b>
+                                </h3>
+                            </div>
+                            <div class="cell small-12 medium-2 large-2">
+                                <h3>
+                                    <b>Time changed</b>
+                                </h3>
+                            </div>
+                            <div 
+                                class="cell small-12 medium-2 large-2"
+                                ng-if="permissions.canEdit"
+                            >
+                                <h3 class="list-header-options">
+                                    <b>Options</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell auto overflow-scroll">
+                <div class="view-event-activity-list-container list-container">
+                    <ul 
+                        class="view-event-activity-list list"
+                        id="eventActivitiesList"
+                    >
+                        <li ng-if="!UI.eventActivitiesLoaded">
+                            <div class="ssc view-event-activity-ssc">
+                                <div 
+                                    class="ssc-square"
+                                    ng-repeat="x in [].constructor(20) track by $index"
+                                ></div>
+                            </div>
+                        </li>
+                        <li
+                            class="view-event-activity-list-item list-item position-relative"
+                            ng-repeat="a in filteredEventActivities = 
+                            (activities | filter:search.eventActivity.value) |
+                            orderBy: sort.eventActivity.value |
+                            limitTo: UI.eventActivitiesDisplayed track by $index"
+                            ng-class="{'selected': l.selected}"
+                        >
+                            <div format-users user="a.changedBy"></div>
+                            <div class="grid-x grid-padding-x align-middle">
+                                <div class="cell small-12 medium-2 large-2">
+                                    <div class="view-event-activity-user-container">
+                                        <div class="grid-x align-middle">
+                                            <div class="cell shrink">
+                                                <div 
+                                                    class="comment-user-container"
+                                                    ng-if="a.changedBy && a.changedBy.Preferences"
+                                                >
+                                                    <div class="golura-user-icon-container text-center frame-container">
+                                                        <div 
+                                                            class="golura-user-icon text-center" 
+                                                            ng-style="{'background-color': a.changedBy.Preferences.backgroundColor}"
+                                                        >
+                                                            <h2 class="flex-child-auto align-middle">
+                                                                <a 
+                                                                    class="white-text"
+                                                                    ng-href="users/user/{{a.changedBy.id}}"
+                                                                    ng-cloak
+                                                                >
+                                                                    {{a.changedBy.shortName}}
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div 
+                                                    class="comment-user-container"
+                                                    ng-if="!a.changedBy || !a.changedBy.Preferences"
+                                                >
+                                                    <div class="golura-user-icon-container text-center frame-container">
+                                                        <div 
+                                                            class="golura-user-icon text-center" 
+                                                            ng-style="{'background-color': '#000'}"
+                                                        >
+                                                            <h2 class="flex-child-auto align-middle">
+                                                                <a 
+                                                                    class="white-text"
+                                                                    ng-href="users/user/{{a.changedBy.id}}"
+                                                                    ng-cloak
+                                                                >
+                                                                    S
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cell auto">
+                                                <h6>
+                                                    {{a.changedBy.fullName || 'System'}}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        {{a.action}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-1 large-1">
+                                    <h6>
+                                        {{a.formattedName}}
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <h6 ng-bind-html="a.description">
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-2 large-2">
+                                    <h6>
+                                        {{a.timestamp | DateTimeFormat}}
+                                    </h6>
+                                </div>
+                                <div 
+                                    class="cell small-12 medium-2 large-2"
+                                    ng-if="permissions.canEdit"
+                                >
+                                    <div class="list-item-options-container">
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="a.revert = !a.revert"
+                                        >
+                                            <i class="fal fa-undo"></i> Undo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div 
+                                class="list-item-delete-container list-item-delete-container black-overlay"
+                                ng-if="a.revert"
+                            >
+                                <div class="grid-x grid-padding-x align-middle">
+                                    <div class="cell small-12 medium-auto large-auto text-center">
+                                        <h4>
+                                            <b class="alert-text">Warning: </b>
+                                            <span class="white-text">Are you sure you want to Undo
+                                                this Change??
+                                            </span>
+                                        </h4>
+                                    </div>
+                                    <div 
+                                        class="cell small-12 medium-auto large-auto"
+                                        ng-class="{'text-center': $root.UI.isMobile}"
+                                    >
+                                        <button 
+                                            class="list-item-options-button button alert white-text"
+                                            type="button"
+                                            ng-disabled="UI.formSaving"
+                                            ng-class="{'form-alert': UI.formSaving}"
+                                            ng-click="revertEventActivity(a)"
+                                        >
+                                            <span ng-if="!UI.formSaving">
+                                                <i class="fal fa-check-circle"></i> Confirm
+                                            </span>
+                                            <span ng-if="UI.formSaving">
+                                                Please Wait...
+                                            </span>
+                                        </button>
+                                        <button 
+                                            class="list-item-options-button button warning white-text"
+                                            type="button"
+                                            ng-click="a.revert = !a.revert"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

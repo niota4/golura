@@ -1,0 +1,148 @@
+<div 
+    class="chat-container"
+    id="chatContainer"
+>
+    <ul 
+        class="chat"
+        id="chat"
+        ng-class="{'ssc': !UI.chatMessagesLoaded}"
+    >
+        <li 
+            class="chat-ssc ssc-square"
+            ng-repeat="x in [].constructor(10) track by $index"
+            ng-if="!UI.chatMessagesLoaded"
+        ></li>
+        <li 
+            class="chat-item"
+            ng-class="{
+                'parent-message': message.replies.length,
+                'text-left chat-left': message.User.id !== user.id,
+                'text-right chat-right': message.User.id === user.id,
+                'chat-edit': message.edit
+            }"
+            ng-repeat="message in chatMessages | orderBy: 'createdAt' track by message.id"
+        >
+            <div 
+                class="chat-item-parent-message-container message-container"
+                ng-if="message.ParentMessage"
+            >
+                <div format-messages message="message.ParentMessage"></div>
+                <div format-users user="message.ParentMessage.User"></div>
+                <div class="chat-item-parent-message message">
+                    <div class="grid-x grid-margin-x align-top">
+                        <div class="cell shrink">
+                            <span>
+                                <i class="parent-message-icon">
+                                    <i class="fas fa-reply"></i> 
+                                    <b>
+                                        Replied
+                                    </b>  
+                                </i>
+                            </span>
+                        </div>
+                        <div class="cell shrink">
+                            <div class="chat-item-parent-message-user-container">
+                                <user-icon user="message.ParentMessage.User"></user-icon>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-auto large-auto">
+                            <h6>
+                                <span>
+                                    {{message.ParentMessage.User.fullName}}
+                                </span>
+                            </h6>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <i 
+                                class="chat-item-parent-message-content"
+                                ng-bind-html="message.ParentMessage.formattedMessage"
+                            >
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div 
+                class="chat-item-links-container"
+                ng-if="message.links.length"
+                ng-repeat="link in message.links track by $index" 
+            >
+                <div class="chat-item-link">
+                    <div class="link-container">
+                        <div class="link-preview">
+                            <a 
+                                ng-href="{{ link.url }}" 
+                                target="_blank"
+                            >
+                                <img 
+                                    ng-if="link.favicon" 
+                                    ng-src="{{ link.favicon }}" 
+                                    alt="favicon" 
+                                />
+                                <strong>
+                                    {{link.title}}
+                                </strong>
+                                <p ng-if="link.description">
+                                    {{link.description}}
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-include="'dist/partials/general/message.html'"></div>
+        </li>
+        <li 
+            class="chat-typing-indicator chat-item chat-left" 
+            ng-if="typingUsersByRoom[chatRoom.id] && typingUsersByRoom[chatRoom.id].length"
+        >
+            <div class="message-container">
+                <div class="message">
+                    <div class="grid-x grid-margin-x align-middle">
+                        <div class="cell shrink">
+                            <i class="fas fa-ellipsis"></i>
+                        </div>
+                        <div class="cell auto">
+                            <span>
+                                {{typingUsersByRoom[chatRoom.id][0].firstName || 'Someone'}} is typing...
+                            </span>
+                            <span ng-if="typingUsersByRoom[chatRoom.id].length > 1">
+                                Multiple people are typing...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <h6
+            class="text-center"
+            ng-if="!chatMessages.length"
+        >   
+            <b>
+                Oh! 
+            </b>
+            There's no messages so far.
+        </h6>
+    </ul>
+</div>
+<div
+    class="message-image-view-reveal image-reveal media-reveal reveal"
+    id="messageImageViewReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeMessageImageViewReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/partials/media/image-viewer.html'"
+    ></div>
+</div>

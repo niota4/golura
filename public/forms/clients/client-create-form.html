@@ -1,0 +1,161 @@
+<div
+    class="client-create-container"
+    ng-init="initClientForm()"
+>   
+    <div class="client-create grid-container">
+        <div format-clients client="client"></div>
+        <div format-clients clients="clients"></div>
+        <div class="grid-x grid-margin-x">
+            <div class="cell small-12 medium-4 large-4">
+                <div class="client-form-sidebar-container">
+                    <div class="client-form-sidebar">
+                        <div class="client-form-sidebar-header">
+                            <h5>
+                                <b>
+                                    This Client looks like:
+                                </b>
+                            </h3>
+                        </div>
+                        <div class="client-form-sidebar-list-container list-container">
+                            <ul class="client-form-sidebar-list list">
+                                <li 
+                                    class="client-sidebar-list-item list-item"
+                                    ng-repeat="client in clients | limitTo: 5 track by $index"
+                                >
+                                    <a href="clients/client/{{client.id}}/edit">
+                                        <div class="client-sidebar-list-item-name">
+                                            <h6>
+                                                <b>
+                                                    {{client.fullName}}
+                                                </b>
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-12 medium-auto large-auto">
+                <form 
+                    class="client-primary-form golura-form"
+                    id="clientPrimaryForm"
+                    name="clientPrimaryForm"
+                    ng-submit="createClient($client, client)"
+                    golura-form-validation
+                >
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12 medium-12 large-12">
+                            <h3>
+                                <b>
+                                    Create Client
+                                </b>
+                            </h6>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12">
+                            <div class="grid-x grid-margin-x">
+                                <div class="cell small-12 medium-auto large-auto">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.clientLoaded"
+                                        ></div>
+                                        <label>   
+                                            First Name
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="text"
+                                            name="primaryFirstName"
+                                            placeholder="Johnny"
+                                            ng-model="client.firstName"
+                                            autocomplete="off"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.clientLoaded"
+                                        ></div>
+                                        <label>   
+                                            Last Name
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </label>
+                                        <input
+                                            class="form-input"
+                                            type="text"
+                                            name="primaryLastName"
+                                            placeholder="Appleseed"
+                                            ng-model="client.lastName"
+                                            autocomplete="off"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12">
+                                    <div 
+                                        class="input-container"
+                                        ng-class="{'ssc': !UI.clientLoaded}"
+                                    >
+                                        <div 
+                                            class="ssc-square"
+                                            ng-if="!UI.clientLoaded"
+                                        ></div>
+                                        <legend>   
+                                            Priority
+                                            <span class="alert-text">
+                                                *
+                                            </span>
+                                        </legend>
+                                        <selectize
+                                            class="client-priority-input form-input"
+                                            id="priorityInput"
+                                            config="priorityOptions"
+                                            options="priorities"
+                                            name="priority"
+                                            ng-model="client.priorityId"
+                                            ng-cloak
+                                            required
+                                        >
+                                        </selectize>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell small-12 medium-12 large-12 text-right">
+                            <button 
+                                class="client-form-submit-button submit-button button" 
+                                id="clientFormSubmitButton"
+                                type="submit"
+                                ng-disabled="UI.formSaving"
+                                ng-class="{'form-saving': UI.formSaving}"
+                            >
+                                <span ng-if="!UI.formSaving">
+                                    <i class="fal fa-save"></i> Save
+                                </span>
+                                <span ng-if="UI.formSaving">
+                                    Please Wait...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="warehouse-container inventory-form-container create-edit-container">
+    <div class="warehouse inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newWarehouse">
+                Create Warehouse
+            </b>
+            <b ng-if="!UI.newWarehouse">
+                Edit Warehouse
+            </b>
+        </h1>
+        <form 
+            class="warehouse-form inventory-form golura-form"
+            id="warehouseForm"
+            name="warehouseForm"
+            ng-submit="createWarehouse($event, warehouse)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.warehouseLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.warehouseLoaded"
+                        ></div>
+                        <label for="warehouseName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="warehouseName"
+                            name="warehouseName"
+                            placeholder="Warehouse name"
+                            ng-model="warehouse.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="warehouseDescription"
+                                name="warehouseDescriptionTextarea"
+                                ng-model="warehouse.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="warehouse-form-submit-button submit-button button" 
+                        id="warehouseFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.warehouseLoaded && UI.newWarehouse"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="warehouse-form-edit-submit-button submit-button button" 
+                        id="warehouseFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateWarehouse(warehouse)"
+                        ng-if="UI.warehouseLoaded && !UI.newWarehouse"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

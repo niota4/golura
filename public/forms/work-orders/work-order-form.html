@@ -1,0 +1,368 @@
+<div 
+    class="work-order-container create-edit-container"
+    ng-init="initWorkOrderForm()"
+>
+    <div class="work-order"> 
+        <div format-users users="users"></div>
+        <div 
+            class="callout sticky text-center fade"
+            ng-class="{'success success-text': UI.message,
+            'alert alert-text': UI.errMessage}"
+            ng-hide="!UI.message.length &&
+            !UI.errMessage.length"
+        >
+            <p ng-if="UI.message.length">
+                {{UI.message}}
+            </p>
+            <p ng-if="UI.errMessage.length">
+                {{UI.errMessage}}
+            </p>
+        </div>    
+        <div class="golura-block grid-y">
+            <div class="cell shrink">
+                <button 
+                    class="back-button button warning white-text" 
+                    type="button"
+                    ng-click="$root.goBack()"
+                >
+                    <i class="fal fa-circle-arrow-left"></i> Back
+                </button>  
+            </div>
+            <div class="cell auto">
+                <form
+                    class="work-order-form golura-form"
+                    id="addressForm"
+                    name="addressForm"
+                    ng-submit="updateWorkOrder($event, workOrder)"
+                    golura-form-validation
+                > 
+                    <div class="golura-block grid-x grid-margin-x">
+                        <div class="cell small-12 medium-auto large-auto">
+        
+                            <div class="work-order-form-sidebar">
+                                <ul 
+                                    class="work-order-form-sidebar-list accordion" 
+                                    data-accordion
+                                    data-deep-link="false"
+                                    data-allow-all-closed="true"
+                                >
+                                    <li 
+                                        class="work-order-form-sidebar-list-item work-order-form-sidebar-list-item-completed warning-message accordion-item alert-background" 
+                                        ng-if="workOrder.WorkOrderStatus.name == 'Completed'"
+                                    >   
+                                        <div class="grid-x grid-margin-x align-middle white-text">
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <span class="work-order-form-sidebar-list-item-signed-icon">
+                                                    <i class="fal fa-exclamation-circle"></i>
+                                                </span>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h4 class="white-text">
+                                                    <b>
+                                                        This Work Order has been Completes, and can no longer be edited.
+                                                    </b>
+                                                    <br/>
+                                                    You can Clone this Work Order to an Event.
+                                                </h4>
+                                            </div>
+                                            <div class="cell small-12 medium-3 large-3">                                        
+                                                <button 
+                                                    class="back-button button success white-text" 
+                                                    type="button"
+                                                    ng-click="copyWorkOrder"
+                                                >
+                                                    <i class="fal fa-clone"></i> Clone
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li 
+                                        class="work-order-form-sidebar-list-item accordion-item is-active" 
+                                        data-accordion-item
+                                    >
+                                        <a 
+                                            class="work-order-form-sidebar-list-item-title accordion-title"
+                                            href="#"
+                                        >
+                                            <b>
+                                                <i class="fal fa-circle-info"></i> Details
+                                            </b>
+                                        </a>
+                                        <div 
+                                            class="work-order-form-sidebar-list-item-content accordion-content" 
+                                            data-tab-content
+                                        >
+                                            <div class="grid-y">
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label>
+                                                            Title
+                                                        </label>
+                                                        <input
+                                                            class="work-order-input form-input tag-input"
+                                                            type="text"
+                                                            id="workOrderTitle"
+                                                            name="workOrderTitle"
+                                                            placeholder="Work Order's title"
+                                                            ng-model="workOrder.title"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label for="workOrderAssignedUserId">
+                                                            Assigned User
+                                                        </label>
+                                                        <selectize
+                                                            class="form-input"
+                                                            config="userOptions"
+                                                            options="users"
+                                                            id="workOrderAssignedUserId"
+                                                            name="workOrderAssignedUserId"
+                                                            ng-model="workOrder.assignUserId"
+                                                        >
+                                                        </selectize>
+                                                    </div> 
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label for="workOrderStatus">
+                                                            Work Order Status
+                                                        </label>
+                                                        <selectize
+                                                            class="form-input"
+                                                            config="statusOptions"
+                                                            options="workOrderStatuses"
+                                                            id="workOrderStatus"
+                                                            name="workOrderStatus"
+                                                            ng-model="workOrder.statusId"
+                                                        >
+                                                        </selectize>
+                                                    </div>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label>
+                                                            Due Date
+                                                        </label>
+                                                        <input 
+                                                            class="form-input"
+                                                            type="text"
+                                                            name="workOrderDueDate"
+                                                            ng-model="workOrder.dueDate"
+                                                            flatpickr
+                                                            allow-past="true"
+                                                            twelve-hour="true"
+                                                            placeholder="Select a Due Date"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label>
+                                                            Scheduled Date
+                                                        </label>
+                                                        <input 
+                                                            class="form-input"
+                                                            type="text"
+                                                            name="workOrderScheduledDate"
+                                                            ng-model="workOrder.scheduledDate"
+                                                            flatpickr
+                                                            allow-past="false"
+                                                            twelve-hour="true"
+                                                            placeholder="Select a Scheduled Date"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell shrink">
+                                                    <div 
+                                                        class="input-container"
+                                                        ng-class="{'ssc': !UI.workOrderLoaded}"
+                                                    >
+                                                        <div 
+                                                            class="ssc-square"
+                                                            ng-if="!UI.workOrderLoaded"
+                                                        ></div>
+                                                        <label>
+                                                            Estimated Hours
+                                                        </label>
+                                                        <input 
+                                                            class="form-input"
+                                                            type="number"
+                                                            id="workOrderEstimatedHours"
+                                                            name="workOrderEstimatedHours"
+                                                            ng-model="workOrder.estimatedHours"
+                                                            ng-value="workOrder.estimatedHours || 0"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="cell shrink text-right">
+                                                    <button 
+                                                        class="work-order-settings-submit-button submit-button button" 
+                                                        id="workOrderSubmitButton"
+                                                        type="submit"
+                                                        ng-disabled="UI.formSaving"
+                                                        ng-class="{'form-saving': UI.formSaving}"
+                                                    >
+                                                        <span ng-if="!UI.formSaving">
+                                                            <i class="fal fa-check-circle"></i> Update
+                                                        </span>
+                                                        <span ng-if="UI.formSaving">
+                                                            Please Wait...
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li 
+                                        class="work-order-form-sidebar-list-item accordion-item" 
+                                        data-accordion-item
+                                    >
+                                        <a 
+                                            class="work-order-form-sidebar-list-item-title accordion-title"
+                                            ng-click="UI.showMemo = !UI.showMemo"
+                                            href="#"
+                                        >
+                                            <b>
+                                                <i class="fal fa-memo"></i> Memo
+                                            </b>
+                                        </a>
+                                        <div 
+                                            class="work-order-form-sidebar-list-item-content work-order-form-sidebar-list-item-memo-container accordion-content" 
+                                            data-tab-content
+                                        >
+                                            <div 
+                                                id="workOrderMemo"
+                                                rich-text-editor 
+                                                ng-model="workOrder.memo"
+                                                on-submit="updateWorkOrder($event, workOrder)"
+                                                work-order="workOrder"
+                                            ></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div 
+                            class="golura-block cell overflow-scroll"
+                            ng-class="{'small-12 medium-12 large-4': !UI.showMemo,
+                            'small-12 medium-12 large-3': UI.showMemo}"
+                        >
+                            <div class="work-order-form-items-container">
+                                <div class="work-order-form-items">
+                                    <div class="golura-block grid-y">
+                                        <div class="cell shrink">
+                                            <h3>
+                                                <b>
+                                                    Cost 
+                                                </b>
+                                                {{workOrder.cost}}
+                                            </h3>
+                                        </div>
+                                        <div class="cell shrink">
+                                            <div class="button-group align-right">
+                                                <button 
+                                                    class="work-order-form-button button" 
+                                                    type="button"
+                                                    ng-click="initLineItems()"
+                                                    data-open="workOrderAddLineItemFormReveal"
+                                                >
+                                                    <i class="fal fa-layer-plus"></i> 
+                                                    Add Line Item
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="cell auto">
+                                            <div 
+                                                class="golura-block view-details list-container"
+                                                ng-include="'dist/partials/work-orders/line-items.html'">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="work-order-add-line-item-form-reveal form-reveal reveal large no-padding"
+    id="workOrderAddLineItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeAddWorkOrderLineItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/add-line-item-to-work-order-form.html'"
+    ></div>
+</div>
+<div
+    class="work-order-line-item-form-reveal reveal"
+    id="workOrderLineItemFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeWorkOrderLineItemFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        class="golura-block"
+        ng-include="'dist/forms/work-orders/work-order-line-item-form.html'"
+    ></div>
+</div>

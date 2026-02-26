@@ -1,0 +1,84 @@
+<div class="user-role-permission-form-container">
+    <div class="user-role-permission create-edit grid-container">
+        <h1>
+            <b>
+                User Permissions
+            </b>
+        </h1>
+        <form 
+            class="user-role-permission-form golura-form"
+            id="userRolePermissionsForm"
+            name="userRolePermissionsForm"
+            ng-submit="updateUserPermisions($event, workerPages)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="user-roles-permissions-container list-container">
+                        <ul class="user-roles-permissions-list list">
+                            <li 
+                                class="user-roles-permissions-list-item list-item"
+                                ng-repeat="page in workerPages track by $index"
+                            >
+                                <h3>
+                                    <b>
+                                        {{page.name}}
+                                    </b>
+                                </h3>
+                                <div class="user-roles-permission-categories-container">
+                                    <ul 
+                                        class="user-roles-permission-categories"
+                                        ng-repeat="permission in page.permissions track by $index"
+                                    >
+                                        <div class="grid-x grid-margin-x">
+                                            <div class="cell small-12 medium-7 large-7 text-capitalize">
+                                                <p ng-if="!permission.subAction">
+                                                    {{permission.action}}
+                                                </p>
+                                                <p ng-if="permission.subAction">
+                                                    {{permission.subAction}}
+                                                </p>
+                                            </div>
+                                            <div class="cell auto">
+                                                <div class="user-roles-form-select-button-container select-container">
+                                                    <button 
+                                                        class="group-form-select-button select-button button"
+                                                        type="button"
+                                                        ng-click="permission.selected = !permission.selected"
+                                                        ng-class="{'selected': permission.selected}"
+                                                    >
+                                                        <div 
+                                                            class="check-icon"
+                                                            ng-if="permission.selected"
+                                                        >
+                                                            <i class="fal fa-check"></i>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="user-form-submit-button submit-button button" 
+                        id="userRolePermissionFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

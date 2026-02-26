@@ -1,0 +1,1138 @@
+.admin-container {
+    height: 100%;
+    
+    .admin {
+        height: 100%;
+        overflow: hidden;
+        background: var(--off-white);
+   
+        .admin-tabs-container {
+            background: var(--white);
+            height: 100%;
+        }
+        
+    }
+    .admin-list-container {
+        height: 100%;
+        overflow: scroll;
+
+        .admin-list {
+            list-style-type: none;
+        }
+
+        .admin-list-details {
+            height: 100%;
+
+            .selected-color {
+                padding: 1rem;
+                width: 1rem;
+                height: 1rem;
+                border-radius: $circle-radius;
+            }
+            .selected-item {
+                background: lighten($success-color, 30);
+                border: 1px solid $success-color;
+                color: $success-color;
+            }
+            .list-item-details {
+                list-style-type: none;
+                margin: 0px;
+                text-align: left;
+
+                li {
+
+                    .list-item-details-label {
+                        display: inline-block;
+
+                        &:first-letter {
+                            text-transform: uppercase;
+                        }
+                    }
+                }
+            }
+        }
+        .admin-integration-list-container {
+            padding: 1rem;
+
+            .admin-integration-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            
+                .admin-integrations-list-item {
+                    padding: 1rem;
+                    border-bottom: 1px solid var(--light-gray);
+                    cursor: pointer;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                    .list-item-icon {
+                        margin-bottom: 1rem;;
+                        
+                        img {
+                            height: 4rem;
+                            width: 4rem;
+                        }
+                    }
+                    h3 {
+                        margin: 0px;
+                    }
+                }
+            }
+        }
+    }
+    .view-estimator {
+        background: var(--off-white);
+        
+        .view-question-containers-container {
+            background: var(--white);
+            border-radius: $container-radius;
+            border: 1px solid var(--light-gray);
+
+        }
+    }
+    .question-containers-list-item-details-container  {
+
+        .question-containers-list-item-details-list {
+            margin: 0px;
+            padding: 0px 1rem !important;
+
+            
+        }
+    }
+    .view-question-container-rules-container {
+        min-height: 10rem;
+
+        .view-question-container-questions-list-item-details-list {
+
+            .question-containers-list-item-details-list-item {
+                overflow: visible;
+                
+                .list-item-delete-container  {
+                    padding: 0px;
+                }
+            }
+            .admin-form-container {
+                overflow: visible;
+            }
+        }
+    }
+    .question-containers-list-container {
+
+        .question-containers-list {
+
+            .question-containers-list-item {
+
+                .question-containers-list-item-name {                    
+                    white-space: -moz-nowrap; /* Firefox */
+                    white-space: -o-nowrap; /* Opera */
+                    white-space: nowrap; /* Chrome */
+                    word-wrap: no-break; /* IE */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+    .question-containers--configure-container {
+        padding: 1rem;
+    }
+    .add-button  {
+        margin: 1rem .5rem !important;
+
+        &:last-child {
+            margin-right: 1rem !important;
+        }
+    }
+    
+    .admin-estimator-container {
+        height: 100%;
+
+        .admin-estimator {
+            height: 100%;
+        }
+    }
+    .admin-stripe-container {
+
+        .admin-stripe {
+            height: 100%;
+
+            .admin-stripe-setup-container {
+                padding-top: 4rem;
+            }
+            .admin-stripe-details-container {
+
+                h6 {
+                    font-size: .75rem;
+                    margin: 0px;
+                }
+
+                .card {
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+    .admin-estimator-ai-container {
+        height: 100%;
+
+        .admin-estimator-ai {
+            height: 100%;
+            padding: 1rem;
+
+            .estimator-ai-steps {
+                margin-bottom: 2rem;
+
+                .steps-container {
+                    display: flex;
+                    justify-content: space-between;
+                    position: relative;
+                    margin-bottom: 2rem;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: 20px;
+                        left: 40px;
+                        right: 40px;
+                        height: 2px;
+                        background: var(--light-gray);
+                        z-index: 1;
+                    }
+
+                    .step {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        position: relative;
+                        z-index: 2;
+
+                        .step-number {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+                            background: var(--light-gray);
+                            color: var(--medium-gray);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: 600;
+                            margin-bottom: 0.5rem;
+                        }
+
+                        .step-label {
+                            font-size: 0.9rem;
+                            color: var(--medium-gray);
+                            text-align: center;
+                        }
+
+                        &.active {
+                            .step-number {
+                                background: var(--primary-color);
+                                color: var(--white);
+                            }
+                            .step-label {
+                                color: var(--primary-color);
+                                font-weight: 600;
+                            }
+                        }
+
+                        &.completed {
+                            .step-number {
+                                background: var(--success-color);
+                                color: var(--white);
+                            }
+                            .step-label {
+                                color: var(--success-color);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .ai-step-content {
+                min-height: 400px;
+
+                .project-type-card {
+                    background: var(--white);
+                    border: 2px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    padding: 1.5rem;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-bottom: 1rem;
+
+                    &:hover {
+                        border-color: var(--primary-color);
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    }
+
+                    &.selected {
+                        border-color: var(--primary-color);
+                        background: rgba(var(--primary-color-rgb), 0.05);
+                    }
+
+                    .card-icon {
+                        font-size: 3rem;
+                        color: var(--primary-color);
+                        margin-bottom: 1rem;
+                    }
+
+                    .card-title {
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                        margin-bottom: 0.5rem;
+                        color: var(--dark-gray);
+                    }
+
+                    .card-description {
+                        font-size: 0.9rem;
+                        color: var(--medium-gray);
+                        line-height: 1.4;
+                    }
+                }
+
+                .component-tags {
+                    .tag-input-container {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-bottom: 1rem;
+
+                        input {
+                            flex: 1;
+                        }
+                    }
+
+                    .tags-list {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.5rem;
+
+                        .tag {
+                            background: var(--primary-color);
+                            color: var(--white);
+                            padding: 0.25rem 0.75rem;
+                            border-radius: 20px;
+                            font-size: 0.9rem;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+
+                            i {
+                                cursor: pointer;
+                                opacity: 0.8;
+
+                                &:hover {
+                                    opacity: 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .ai-analysis-results {
+                    .recommended-questions {
+                        margin-top: 2rem;
+                        border: 1px solid var(--light-gray);
+                        border-radius: $container-radius;
+                        padding: 1.5rem;
+
+                        h3 {
+                            color: var(--primary-color);
+                            margin-bottom: 1rem;
+                        }
+
+                        .question-recommendations {
+                            .question-item {
+                                background: var(--white);
+                                border: 1px solid var(--light-gray);
+                                border-radius: $container-radius;
+                                padding: 1rem;
+                                margin-bottom: 1rem;
+
+                                .question-text {
+                                    font-weight: 600;
+                                    margin-bottom: 0.5rem;
+                                    color: var(--dark-gray);
+                                }
+
+                                .question-type {
+                                    font-size: 0.9rem;
+                                    color: var(--medium-gray);
+                                    margin-bottom: 1rem;
+                                }
+
+                                .question-actions {
+                                    display: flex;
+                                    gap: 0.5rem;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .estimator-preview {
+                    background: var(--white);
+                    border: 1px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    padding: 1.5rem;
+
+                    h3 {
+                        color: var(--primary-color);
+                        margin-bottom: 1rem;
+                    }
+
+                    .summary-item {
+                        margin-bottom: 0.75rem;
+                        padding-bottom: 0.75rem;
+                        border-bottom: 1px solid var(--light-gray);
+
+                        &:last-child {
+                            border-bottom: none;
+                            margin-bottom: 0;
+                        }
+
+                        strong {
+                            color: var(--dark-gray);
+                            margin-right: 0.5rem;
+                        }
+                    }
+                }
+
+                .generation-options {
+                    background: var(--off-white);
+                    border: 1px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    padding: 1.5rem;
+
+                    h4 {
+                        color: var(--primary-color);
+                        margin-bottom: 1rem;
+                    }
+
+                    .option-item {
+                        margin-bottom: 1rem;
+
+                        label {
+                            display: flex;
+                            align-items: center;
+                            cursor: pointer;
+                            font-size: 0.95rem;
+
+                            input[type="checkbox"] {
+                                margin-right: 0.75rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .ai-form-navigation {
+                margin-top: 2rem;
+                padding-top: 2rem;
+                border-top: 1px solid var(--light-gray);
+            }
+        }
+    }
+    .view-question-container-questions,
+    .view-question-container-line-items {
+        border: 1px solid var(--light-gray);
+        border-radius: $container-radius;
+        overflow: hidden;
+        height: 30rem;
+        margin-bottom: 1rem;
+        background: var(--white);
+
+        h3 {
+            padding: 1rem;
+            margin: 0px;
+        }
+        .view-question-container-questions,
+        .view-question-container-line-items {
+            height: 30rem;
+        }
+    }
+    .admin-form-container {
+        height: 100%;
+        overflow: scroll;
+
+        &.admin-estimators-container {
+
+            .admin-estimators {
+                height: 100%;
+                padding: 0px;
+
+                .estimator-search-create-button-container {
+                    margin: 0px;
+                }
+            }
+        }
+        .admin-form-details {
+            padding: 1rem;
+                
+            h1 {
+                margin: 0px 0px 1rem;
+                text-transform: capitalize;
+            }
+
+            h2,
+            h5 {
+                font-size: 1rem;
+                color: var(--alt-font-color);
+            }
+            h5 {
+                margin: 0px 0px 1rem;
+            } 
+            .admin-form {
+                max-width: 75rem;
+                background: var(--white);
+                border: 1px solid var(--light-gray);
+                padding: 1rem;
+                border-radius: $container-radius;
+
+                &.rule-condition-form {
+
+                    .input-container {
+                        margin-bottom: 1.5rem;
+                    }
+                }
+                .general-company-logo-container {
+                    border: 1px solid var(--light-gray);
+                    background: var(--white);
+                    border-radius: $container-radius;
+                    display: inline-block;
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                    position: relative;
+
+                    .general-company-logo-empty {
+                        margin: 0px;
+                    }
+                    .general-company-logo {
+                        background-repeat: no-repeat; 
+                        background-position: center; 
+                        background-size: contain; 
+                        height: 5rem; 
+                        width: 15rem; 
+                    }
+                    .general-company-logo-remove-button {
+                        position: absolute;
+                        top: .5rem;
+                        right: .5rem;
+                        padding: .5rem;
+                    }
+                }
+                .general-company-logo-button {
+                    font-size: .75rem;
+                }
+                .general-form-hours-closed,
+                .general-form-hours-to {
+                    height: 4rem;
+                    padding: 0.75rem 0px;
+                    font-size: .75rem;
+                    display: block;
+                    text-align: center;
+                }
+                .general-form-hours-closed {
+
+                    label {
+                        padding: 0px .5rem;
+                    }
+                }
+                .general-form-hours-to {
+
+                    &::before,
+                    &::after {
+                        content: '';
+                        width: .55rem;
+                        margin-bottom: .25rem;
+                        display: inline-block;
+                        border-bottom: 1px solid var(--black);
+                        position: relative;
+                    }
+                    &::before {
+                        left: -.25rem;
+                    }
+                    &::after {
+                        right: -.25rem;
+                    }
+                }
+                
+                .general-form-hours-list {
+                    list-style-type: none;
+                    margin: 0px;
+
+                    .general-form-hours-list-item {
+                        
+                        label {
+                            text-transform: capitalize;
+                        }
+                    }
+                }
+                .general-form-representative-companies-container {
+                    border: 1px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    padding: 1rem;
+
+                    .input-container {
+                        margin: 0px;
+                    }
+                    .general-form-representative-companies-delete-button {
+                        margin: 0px;
+                    }
+                }
+                .events-form-types-container,
+                .roles-container {
+                    border: 1px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    overflow: hidden;
+                    height: 30rem;
+                    
+                    .events-form-types,
+                    .roles {
+                        height: 100%;
+                    }
+                }
+                .events-form-type-tags-container {
+                    border: 1px solid var(--light-gray);
+                    border-radius: $container-radius;
+                    overflow: hidden;
+                    height: 20rem;
+
+                    .events-form-type-tags {
+                        height: 100%;
+                    }
+                }
+                .user-form-selectable-list {
+                    margin: 0px 0px 1rem 0px;
+                    list-style-type: none;
+        
+                    .user-form-selectable-list-item {
+                        margin-bottom: 1rem;
+        
+                        label {
+                            padding-left: .5rem;
+                            margin-bottom: 0px;
+                            text-transform: capitalize;
+        
+                        }
+                    }
+                }
+            }
+            &.admin-forms,
+            &.admin-templates {
+                height: 100%;
+                padding: 0px;
+
+                .admin-forms-options-container,
+                .admin-templates-options-container {
+                    padding: 1rem;
+                    border-bottom: 1px solid var(--light-gray);
+                    background: var(--white);
+
+                    h1 {
+                        margin: 0px;
+                    }
+                }
+                .admin-forms-details-container,
+                .admin-templates-details-container {
+                    height: 100%;
+                    
+                    .admin-forms-list-container,
+                    .admin-templates-list-container {
+                        border-right: 1px solid var(--light-gray);
+                        background: var(--white);
+                        height: 100%;
+                        overflow: auto;
+                        padding: 1rem;
+
+                    } 
+                    .admin-forms-forms-container {
+                        height: 100%;
+
+                        .admin-forms-forms {
+                            height: 100%;
+                            overflow: auto;
+                            padding: 1rem;
+
+                            .admin-form-view-container {
+
+                                .admin-form-view {
+                                    max-width: 45rem;
+                                    margin: 0 auto;
+                                    border: 1px solid var(--light-gray);
+                                    border-radius: $container-radius;
+                                    padding: 1rem;
+                                }
+                            }
+                        }
+                    }
+                    .admin-templates-list {
+                        list-style-type: none;
+                        margin: 0px;
+
+                        .admin-templates-list-item {
+
+                            button {
+
+                                &:hover {
+                                    background: var(--light-gray);
+                                }
+                                &.is-active {
+                                    background: lighten($secondary-color, 15);
+                                    color: $secondary-color;
+                                }
+                            }
+                        }
+                    }
+                    .admin-template-options-container {
+                        padding: 1rem;
+                        border-bottom: 1px solid var(--light-gray);
+                        background: var(--white);
+
+                        h3 {
+                            margin: 0px;
+                        }
+
+                        .button-group {
+                            margin-bottom: 0px;
+
+                            button {
+                                margin-bottom: 0px;
+                            }
+                        }
+                    }
+                    .admin-email-template-builder-container {
+                        border: none;
+                    }
+                }
+            }
+        }
+    }
+}
+.company-setup-form-container {
+
+    .company-setup-form-logo {
+        text-align: center;
+        padding: 0px 2rem;
+
+        img {
+            display: inline-block;
+            padding-bottom: .25rem;
+            height: 4rem;
+        }
+        h1 {
+            color: $alert-color;
+            border-bottom:  1px solid $medium-gray;
+            margin: 0px;
+            padding-bottom: .5rem;
+            margin-bottom: 2rem;
+        }
+    }
+    hr {
+        border-bottom: 1px solid var(--light-gray);
+        margin: 2rem 0px 3rem;
+    }
+    .company-form {
+
+        h1 {
+            margin-bottom: 0px;
+        }
+    }
+
+    .company-setup-form{
+        padding: 4rem 3rem;
+        position: relative;
+        top: 50%;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        -webkit-transform: translateY(-50%);  
+        transform: translateY(-50%); 
+        border-radius: $global-radius;
+
+        .company-setup-form-activation-code-container {
+            padding: 0px 2rem;
+
+            .company-setup-form-activation-code {
+                padding: 1rem;
+                height: 5rem;
+                border: 1px solid var(--light-gray);
+                border-radius: $container-radius;
+                background: var(--light-gray);
+                margin-bottom: 1rem;
+                font-size: 2rem;
+                font-weight: bolder;
+                text-align: center;
+
+                &::placeholder {
+                    color: var(--medium-gray);
+                    font-weight: bolder;
+                    font-style: normal;
+                }
+            }
+        }
+    }
+}
+.estimator-ai-form {
+
+    .ai-step-content  {
+
+        .ai-analysis-results {
+
+            .label {
+                margin-right: .25rem;
+            }
+            .list-item-options-container {
+                margin: 0px;
+            }
+            .question-containers-section {
+                
+                .question-containers-container {
+
+                    .question-containers {
+
+                        .question-containers-accordion {
+                            padding: 0px;
+
+                            .question-container-item  {
+                                padding: 0px;
+                                border: 1px solid var(--light-gray);
+                                margin-bottom: 1rem;
+                                background: var(--white);
+
+                                &.is-active {
+                                    background: var(--light-gray);
+
+                                    .question-container-title  {
+                                        border-bottom: 1px solid var(--light-gray);
+                                        color: var(--primary-color);
+                                    }
+                                }
+                                .question-container-title {
+                                    color: var(--alt-font-color-2);
+                                    font-size: 1rem;
+                                    border: none;
+                                    border-radius: 0px;
+                                    padding: 2rem 1rem;
+                                    background: $transparent;
+                                }
+
+                                .question-container-content {
+                                    border-bottom-right-radius: $container-radius;
+                                    border-bottom-left-radius: $container-radius;
+                                    border: none;
+                                    padding: 0px;
+
+                                    .container-questions {
+
+                                        .questions-list {
+
+                                            .question-item {
+
+                                                .question-options {
+                                                    font-style: italic;
+                                                    font-size: .75rem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .formulas-section {
+
+                .formulas-container {
+
+                    .formulas-list {
+
+                        .formula-item {
+                            padding: 1rem;
+                            border: 1px solid var(--light-gray);
+                            border-radius: $container-radius;
+                            margin-bottom: 1rem;
+                            background: var(--white);
+
+                            h4 {
+                                margin: 0px 0px 1rem;
+                                color: var(--primary-color);
+                            }
+                            p {
+                                font-size: .875rem;
+                                color: var(--medium-gray);
+                            }
+                            code {
+                                display: block;
+                                margin: 1rem 0px;
+                                background: var(--off-white);
+                                padding: 1rem;
+                                border-radius: $container-radius;
+                                border: 1px solid var(--light-gray);
+                                color: var(--medium-gray);
+                                font-family: monospace;
+                                font-size: .875rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .estimator-preview {
+
+            .generation-options {
+
+                .option-item-select-button-container {
+                    margin-bottom: 1rem !important;
+                }
+            }
+        }
+    }
+}
+.user-roles-create-edit-container {
+
+    .user-roles-create-edit {
+
+        .user-roles-form {
+            padding: 2rem;
+
+            .user-roles-permissions-container,
+            .user-roles-widgets-container {
+
+                .user-roles-permissions-list,
+                .user-roles-widgets-list {
+                    padding: 0px;
+
+                    .user-roles-permissions-list-item,
+                    .user-roles-widgets-list-item {
+                        padding: 1rem;
+
+                        h3 {
+                            font-size: 1rem;
+                            text-transform: capitalize;
+                        }
+
+                        &:hover {
+                            background: var(--white);
+                        }
+                        p {
+
+                            &:first-letter{
+                                text-transform: capitalize;
+                            }
+                        }
+                    }
+                    .user-roles-widgets-list-item {
+                        
+                        .select-container {
+                            margin: 0px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.group-form-reveal {
+
+    .group-form-selection-container {
+
+        .group-form-selection {
+
+            h2 {
+                margin-bottom: 1rem;
+            }
+
+            .group-form-selection-item {
+                background: var(--light-gray);
+                color: $medium-gray;
+                border-radius: $container-radius;
+                margin: 0 auto;
+                padding: 3rem 0px;
+                text-align: center;
+                font-size: 2rem;
+                max-width: 15rem;
+
+                &:hover {
+                    background-color: darken($light-gray, 5);
+                }
+                span {
+                    display: block;
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+    .admin-group-container {
+
+        .admin-group {
+            
+            .group-form {
+
+                h2 {
+                    color: var(--alt-font-color);
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
+.estimator-rule-condition-form-reveal {
+    
+    .admin-rule-condition-container  {
+
+        .admin-rule-condition {
+
+            .rule-condition-form {
+
+                .variables-list-container {
+
+                    .variables-list {
+
+                        .variables-list-item {
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.admin-question-container-form-reveal {
+    height: 75vh; 
+    width: 85vw;
+    max-width: 100%;
+    padding: 0px;
+    top: 50% !important;
+    -webkit-transform: translateY(-50%);  
+    transform: translateY(-50%);
+
+
+    .callout {
+        border-top-right-radius: $global-radius;
+
+        .close-button {
+            top: 0px;
+            right: 0rem;
+        }
+    }
+    .admin-question-container-form-sidebar  {
+        border-top-left-radius: $global-radius;
+        border-bottom-left-radius: $global-radius;
+
+        h4 {
+            padding: 2rem 1rem 0px;
+            margin: 0px;
+
+            hr {
+                margin-bottom: 0px;
+            }
+        }
+    }
+    .add-question-container-form-list {
+        height: 100%;
+        border-top-right-radius: $global-radius;
+        border-bottom-right-radius: $global-radius;
+        overflow: hidden;
+        position: relative;
+    }
+}
+.email-template-preview-reveal {
+    width: 85vw;
+    max-width: 100%;
+    height: 90vh;
+
+    .email-template-preview-container {
+        height: 100%; 
+        overflow: auto;
+
+        .email-template-preview-iframe {
+            height: 100%;
+            width: 100%;
+            border: none;
+            border-radius: $container-radius;
+        }
+    }
+}
+.form-create-form-reveal {
+    width: 85vw;
+    max-width: 100%;
+    height: 90vh;
+
+    .form-builder-form-container {
+        height: 100%; 
+        overflow: auto;
+
+        .form-builder {
+            padding: 0px;
+        }
+    }
+}
+.formula-form-reveal {
+
+    .variables-side-bar-container {
+        background: var(--light-gray);
+        border-radius: $container-radius;
+        padding: 1rem;
+        height: 100%;
+
+        .variables-side-bar-list {
+            list-style-type: none;
+            color: var(--medium-gray);
+
+            .variables-side-bar-list-item {
+
+                h6 {
+                    font-size: 0.75rem;
+                    color: var(--medium-gray);
+                    word-break: break-all;
+                    word-wrap: break-word;
+                    white-space: pre-wrap;
+                    white-space: -moz-pre-wrap;
+                    white-space: -pre-wrap;
+                    white-space: -o-pre-wrap;
+                }
+            }
+        }
+    }
+}
+.estimator-form-reveal {
+
+    .admin-estimator-ai-container {
+
+        .admin-estimator-ai {
+            height: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0px;
+
+            .ai-step-content {
+                padding: 1rem;
+            }
+        }
+    }
+}
+.admin-question-container-form-container {
+    height: 100%;
+    overflow: hidden;
+    border-radius: $global-radius;
+
+    .admin-estimate-progress {
+        height: 100%;
+
+        .admin-question-container-form {
+            height: 100%;
+
+            .admin-question-container-form-sidebar  {
+                height: 100%;
+                background: var(--off-white);
+                border-right: 1px solid var(--light-gray);
+            }
+        }
+    }
+}

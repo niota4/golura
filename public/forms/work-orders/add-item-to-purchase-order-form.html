@@ -1,0 +1,234 @@
+<div class="add-purchase-order-form-container estimate-form-container form-container">
+    <div class="golura-block estimate-add-purchase-order estimate-form-details">
+        <form 
+            class="add-purchase-order-form estimate-form golura-form form"
+            id="addPurchaseOrderForm"
+            name="addPurchaseOrderForm"
+        >
+            <div 
+                class="grid-x"
+                ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+            >
+                <div class="golura-block cell small-12 medium-3 large-3">
+                    <div class="add-purchase-order-form-sidebar form-sidebar grid-y">
+                        <div class="cell shrink">
+                            <h4 class="medium-gray-text text-center">
+                                #{{purchaseOrder.purchaseOrderNumber}}
+                                <hr/>
+                            </h4>
+                        </div>
+                        <div class="cell hide-for-small-only medium-auto large-auto overflow-scroll">
+                            <div class="list-container">
+                                <ul class="view-purchase-order-list-item-details-list list-item-details-list list">
+                                    <li 
+                                        class="purchase-order-list-item-details-list-item list-item-details-list-item list-item position-relative"
+                                        ng-repeat="item in filteredItems = 
+                                        (purchaseOrder.PurchaseOrderItems | filter: search.purchaseOrders.value) |
+                                        orderBy: -createdAt track by $index"
+                                    >   
+                                        <h6>
+                                            <b>ID: </b>
+                                            #{{item.Item.partNumber}}
+                                        </h6>
+                                        <h6>
+                                            <b>Name: </b>
+                                            {{item.Item.name}}
+                                        </h6>
+                                        <h6>
+                                            <b>Rate: </b>
+                                            {{item.rate}}
+                                        </h6>
+                                        <h6>
+                                            <b>Part Number: </b>
+                                            {{item.partNumber}}
+                                        </h6>
+                                        <h6>
+                                            <b>Parent Part Number: </b>
+                                            {{item.parentManufacturerPartNumber}}
+                                        </h6>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="golura-block cell small-12 medium-auto large-auto">
+                    <div 
+                        class="callout sticky text-center fade"
+                        ng-hide="!UI.message.length &&
+                        !UI.errMessage.length || 
+                        UI.modalFormSaved"
+                        ng-class="{'success success-text': UI.message,
+                        'alert alert-text': UI.errMessage}"
+                        data-sticky 
+                        data-options="marginTop:0;"
+                    >
+                        <button 
+                            class="close-button button clear"
+                            ng-class="{'success': UI.message,
+                            'alert': UI.errMessage}"
+                            type="button"
+                            ng-click="UI.errMessage = !UI.errMessage;
+                            UI.message = !UI.message"
+                        >
+                            <i class="fal fa-times-circle"></i>
+                        </button>
+                        <p ng-if="UI.message.length">
+                            {{UI.message}}
+                        </p>
+                        <p ng-if="UI.errMessage.length">
+                            {{UI.errMessage}}
+                        </p>
+                    </div>
+                    <div 
+                        class="add-purchase-order-form-items form-list grid-y"
+                        ng-class="{'golura-mobile-block': $root.UI.isMobile, 'golura-block': !$root.UI.isMobile}"
+                    >
+                        <div class="cell shrink">
+                            <div class="purchase-order-search-container list-search-container">
+                                <div class="purchase-order-search list-search">
+                                    <div class="search-input-container">
+                                        <div class="grid-x align-middle">
+                                            <div class="cell auto align-self-bottom">
+                                                <input
+                                                    class="purchase-order-search-input search-input"
+                                                    id="itemSearchInput" 
+                                                    type="text"
+                                                    placeholder="Search items..."
+                                                    ng-model="search.items.value"
+                                                />
+                                            </div>
+                                            <div class="cell shrink align-self-bottom">
+                                                <span class="search-icon">
+                                                    <i class="fal fa-search"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="cell small-12 medium-auto large-auto position-relative"
+                            ng-class="{'overflow-scroll': !$root.UI.isMobile}"
+                        >
+                            <div class="purchase-order-list-container list-container">
+                                <ul 
+                                    class="purchase-order-list list"
+                                    id="itemsList"
+                                >
+                                    <li ng-show="!UI.itemsLoaded">
+                                        <div class="ssc purchase-order-ssc">
+                                            <div 
+                                                class="ssc-square"
+                                                ng-repeat="x in [].constructor(40) track by $index"
+                                            ></div>
+                                        </div>
+                                    </li>
+                                    <li 
+                                        class="purchase-order-list-item text-center"
+                                        ng-if="!filteredItems.length"
+                                    >
+                                        <h5>
+                                            <b>No Items Found</b>
+                                        </h5>
+                                        <a 
+                                            class="add-purchase-order-item-button button success white-text" 
+                                            ng-class="{'expanded': $root.UI.isMobile}"
+                                            type="button"
+                                            ng-href="/inventory/items/item"
+                                        >
+                                            <i class="fal fa-plus-circle"></i> Create Items
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="purchase-order-list-item list-item position-relative"
+                                        ng-repeat="item in filteredItems = 
+                                        (items | filter:search.items.value) 
+                                        track by $index"
+                                    >
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <h6 
+                                                    class="purchase-order-list-item-name"
+                                                    title="{{item.name}}"
+                                                >
+                                                    <b>
+                                                        {{item.Item.partNumber}}
+                                                    </b>
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-auto large-auto">
+                                                <h6>
+                                                    <b>
+                                                        {{item.Item.name}}
+                                                    </b>
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-3 large-3">
+                                                <h6>
+                                                    <b>Unit Price: </b>${{item.price.toFixed(2)}}
+                                                </h6>
+                                                <h6>
+                                                    <b>Total Price: </b>${{(item.price * item.quantity).toFixed(2) || 0}}
+                                                </h6>
+                                            </div>
+                                            <div class="cell small-12 medium-3 large-3">
+                                                <div class="input-container">
+                                                    <label>
+                                                        Quantity
+                                                        <span class="alert-text">
+                                                            *
+                                                        </span>
+                                                    </label>
+                                                    <input
+                                                        class="form-input"
+                                                        type="number"
+                                                        id="itemQuantity"
+                                                        name="itemQuantity"
+                                                        placeholder="Enter a quantity"
+                                                        min="item.minimumOrderQuantity || 0"
+                                                        ng-model="item.quantity"
+                                                        ng-change="item.quantity = item.quantity || 0" 
+                                                        required
+                                                    />
+                                                </div> 
+                                            </div>
+                                            <div class="cell small-12 medium-shrink large-shrink">
+                                                <div class="button-group">
+                                                    <button
+                                                        class="add-purchase-order-form-add-button button"
+                                                        ng-click="addItemToPurchaseOrder(item)"
+                                                        ng-class="{'form-saving': item.adding}"
+                                                        ng-disabled="item.quantity <= 0"
+                                                    >
+                                                        <span ng-if="!item.adding">
+                                                            <i class="fal fa-plus-circle"></i> 
+                                                            Add
+                                                        </span>
+                                                        <span ng-if="item.adding">
+                                                            Please Wait...
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li 
+                                        class="purchase-order-list-infinite-scroll text-center"
+                                        id="purchaseOrderListInfiniteScroll"
+                                        ng-init="initInfiniteScroll()"
+                                        ng-show="filteredPurchaseOrder.length > 20"
+                                        ng-click="updateUsersDisplayed()"
+                                    >
+                                        <div class="dispatch-loader"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

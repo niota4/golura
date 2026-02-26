@@ -1,0 +1,121 @@
+<div class="admin-user-container admin-form-container">
+    <div class="admin-user admin-form-details">
+        <h1>
+            <b>
+                User Settings
+            </b>
+        </h1>
+        <form 
+            class="user-form admin-form golura-form"
+            id="userForm"
+            name="userForm"
+            ng-submit="updateUserSettings($event, user)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="button-group"
+                        ng-class="{'stacked': $root.UI.isMobile,
+                        ' align-right': !$root.UI.isMobile}"
+                    >
+                        <a
+                            class="admin-button button success white-text"
+                            ng-href="/users/user"
+                            ng-class="{'expanded': $root.UI.isMobile}"
+                        >
+                            <i class="fal fa-edit"></i> Create User
+                        </a>
+                        <a
+                            class="admin-button button alert white-text"
+                            ng-href="admin-settings/archived/users"
+                            ng-class="{'expanded': $root.UI.isMobile}"
+                        >
+                            <i class="fal fa-box-archive"></i> View Archived Users
+                        </a>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Default</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.userSettingsLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.userSettingsLoaded"
+                        ></div>
+                        <label for="userRoles">
+                            Role
+                        </label>
+                        <selectize
+                            class="user-roles-input form-input"
+                            config="rolesOptions"
+                            options="roles"
+                            id="userRoles"
+                            name="userRoles"
+                            ng-model="company.defaultRoleId"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <button 
+                        class="user-default-role-submit-button submit-button button" 
+                        id="userDefaultRoleSubmitButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateGeneralSettings($event, company)"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2>
+                        <b>Roles</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="roles-container">
+                        <div class="roles">
+                            <div
+                                class="golura-block"
+                                ng-include="'dist/partials/admin/roles.html'"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div
+    class="user-roles-form-reveal reveal"
+    id="userRolesFormReveal"
+    data-reveal
+    data-close-on-click="false"
+>
+    <button 
+        class="close-button" 
+        aria-label="closeUserRolesFormReveal" 
+        type="button" 
+        data-close
+    >
+        <span aria-hidden="true">
+            <i class="fal fa-times-circle"></i>
+        </span>
+    </button>
+    <div 
+        ng-include="'dist/forms/admin/user-roles-form.html'"
+        ng-if="UI.roleLoaded"
+    ></div>
+</div>

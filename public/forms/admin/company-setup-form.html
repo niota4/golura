@@ -1,0 +1,891 @@
+<div 
+    class="company-setup-form-container create-edit-container"
+    ng-init="initCompanySetupForm()"
+>
+    <div 
+        class="callout sticky text-center fade"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length"
+    >
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>  
+    <div class="company-setup-form create-edit grid-container">
+        <div class="company-setup-form-logo">
+            <img
+                src="/dist/assets/img/logos/golura/golura-logo.svg"
+                ng-if="!$root.preferences.darkMode"
+                alt="Golura Logo"
+            />
+            <img
+                src="/dist/assets/img/logos/golura/golura-logo-white.svg"
+                ng-if="$root.preferences.darkMode"
+                alt="Golura Logo"
+            />
+        </div>
+        <hr/>
+        <form 
+            class="company-form golura-form"
+            id="setupCompanyForm"
+            name="setupCompanyForm"
+            ng-submit="setupCompany($event, company)"
+        >
+            <div ng-if="UI.currentStep === 1">
+                <h1>
+                    <b>
+                        Activation Code
+                    </b>
+                </h1>
+                <p>
+                    Please enter the activation code sent to your email.
+                    <br>
+                    If you haven't received it, please check your spam folder.
+                    <br>
+                    <br>
+                </p>
+                <p class="text-center">
+                    <b class="alert-text">
+                        The activation code is valid for 1 day.
+                    </b>
+                </p>
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="company-setup-form-activation-code-container">
+                            <div class="grid-x grid-margin-x align-middle">
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[0]"
+                                        ng-change="moveToNextInput(0, $event)"
+                                        ng-keydown="moveToNextInput(0, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                        autofocus
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[1]"
+                                        ng-change="moveToNextInput(1, $event)"
+                                        ng-keydown="moveToNextInput(1, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[2]"
+                                        ng-change="moveToNextInput(2, $event)"
+                                        ng-keydown="moveToNextInput(2, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[3]"
+                                        ng-change="moveToNextInput(3, $event)"
+                                        ng-keydown="moveToNextInput(3, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[4]"
+                                        ng-change="moveToNextInput(4, $event)"
+                                        ng-keydown="moveToNextInput(4, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                                <div class="cell auto">
+                                    <input 
+                                        class="company-setup-form-activation-code"
+                                        type="text"
+                                        maxlength="1"
+                                        ng-model="activationCode[5]"
+                                        ng-change="moveToNextInput(5, $event)"
+                                        ng-keydown="moveToNextInput(5, $event)"
+                                        ng-paste="handlePaste($event)"
+                                        placeholder="0"
+                                        ng-attr-autofocus="true"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button
+                            class="button warning white-text"
+                            type="button"
+                            ng-click="sendValidationCode()"
+                        >
+                            <i class="fal fa-paper-plane"></i> 
+                            Resend Code
+                        </button>
+                        <button 
+                            type="button" 
+                            class="button" 
+                            ng-click="validateActivationCode()"
+                            ng-disabled="activationCode.join('').length !== 6"
+                        >
+                            <i class="fal fa-check-circle"></i>  
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 2">
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <h1>
+                            <b>
+                                Company Information
+                            </b>
+                        </h1>
+                        <p>
+                            Please fill in the company information below.
+                        </p>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyName">
+                                        Company Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="companyName" 
+                                        name="companyName" 
+                                        ng-model="company.name" 
+                                        required
+                                        placeholder="Enter company name"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-6">
+                                <div class="input-container">
+                                    <label for="companyEmail">
+                                        Company Email
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        id="companyEmail" 
+                                        name="companyEmail" 
+                                        ng-model="company.email" 
+                                        required
+                                        placeholder="Enter company email"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-6">
+                                <div class="input-container">
+                                    <label for="companyPhone">
+                                        Company Phone
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="tel" 
+                                        id="companyPhone" 
+                                        name="companyPhone" 
+                                        placeholder="(123) 456-7890"
+                                        ng-model="company.number"
+                                        ui-mask="(999) 999-9999"
+                                        ui-mask="99.99.9999"  
+                                        ui-mask-placeholder 
+                                        ui-mask-placeholder-char="_"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyAddress1">
+                                        Street 1
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        class="form-input"
+                                        name="address1"
+                                        id="companyAddress1"
+                                        name="companyAddress1"
+                                        ng-model="company.street1"
+                                        placeholder="Company address"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyAddress2">
+                                        Street 2
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        class="form-input"
+                                        id="companyAddress2"
+                                        name="companyAddress2"
+                                        ng-model="company.street2"
+                                        placeholder="Company address"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyCity">
+                                        City
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        class="form-input"
+                                        id="companyCity"
+                                        name="companyCity"
+                                        ng-model="company.city"
+                                        placeholder="Company city"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="grid-x grid-margin-x">
+                                    <div 
+                                        class="cell small-12 medium-4 large-4" 
+                                        data-id="{{address.State.name}}"
+                                    >
+                                        <div class="input-container">
+                                            <label for="companyState">
+                                                State
+                                            </label>
+                                            <selectize
+                                                class="company-states-input form-input"
+                                                config="stateOptions"
+                                                options="states"
+                                                id="companyState"
+                                                name="companyState"
+                                                ng-model="company.stateId"
+                                            >
+                                            </selectize>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <div class="input-container">
+                                            <label for="companyZipCode">
+                                                Zip Code
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                class="form-input"
+                                                id="companyZipCode"
+                                                name="companyZipCode"
+                                                ng-model="company.zipCode"
+                                                placeholder="Company zip code"
+                                                ui-mask="99999"
+                                                ui-mask-placeholder 
+                                                ui-mask-placeholder-char="_"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12 text-right">
+                                <button 
+                                    type="button" 
+                                    class="button" 
+                                    ng-click="updateCompanySetupStep(3)" 
+                                    ng-disabled="!company.name || 
+                                    !company.email || 
+                                    !company.number ||
+                                    company.street1 && !company.city ||
+                                    company.street1 && !company.stateId ||
+                                    company.street1 && !company.zipCode"
+                                >
+                                    <i class="fal fa-check-circle"></i>  
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 3">
+                <h1>
+                    <b>
+                        Company Preferences
+                    </b>
+                </h1>
+                <p>
+                    Please select your company preferences below.
+                </p>
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyType">
+                                        Company Type
+                                        <span class="required">*</span>
+                                    </label>
+                                    <selectize
+                                        class="form-input"
+                                        config="typeOptions"
+                                        options="companyTypes"
+                                        id="companyType"
+                                        name="companyType"
+                                        ng-model="company.typeId"
+                                        required
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyWebsite">
+                                        Company Website
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyWebsite"
+                                        name="companyWebsite"
+                                        ng-model="company.website"
+                                        placeholder="Enter company website URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyLinkedIn">
+                                        LinkedIn Profile
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyLinkedIn"
+                                        name="companyLinkedIn"
+                                        ng-model="company.linkedIn"
+                                        placeholder="Enter LinkedIn profile URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyFacebook">
+                                        Facebook Page
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyFacebook"
+                                        name="companyFacebook"
+                                        ng-model="company.facebook"
+                                        placeholder="Enter Facebook page URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyTwitter">
+                                        Twitter Handle
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyTwitter"
+                                        name="companyTwitter"
+                                        ng-model="company.twitter"
+                                        placeholder="Enter Twitter handle URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyInstagram">
+                                        Instagram Profile
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyInstagram"
+                                        name="companyInstagram"
+                                        ng-model="company.instagram"
+                                        placeholder="Enter Instagram profile URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-4">
+                                <div class="input-container">
+                                    <label for="companyYouTube">
+                                        YouTube Channel
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        class="form-input"
+                                        id="companyYouTube"
+                                        name="companyYouTube"
+                                        ng-model="company.youTube"
+                                        placeholder="Enter YouTube channel URL"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="companyDescription">
+                                        Company Description
+                                    </label>
+                                    <div class="form-textarea-container">
+                                        <textarea 
+                                            class="form-input"
+                                            id="companyDescription"
+                                            name="companyDescription"
+                                            ng-model="company.description"
+                                            placeholder="Enter company description"
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <div class="input-container">
+                                    <label>
+                                        Primary Color
+                                    </label>
+                                    <div
+                                        class="color-picker-sample"
+                                        ng-style="{'background': company.primaryColor}"
+                                        ng-model="company.primaryColor"
+                                        color-picker 
+                                        color-picker-model="company.primaryColor"
+                                        color-picker-output-format="'hex'"
+                                    >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <div class="input-container">
+                                    <label>
+                                        Secondary Color
+                                    </label>
+                                    <div
+                                        class="color-picker-sample"
+                                        ng-style="{'background': company.secondaryColor}"
+                                        ng-model="company.secondaryColor"
+                                        color-picker 
+                                        color-picker-model="company.secondaryColor"
+                                        color-picker-output-format="'hex'"
+                                    >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-shrink large-shrink">
+                                <div class="input-container">
+                                    <label>
+                                        Tertiary Color
+                                    </label>
+                                    <div
+                                        class="color-picker-sample"
+                                        ng-style="{'background': company.tertiaryColor}"
+                                        ng-model="company.tertiaryColor"
+                                        color-picker 
+                                        color-picker-model="company.tertiaryColor"
+                                        color-picker-output-format="'hex'"
+                                    >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12 text-right">
+                                <button 
+                                    class="button warning white-text" 
+                                    type="button" 
+                                    ng-click="updateCompanySetupStep(2)"
+                                >
+                                    <i class="fal fa-circle-arrow-left"></i> 
+                                    Back
+                                </button>
+                                <button 
+                                    type="button" 
+                                    class="button" 
+                                    ng-click="updateCompanySetupStep(4)" 
+                                    ng-disabled="!company.typeId"
+                                >
+                                    <i class="fal fa-check-circle"></i>  
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 4">
+                <h1>
+                    <b>
+                        Admin Setup
+                    </b>
+                </h1>
+                <p>
+                    Please fill in the admin information below.
+                </p>
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-6 large-6">
+                                <div class="input-container">
+                                    <label for="adminName">
+                                        First Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="adminName" 
+                                        name="adminName" 
+                                        ng-model="company.User.firstName" 
+                                        required
+                                        placeholder="Enter admin name"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6 large-6">
+                                <div class="input-container">
+                                    <label for="adminLastName">
+                                        Last Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="adminLastName" 
+                                        name="adminLastName" 
+                                        ng-model="company.User.lastName" 
+                                        required
+                                        placeholder="Enter admin last name"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="adminEmail">
+                                        Admin Email
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        id="adminEmail" 
+                                        name="adminEmail" 
+                                        ng-model="company.User.email" 
+                                        required
+                                        placeholder="Enter admin email"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="adminPassword">
+                                        Admin Password
+                                        <span class="required">*</span>
+                                    </label>
+                                    <password-strength 
+                                        ng-model="company.User.password" 
+                                        required="true"
+                                        strength="strength"
+                                    ></password-strength>
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="input-container">
+                                    <label for="adminConfirmPassword">
+                                        Confirm Password
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        id="adminConfirmPassword" 
+                                        name="adminConfirmPassword" 
+                                        ng-model="company.User.confirmPassword" 
+                                        required
+                                        placeholder="Confirm admin password"
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-12 large-12 text-right">
+                                <button 
+                                    class="button warning white-text" 
+                                    type="button" 
+                                    ng-click="updateCompanySetupStep(3)"
+                                >
+                                    <i class="fal fa-circle-arrow-left"></i> 
+                                    Back
+                                </button>
+                                <button 
+                                    type="button" 
+                                    class="button" 
+                                    ng-click="updateCompanySetupStep(5)" 
+                                    ng-disabled="!company.User.firstName || !company.User.lastName || !company.User.email || !company.User.password || company.User.password !== company.User.confirmPassword"
+                                >
+                                    <i class="fal fa-check-circle"></i>  
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 5">
+                <div format-addresses address="company"></div>
+                <div format-phone-numbers phone-number="company"></div>
+                <h1>
+                    <b>
+                        Review and Submit
+                    </b>
+                </h1>
+                <p>
+                    Please review your company information before submitting.
+                </p>
+                <div class="grid-x grid-margin-x align-center">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="company-review-container">
+                            <div class="grid-x grid-margin-x">
+                                <div class="cell small-12 medium-12 large-12">
+                                    <h2 class="text-capitalize">
+                                        <b>
+                                            {{company.name}}
+                                        </b>
+                                    </h2>
+                                </div>
+                                <div class="cell small-12 medium-6 large-6">
+                                    <h6>
+                                        <b>
+                                            Email: 
+                                        </b>
+                                        {{company.email}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Phone: 
+                                        </b>
+                                        {{company.formattedNumber}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Address: 
+                                        </b>
+                                        {{company.fullAddress}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Type: 
+                                        </b>
+                                        {{company.Type.name}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Website: 
+                                        </b>
+                                        <a 
+                                            href="{{company.website}}" 
+                                            target="_blank"
+                                            ng-if="company.website"
+                                        >
+                                            {{company.website}}
+                                        </a>
+                                        <span ng-if="!company.website">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            LinkedIn: 
+                                        </b>
+                                        <a 
+                                            href="{{company.linkedIn}}" 
+                                            target="_blank"
+                                            ng-if="company.linkedIn"
+                                        >
+                                            {{company.linkedIn}}
+                                        </a>
+                                        <span ng-if="!company.linkedIn">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Facebook: 
+                                        </b>
+                                        <a 
+                                            href="{{company.facebook}}" 
+                                            target="_blank"
+                                            ng-if="company.facebook"
+                                        >
+                                            {{company.facebook}}
+                                        </a>
+                                        <span ng-if="!company.facebook">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Twitter: 
+                                        </b>
+                                        <a 
+                                            href="{{company.twitter}}" 
+                                            target="_blank"
+                                            ng-if="company.twitter"
+                                        >
+                                            {{company.twitter}}
+                                        </a>
+                                        <span ng-if="!company.twitter">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Instagram: 
+                                        </b>
+                                        <a 
+                                            href="{{company.instagram}}" 
+                                            target="_blank"
+                                            ng-if="company.instagram"
+                                        >
+                                            {{company.instagram}}
+                                        </a>
+                                        <span ng-if="!company.instagram">
+                                            N/A
+                                        </span>
+                                            
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            YouTube: 
+                                        </b>
+                                        <a 
+                                            href="{{company.youTube}}" 
+                                            target="_blank"
+                                            ng-if="company.youTube"
+                                        >
+                                            {{company.youTube}}
+                                        </a>
+                                        <span ng-if="!company.youTube">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                </div>
+                                <div class="cell small-12 medium-6 large-6">
+                                    <div class="grid-x">
+                                        <div class="cell small-12 medium-12 large-12">
+                                            <h6>
+                                                <b>
+                                                    Description:
+                                                </b>
+                                            </h6>
+                                        </div>
+                                        <div class="cell small-12 medium-12 large-12">
+                                            <p>
+                                                {{company.description || 'No description provided.'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <h6>
+                                        <b>
+                                            Primary Color:
+                                        </b> 
+                                        <span 
+                                            class="label white-text" 
+                                            ng-style="{'background': company.primaryColor}"
+                                            ng-if="company.primaryColor"
+                                        >
+                                            {{company.primaryColor}}
+                                        </span>
+                                        <span 
+                                            class="label white-text" 
+                                            ng-if="!company.primaryColor"
+                                        >
+                                            Not Set
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Secondary Color: 
+                                        </b>
+                                        <span 
+                                            class="label white-text" 
+                                            ng-style="{'background': company.secondaryColor}"
+                                            ng-if="company.secondaryColor"
+                                        >
+                                            {{company.secondaryColor}}
+                                        </span>
+                                        <span 
+                                            class="label secondary white-text" 
+                                            ng-if="!company.secondaryColor"
+                                        >
+                                            Not Set
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Tertiary Color: 
+                                        </b> 
+                                        <span 
+                                            class="label white-text" 
+                                            ng-style="{'background': company.tertiaryColor}"
+                                            ng-if="company.tertiaryColor"
+                                        >
+                                            {{company.tertiaryColor}}
+                                        </span>
+                                        <span 
+                                            class="label white-text" 
+                                            ng-if="!company.tertiaryColor"
+                                        >
+                                            Not Set
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="cell small-12 medium-12 large-12 text-right">
+                                    <button 
+                                        class="button warning white-text" 
+                                        type="button" 
+                                        ng-click="updateCompanySetupStep(4)"
+                                    >
+                                        <i class="fal fa-circle-arrow-left"></i> 
+                                        Back
+                                    </button>
+                                    <button 
+                                        class="button success white-text"
+                                        type="submit" 
+                                        ng-click="submitCompanySetup()"
+                                    >
+                                        <i class="fal fa-check-circle"></i>  
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

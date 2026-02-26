@@ -1,0 +1,120 @@
+<div class="inventory-container">
+    <div 
+        class="inventory"
+        ng-init="initInventory()"
+    >
+        <div class="golura-block grid-x">
+            <div class="cell small-12 medium-2 large-2">
+                <div class="inventory-tabs-container tabs-container">
+                    <div class="inventory-tabs tabs-list-container">
+                        <ul 
+                            class="inventory-tabs-list tabs tabs-list vertical" 
+                            id="inventoryTabs"
+                            data-responsive-accordion-tabs="tabs small-accordion medium-tabs large-tabs"
+                            data-deep-link="false"
+                            data-allow-all-closed="true"
+                        >
+                            <li class="inventory-tabs-title tabs-title is-active">
+                                <a  
+                                    class="inventory-tabs-title-link"
+                                    data-tabs-target="warehouses"
+                                    ng-click="initInventory()"
+                                >
+                                    <i class="fal fa-info-circle"></i> Warehouses
+                                </a>
+                            </li>
+                            <li class="inventory-tabs-title inventory-tabs-link-title">
+                                <a  
+                                    class="inventory-tabs-title-link"
+                                    ng-href="work-orders"
+                                >
+                                    <i class="fal fa-file-word"></i> Work Orders
+                                </a>
+                            </li>
+                            <li class="inventory-tabs-title tabs-title">
+                                <a  
+                                    class="inventory-tabs-title-link"
+                                    data-tabs-target="purchaseOrders"
+                                    ng-click="initPurchaseOrders()"
+                                >
+                                    <i class="fal fa-cart-flatbed"></i> Purchase Orders
+                                </a>
+                            </li>
+                            <li class="inventory-tabs-title inventory-tabs-link-title">
+                                <a  
+                                    class="inventory-tabs-title-link"
+                                    ng-href="inventory/items"
+                                >
+                                    <i class="fal fa-solid fa-grip-vertical"></i> Items
+                                </a>
+                            </li>
+                            <li class="inventory-tabs-title tabs-title">
+                                <a  
+                                    class="inventory-tabs-title-link"
+                                    data-tabs-target="vendors"
+                                    ng-click="initVendors()"
+                                >
+                                    <i class="fal fa-industry-windows"></i> Vendors
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="golura-block cell small-12 medium-auto large-auto">
+                <div 
+                    class="callout sticky success success-text text-center fade"
+                    ng-hide="!UI.formSaved"
+                    data-sticky 
+                    data-options="marginTop:0;"
+                >
+                    <button 
+                        class="close-button success button clear"
+                        type="button"
+                        ng-click="UI.formSaved = !UI.formSaved"
+                    >
+                        <i class="fal fa-times-circle"></i>
+                    </button>
+                    <p>
+                        {{UI.message}}
+                    </p>
+                </div>
+                <div 
+                    class="inventory-tabs-content tabs-content" 
+                    data-tabs-content="inventoryTabs"
+                >
+                    <div 
+                        class="inventory-warehouses-tabs-panel inventory-tabs-panel tabs-panel is-active" 
+                        id="warehouses"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/inventory/warehouses.html'"
+                        >
+                        </div>
+                    </div>
+                    <div 
+                        class="inventory-purchase-orders-tabs-panel inventory-tabs-panel tabs-panel" 
+                        id="purchaseOrders"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/inventory/purchase-orders.html'"
+                        >
+                        </div>
+                    </div>
+                    <div 
+                        class="inventory-vendors-tabs-panel inventory-tabs-panel tabs-panel" 
+                        id="vendors"
+                    >
+                        <div 
+                            class="golura-block"
+                            ng-include="'dist/partials/inventory/vendors.html'"
+                        >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

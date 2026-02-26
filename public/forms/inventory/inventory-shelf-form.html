@@ -1,0 +1,159 @@
+<div class="inventory-shelf-container inventory-form-container create-edit-container">
+    <div class="inventory-shelf inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventoryShelf">
+                Create Inventory Shelf
+            </b>
+            <b ng-if="!UI.newInventoryShelf">
+                Edit Inventory Shelf
+            </b>
+        </h1>
+        <form 
+            class="inventory-shelf-form inventory-form golura-form"
+            id="inventoryShelfForm"
+            name="inventoryShelfForm"
+            ng-submit="createInventoryShelf($event, inventoryShelf)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryShelfLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryShelfLoaded"
+                        ></div>
+                        <label for="shelfName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="shelfName"
+                            name="shelfName"
+                            placeholder="Shelf name"
+                            ng-model="inventoryShelf.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryShelfLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryShelfLoaded"
+                        ></div>
+                        <label>
+                            Row
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="inventoryOptions"
+                            options="inventoryRows"
+                            id="inventoryRow"
+                            name="inventoryRow"
+                            type="text"
+                            ng-model="inventoryShelf.inventoryRowId"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="!UI.newInventoryShelf"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryShelfLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryShelfLoaded"
+                        ></div>
+                        <label for="areaStep">   
+                            Step
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="shelfStep"
+                            name="shelfStep"
+                            placeholder="Shelf step"
+                            ng-model="inventoryShelf.step"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="shelfDescription"
+                                name="shelfDescriptionTextarea"
+                                ng-model="inventoryShelf.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-shelf-form-submit-button submit-button button" 
+                        id="inventoryShelfFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventoryShelfLoaded && UI.newInventoryShelf"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-shelf-form-edit-submit-button submit-button button" 
+                        id="inventoryShelfFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventoryShelf(inventoryShelf)"
+                        ng-if="UI.inventoryShelfLoaded && !UI.newInventoryShelf"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

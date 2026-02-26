@@ -1,0 +1,391 @@
+<div 
+    class="estimate-line-item-create-edit-container create-edit-container" 
+    ng-init="initEstimateLineItemForm()"
+>
+    <div 
+        class="callout success success-text sticky text-center fade"
+        ng-if="UI.formSaved"
+        data-sticky 
+    >
+        <p>
+            {{UI.message}}
+        </p>
+    </div>
+    <div class="estimate-line-item-create-edit create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newEstimateLineItem">Create Estimate Line Item</b>
+            <b ng-if="!UI.newEstimateLineItem">Edit Estimate Line Item</b>
+        </h1>
+        <form 
+            class="estimate-line-item-form golura-form" 
+            id="estimateLineItemForm" 
+            name="estimateLineItemForm" 
+            ng-submit="UI.newEstimateLineItem ? createEstimateLineItem($event, estimateLineItem) : updateEstimateLineItem(estimateLineItem)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Pricing Method</b></h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Priced By
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="pricedByOptions"
+                            options="pricedByOptions"
+                            id="estimateLineItemPricedBy"
+                            name="estimateLineItemPricedBy"
+                            ng-model="estimateLineItem.pricedBy"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Details</b></h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Name
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="name" 
+                            placeholder="Item Name" 
+                            ng-model="estimateLineItem.name" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container amount-container">
+                        <label>
+                            Total
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text"
+                            name="totalPrice"
+                            placeholder="0.0" 
+                            ng-model="estimateLineItem.totalPrice" 
+                            format-number 
+                            allow-decimal="true" 
+                            decimal-places="2" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Rate
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            step="0.01"
+                            name="rate"
+                            placeholder="0.0" 
+                            ng-model="estimateLineItem.rate" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Unit
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="unitOptions"
+                            options="units"
+                            id="estimateLineItemUnit"
+                            name="estimateLineItemUnit"
+                            ng-model="estimateLineItem.unit"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6">
+                    <div class="input-container">
+                        <label>
+                            Markup
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            step="0.01"
+                            name="markup" 
+                            placeholder="0.00" 
+                            ng-model="estimateLineItem.markup" 
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-shrink large-shrink">
+                    <div class="line-item-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="line-item-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="line-item taxable button"
+                                    ng-click="estimateLineItem.taxable = !estimateLineItem.taxable"
+                                    ng-class="{'selected': estimateLineItem.taxable}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimateLineItem.taxable"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Taxable?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-auto large-auto"
+                    ng-if="estimateLineItem.taxable"
+                >
+                    <div class="input-container">
+                        <label>
+                            Sales Tax Rate
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="text"
+                            name="salesTaxRate" 
+                            placeholder="0.00" 
+                            ng-model="estimateLineItem.salesTaxRate"
+                            ui-mask="9?999.99" 
+                            ui-mask-placeholder 
+                            ui-mask-placeholder-char="·"
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea 
+                                class="form-textarea" 
+                                name="description" 
+                                placeholder="Item Description" 
+                                ng-model="estimateLineItem.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="estimate-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="estimate-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="estimate email button"
+                                    ng-click="estimateLineItem.lineItemPrice = !estimateLineItem.lineItemPrice"
+                                    ng-class="{'selected': estimateLineItem.lineItemPrice}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimateLineItem.lineItemPrice"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Show Line Item Price?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <h2><b>Labor Assignment</b></h2>
+                </div>
+                <div class="cell small-12 medium-612large-12">
+                    <div class="input-container">
+                        <label>
+                            Category
+                            <span class="alert-text">*</span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="categoryOptions"
+                            options="laborAssignmentOptions"
+                            id="estimateLineItemCategory"
+                            name="estimateLineItemCategory"
+                            ng-model="estimateLineItem.category"
+                            ng-change="onCategoryChange()"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12" ng-if="estimateLineItem.category === 'Labor'">
+                    <div class="input-container">
+                        <label>
+                            Labor Role
+                            <span class="alert-text">*</span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="laborOptions"
+                            options="labor"
+                            id="estimateLineItemLabor"
+                            name="estimateLineItemLabor"
+                            ng-model="estimateLineItem.laborId"
+                            ng-change="onLaborChange()"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12" ng-if="estimateLineItem.category === 'Labor' && selectedLabor">
+                    <div class="estimate-line-item-form-labor-details">
+                        <h6><strong>{{selectedLabor.role}}</strong></h6>
+                        <p><strong>Rate:</strong> ${{selectedLabor.rate}}/hour</p>
+                        <p><strong>Overtime Rate:</strong> ${{selectedLabor.overtimeRate}}/hour</p>
+                        <p><strong>Standard Hours:</strong> {{selectedLabor.standardHoursPerDay}}/day</p>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="estimateLineItem.category === 'Labor'">
+                    <div class="input-container">
+                        <label>
+                            Hours
+                            <span class="alert-text">*</span>
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="laborHours"
+                            placeholder="8" 
+                            ng-model="estimateLineItem.quantity" 
+                            ng-change="calculateLaborTotal()"
+                            min="0"
+                            step="0.5"
+                            required 
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="estimateLineItem.category === 'Labor'">
+                    <div class="estimate-line-item-form-select-button-container select-container">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="estimate-line-item-form-select-button select-button button"
+                                    type="button"
+                                    aria-label="estimate line item form button"
+                                    ng-click="estimateLineItem.useOvertimeRate = !estimateLineItem.useOvertimeRate; calculateLaborTotal()"
+                                    ng-class="{'selected': estimateLineItem.useOvertimeRate}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="estimateLineItem.useOvertimeRate"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <span>
+                                    Use Overtime Rate
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="estimateLineItem.category === 'Labor' && estimateLineItem.useOvertimeRate">
+                    <div class="input-container">
+                        <label>
+                            Standard Hours
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="standardHours"
+                            placeholder="8" 
+                            ng-model="estimateLineItem.standardHours" 
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-6 large-6" ng-if="estimateLineItem.category === 'Labor' && estimateLineItem.useOvertimeRate">
+                    <div class="input-container">
+                        <label>
+                            Overtime Hours
+                        </label>
+                        <input 
+                            class="form-input" 
+                            type="number"
+                            name="overtimeHours"
+                            placeholder="0" 
+                            ng-model="estimateLineItem.overtimeHours" 
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="line-item-form-submit-button submit-button button" 
+                        id="lineItemFormSubmitButton" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.newEstimateLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button
+                        class="line-item-form-edit-submit-button submit-button button" 
+                        id="lineItemFormEditSubmitButton" 
+                        type="button" 
+                        ng-disabled="UI.formSaving" 
+                        ng-class="{'form-saving': UI.formSaving}" 
+                        ng-click="updateEstimateLineItem(estimateLineItem)" 
+                        ng-if="!UI.newEstimateLineItem"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> 
+                            Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <a 
+                        class="back-button button warning white-text" 
+                        ng-href="estimates/estimate-line-items"
+                    >
+                        <i class="fal fa-times-circle"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

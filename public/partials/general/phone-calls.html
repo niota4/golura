@@ -1,0 +1,160 @@
+<div class="phone-calls-container list-container">
+    <div class="phone-calls">
+        <ul 
+            class="phone-calls-list list"
+            id="phoneCallsList"
+            ng-class="{'ssc': !UI.phoneCallsLoaded}"
+        >
+            <li 
+                class="phone-calls-ssc ssc"
+                ng-repeat="x in [].constructor(10) track by $index"
+                ng-if="!UI.phoneCallsLoaded"
+            >
+                <div class="phone-call-ssc ssc-square"></div>
+            </li>
+            <li 
+                class="phone-call-no-results list-item"
+                ng-if="!phoneCalls.length && UI.phoneCallsLoaded"
+            >
+                <div class="grid-x align-middle">
+                    <div class="cell auto text-center">
+                        <h5>
+                            <b>No Phone Calls Found</b>
+                        </h5>
+                        <p>There are no phone calls for this client yet.</p>
+                    </div>
+                </div>
+            </li>
+            <li
+                class="phone-call-item list-item"
+                ng-class="{
+                    'phone-call-left': phoneCall.Creator.id !== user.id,
+                    'phone-call-right': phoneCall.Creator.id === user.id,
+                    'phone-call-edit': phoneCall.edit,
+                    'phone-call-pending': phoneCall.status === 'Pending',
+                    'phone-call-in-progress': phoneCall.status === 'In Progress',
+                    'phone-call-completed': phoneCall.status === 'Completed',
+                    'phone-call-failed': phoneCall.status === 'Failed'
+                }"
+                ng-repeat="phoneCall in phoneCalls | orderBy: 'createdAt' track by phoneCall.id"
+            >
+            <div format-phone-numbers phone-number="phoneCall.ClientPhoneNumber"></div>
+                <div class="phone-call-content">
+                    <div class="grid-x align-middle">
+                        <div class="cell auto">
+                            <div class="phone-call-header">
+                                <div class="grid-x align-middle">
+                                    <div class="cell auto">
+                                        <h3 class="phone-call-number">
+                                            <button
+                                                class="phone-number-button"
+                                                ng-model="phoneCall.ClientPhoneNumber.number"
+                                                ng-cloak
+                                                phone-number
+                                                ng-if="phoneCall.ClientPhoneNumber.number"
+                                                client-id="{{client.id}}"
+                                                phone-number-id="{{phoneCall.ClientPhoneNumber.id}}"
+                                            >
+                                                <b>
+                                                    {{phoneCall.ClientPhoneNumber.formattedNumber}}
+                                                </b>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <h6 class="text-right">
+                                            <i>
+                                                Sent {{phoneCall.createdAt | DateTimeFormat}}
+                                            </i>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phone-call-details">
+                        <div class="grid-x">
+                            <div class="cell small-12 medium-12 large-12">
+                                <div class="phone-call-info">
+                                    <h6 ng-if="phoneCall.userPhoneNumber">
+                                        <b>
+                                            User Phone Number: 
+                                        </b>                                
+                                        <span format-phone-string="{{phoneCall.userPhoneNumber}}"
+                                        ></span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Duration: 
+                                        </b>
+                                        {{phoneCall.duration | TimeFormat}}
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Started: 
+                                        </b>
+                                        <span ng-if="phoneCall.startedAt">
+                                            {{phoneCall.startedAt | DateTimeFormat}}
+                                        </span>
+                                        <span ng-if="!phoneCall.startedAt">
+                                            N/A
+                                        </span>
+                                    </h6>
+                                    <h6>
+                                        <b>
+                                            Ended: 
+                                        </b>
+                                        <span ng-if="phoneCall.endedAt">
+                                            {{phoneCall.endedAt | DateTimeFormat}}
+                                        </span>
+                                        <span ng-if="!phoneCall.endedAt">
+                                            Still in progress
+                                        </span>
+                                    </h6>
+                                    <h6 ng-if="phoneCall.Estimate || phoneCall.Event || phoneCall.WorkOrder || phoneCall.Invoice">
+                                        <b>Related To: </b>
+                                        <span ng-if="phoneCall.Estimate">
+                                            Estimate: <a href="/estimates/estimate/{{phoneCall.Estimate.id}}">
+                                                {{phoneCall.Estimate.estimateNumber}}
+                                            </a>
+                                        </span>
+                                        <span ng-if="phoneCall.WorkOrder">
+                                            Work Order: <a href="/work-orders/work-order/{{phoneCall.WorkOrder.id}}">
+                                                {{phoneCall.WorkOrder.workOrderNumber}}
+                                            </a>
+                                        </span>
+                                        <span ng-if="phoneCall.Event">
+                                            Event: <a href="/events/event/{{phoneCall.Event.id}}">
+                                                {{phoneCall.Event.title}}
+                                            </a>
+                                        </span>
+                                        <span ng-if="phoneCall.Invoice">
+                                            Invoice: <a href="/invoices/invoice/{{phoneCall.Invoice.id}}">
+                                                {{phoneCall.Invoice.invoiceNumber}}
+                                            </a>
+                                        </span>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="phone-call-actions" 
+                        ng-if="phoneCall.recordingUrl || phoneCall.conferenceSid"
+                    >
+                        <div class="button-group">
+                            <button 
+                                class="button"
+                                type="button"
+                                ng-if="phoneCall.recordingUrl"
+                                ng-click="playRecording(phoneCall.recordingUrl)"
+                            >
+                                <i class="fal fa-play"></i> Play Recording
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="inventory-rack-container inventory-form-container create-edit-container">
+    <div class="inventory-rack inventory-form-details create-edit grid-container">
+        <h1>
+            <b ng-if="UI.newInventoryRack">
+                Create Inventory Rack
+            </b>
+            <b ng-if="!UI.newInventoryRack">
+                Edit Inventory Rack
+            </b>
+        </h1>
+        <form 
+            class="inventory-rack-form inventory-form golura-form"
+            id="inventoryRackForm"
+            name="inventoryRackForm"
+            ng-submit="createInventoryRack($event, inventoryRack)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryRackLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryRackLoaded"
+                        ></div>
+                        <label for="rackName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="rackName"
+                            name="rackName"
+                            placeholder="Rack name"
+                            ng-model="inventoryRack.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryRackLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryRackLoaded"
+                        ></div>
+                        <label>
+                            Shelf
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <selectize
+                            class="form-input"
+                            config="inventoryOptions"
+                            options="inventoryShelves"
+                            id="inventoryShelf"
+                            name="inventoryShelf"
+                            type="text"
+                            ng-model="inventoryRack.inventoryShelfId"
+                            required
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div 
+                    class="cell small-12 medium-12 large-12"
+                    ng-if="!UI.newInventoryRack"
+                >
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.inventoryRackLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.inventoryRackLoaded"
+                        ></div>
+                        <label for="rackStep">   
+                            Step
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="rackStep"
+                            name="rackStep"
+                            placeholder="Rack step"
+                            ng-model="inventoryRack.step"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="rackDescription"
+                                name="rackDescriptionTextarea"
+                                ng-model="inventoryRack.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="inventory-rack-form-submit-button submit-button button" 
+                        id="inventoryRackFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.inventoryRackLoaded && UI.newInventoryRack"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="inventory-rack-form-edit-submit-button submit-button button" 
+                        id="inventoryRackFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateInventoryRack(inventoryRack)"
+                        ng-if="UI.inventoryRackLoaded && !UI.newInventoryRack"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

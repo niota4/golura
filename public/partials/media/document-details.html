@@ -1,0 +1,121 @@
+
+<div class="media-options grid-x white-text">
+    <div format-users user="document.User"></div>
+    <div class="cell small-12 medium-6 large-6">
+        <button 
+            class="media-close-button button warning white-text"
+            type="button"
+            ng-click="initTabs()"
+            ng-if="!userDocument"
+        >
+            <b>
+                <i class="fal fa-times-circle"></i> Close
+            </b>
+        </button>
+        <button 
+            class="media-close-button button warning white-text"
+            type="button"
+            ng-click="document.options = !document.options"
+            ng-if="userDocument"
+        >
+            <b>
+                <i class="fal fa-times-circle"></i> 
+                <span ng-if="!$root.UI.isMobile">
+                    Close
+                </span>
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-6 large-6 text-right">
+        <button 
+            class="delete-button button alert white-text"
+            type="button"
+            ng-click="document.delete = !document.delete"
+            ng-if="userDocument"
+        >
+            <b>
+                <i class="fal fa-archive"></i> 
+                <span ng-if="!$root.UI.isMobile">
+                    Delete
+                </span>
+            </b>
+        </button>
+    </div>
+    <div class="cell small-12 medium-12 large-12">
+        <h4 class="separator-left">
+            <b>
+                Document Details
+            </b>
+        </h4>
+        <h6>
+            <b>
+                Uploaded On: 
+            </b>
+            {{document.createdAt | DateTimeFormat}}
+        </h6>
+        <h6>
+            <b>
+                Uploaded By: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="users/user/{{document.userId}}"
+            >
+                {{document.User.fullName}}
+            </a>
+        </h6>
+        <h6 ng-if="document.estimateId">
+            <b>
+                Related Estimate: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="estimates/estimate/{{document.estimateId}}"
+            >
+                {{document.Estimate.estimateId}}
+            </a>
+        </h6>
+        <h6 ng-if="document.eventId">
+            <b>
+                Related Event: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="events/event/{{document.Event.id}}"
+            >
+                {{document.Event.title}}
+            </a>
+        </h6>
+        <h6 ng-if="media.marketingId">
+            <b>
+                Related Marketing: 
+            </b>
+            <a 
+                class="text-capitalize"
+                ng-href="marketings/marketing/{{document.marketingId}}"
+            >
+                {{document.Estimate.marketingId}}
+            </a>
+        </h6>
+        <h6>
+            <b>
+                Size: 
+            </b>
+            {{document.size ? (document.size | ByteFormat) : 'N/A'}}
+        </h6>
+        <h6>
+            <b>
+                Page Count: 
+            </b>
+            {{ document.pageCount || 'N/A' }}
+        </h6>
+        <h6>
+            <b>
+                Format: 
+            </b>
+            <span class="text-uppercase">
+                {{ video.format || 'N/A' }}
+            </span>
+        </h6>
+    </div>
+</div>

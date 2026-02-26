@@ -1,0 +1,187 @@
+<div class="admin-group-container admin-form-container create-edit-container">
+    <div class="admin-group admin-form-details create-edit grid-container">
+        <div format-users users="users"></div>
+        <h1>
+            <b ng-if="UI.newGroup">
+                Create Group
+            </b>
+            <b ng-if="!UI.newGroup">
+                Edit Group
+            </b>
+        </h1>
+        <form 
+            class="group-form admin-form golura-form"
+            id="groupForm"
+            name="groupForm"
+            ng-submit="createGroup($event, group)"
+        >
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-12 medium-12 large-12">
+                    <h2>
+                        <b>Details</b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.groupLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.groupLoaded"
+                        ></div>
+                        <label for="groupName">   
+                            Name
+                            <span class="alert-text">
+                                *
+                            </span>
+                        </label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="groupName"
+                            name="groupName"
+                            placeholder="Group name"
+                            ng-model="group.name"
+                            autocomplete="off"
+                            required
+                        />
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="group-form-select-button-container select-container">
+                        <div class="grid-x align-middle">
+                            <div class="cell shrink text-right">
+                                <button 
+                                    class="group-form-select-button select-button button"
+                                    type="button"
+                                    ng-click="group.calendar = !group.calendar"
+                                    ng-class="{'selected': group.calendar}"
+                                >
+                                    <div 
+                                        class="check-icon"
+                                        ng-if="group.calendar"
+                                    >
+                                        <i class="fal fa-check"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="cell auto">
+                                <label>
+                                    Add to Calendar?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div class="input-container">
+                        <label>   
+                            Description
+                        </label>
+                        <div class="form-textarea-container">
+                            <textarea
+                                class="form-textarea"
+                                id="groupDescription"
+                                name="groupDescriptionTextarea"
+                                ng-model="group.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <hr/>
+                    <h2 title="These will be the roles that can use this Event Type.">
+                        <b>
+                            Users 
+                            <span class="golura-tooltip">
+                                <i class="fas fa-question-circle"></i>
+                            </span>
+                        </b>
+                    </h2>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.usersLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.usersLoaded"
+                        ></div>
+                        <label>
+                            Roles
+                        </label>
+                        <selectize
+                            class="group-roles-input form-input"
+                            config="roleOptions"
+                            options="roles"
+                            id="groupRoles"
+                            name="groupRoles"
+                            type="text"
+                            ng-model="group.RoleGroups"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12">
+                    <div 
+                        class="input-container"
+                        ng-class="{'ssc': !UI.usersLoaded}"
+                    >
+                        <div 
+                            class="ssc-square"
+                            ng-if="!UI.usersLoaded"
+                        ></div>
+                        <label>
+                            Users
+                        </label>
+                        <selectize
+                            class="group-user-input form-input"
+                            config="usersOptions"
+                            options="users"
+                            id="groupUsers"
+                            name="groupUsers"
+                            type="text"
+                            ng-model="group.UserGroups"
+                        >
+                        </selectize>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-12 large-12 text-right">
+                    <button 
+                        class="group-form-submit-button submit-button button" 
+                        id="groupFormSubmitButton"
+                        type="submit"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-if="UI.groupLoaded && UI.newGroup"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="user-form-edit-submit-button submit-button button" 
+                        id="groupFormUpdateButton"
+                        type="button"
+                        ng-disabled="UI.formSaving"
+                        ng-class="{'form-saving': UI.formSaving}"
+                        ng-click="updateGroup(group)"
+                        ng-if="UI.groupLoaded && !UI.newGroup"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-check-circle"></i> Update
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,753 @@
+<div class="event-create-edit-container create-edit-container">
+    <div 
+        class="callout sticky text-center fade"
+        ng-hide="!UI.message.length &&
+        !UI.errMessage.length || 
+        UI.modalFormSaved"
+        ng-class="{'success success-text': UI.message,
+        'alert alert-text': UI.errMessage}"
+        data-sticky 
+        data-options="marginTop:0;"
+    >
+        <button 
+            class="close-button button clear"
+            ng-class="{'success': UI.message,
+            'alert': UI.errMessage}"
+            type="button"
+            ng-click="UI.errMessage = !UI.errMessage;
+            UI.message = !UI.message"
+        >
+            <i class="fal fa-times-circle"></i>
+        </button>
+        <p ng-if="UI.message.length">
+            {{UI.message}}
+        </p>
+        <p ng-if="UI.errMessage.length">
+            {{UI.errMessage}}
+        </p>
+    </div>
+    <div format-clients clients="clients"></div>
+    <div format-users users="users"></div>
+    <div format-addresses addresses="addresses"></div>
+    <div format-addresses addresses="event.client.ClientAddresses"></div>
+    <div format-phone-numbers phone-numbers="event.client.ClientPhoneNumbers"></div>
+    <div format-phone-numbers phone-numbers="phoneNumbers"></div>
+    <div class="event-create-edit create-edit grid-container">
+        <form 
+            class="event-form golura-form"
+            id="createEventForm"
+            name="createEventForm"
+            ng-submit="createEvent($event, event)"
+            golura-form-validation
+        >
+            <h1 ng-if="UI.currentStep !== 1">
+                <b>
+                    Create Event
+                </b>
+            </h1>
+            <div ng-if="UI.currentStep === 1">
+                <div class="event-category-list-container">
+                    <h2>
+                        <b>
+                            Who is this event for?
+                        </b>
+                    </h2>
+                    <ul class="event-category-list grid-x grid-margin-x align-middle">
+                        <li 
+                            class="event-category-list-item cell small-12 medium-3 large-3"
+                            ng-repeat="category in eventCategories track by $index"
+                            ng-click="event.categoryType = category.name; updateStep(2, category.id);"
+                        >
+                            <div class="event-category-list-item-content">
+                                <i 
+                                    class="fal "
+                                    ng-class="{
+                                        'fa-people-group': category.name === 'client',
+                                        'fa-user-group-crown': category.name === 'group',
+                                        'fa-users': category.name === 'user',
+                                        'fa-building': category.name === 'company'
+                                    }"
+                                ></i>
+                                <span>
+                                    <b>
+                                        {{category.name}}
+                                    </b>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-show="UI.currentStep === 2">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-12 large-12">
+                        <h6>
+                            <b>Primary Information</b>
+                        </h6>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 position-relative">
+                        <div 
+                            class="input-container"
+                            ng-if="UI.currentStep === 2"
+                        >
+                            <label>
+                                Type
+                                <span 
+                                    class="alert-text"
+                                    ng-if="updateCategoryRequireType(event.categoryType)"
+                                >
+                                    *
+                                </span>
+                            </label>
+                            <selectize
+                                class="event-input form-input"
+                                config="typeOptions"
+                                options="eventTypes"
+                                id="eventTypes"
+                                name="eventTypes"
+                                ng-model="event.eventTypeId"
+                                ng-change="initEventType(event.eventTypeId)"
+                                ng-required="updateCategoryRequireType(event.categoryType)"
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-6 large-6"
+                        ng-if="!(event.EventType && event.EventType.map) || event.startDate"
+                    >
+                        <div class="input-container">
+                            <label>
+                                Start Date
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="text"
+                                name="eventStartDate"
+                                ng-model="event.startDate"
+                                flatpickr
+                                allow-past="true"
+                                twelve-hour="true"
+                                placeholder="Select a Start Date and time"
+                                required 
+                            />
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-6 large-6"
+                        ng-if="!(event.EventType && event.EventType.map) || event.endDate"
+                    >
+                        <div class="input-container">
+                            <label>
+                                End Date
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input 
+                                class="form-input"
+                                type="text"
+                                name="eventEndDate"
+                                ng-model="event.endDate"
+                                flatpickr
+                                allow-past="true"
+                                twelve-hour="true"
+                                placeholder="Select a End Date and time"
+                                required 
+                            />
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12 position-relative" 
+                        ng-if="event.categoryType == 'client' && !UI.clientView"
+                    >
+                        <div format-clients client="event.client"></div>
+                        <div 
+                            class="input-container"
+                        >
+                            <label>
+                                Search Client
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                class="event-input form-input"
+                                type="text"
+                                name="eventClient"
+                                placeholder="Search for the client"
+                                ng-model="event.clientSearch"
+                                maxlength="255"
+                                autocomplete="off"
+                                data-open="eventFormClientContent"
+                                ng-required="UI.currentStep === 2 && event.categoryType === 'client'"
+                                ng-disabled="UI.currentStep !== 2 || event.categoryType !== 'client'"
+                            />
+                        </div>
+                        <div 
+                            class="event-form-client-container"
+                            ng-if="event.clientId"
+                        >
+                            <div class="cell small-12 medium-12 large-12">
+                                <h6>
+                                    <b>
+                                        Current Client
+                                    </b>
+                                </h6>
+                            </div>
+                            <div class="event-form-client">
+                                <div class="grid-x grid-margin-x align-middle">
+                                    <div class="cell shrink">
+                                        <div class="golura-user-icon-container text-center frame-container">
+                                            <div class="golura-user-icon text-center">
+                                                <h2 class="flex-child-auto align-middle">
+                                                    {{event.client.shortName}}
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cell auto">
+                                        <h6 class="users-list-item-name list-item-name">
+                                            {{event.client.fullName}}
+                                        </h6>
+                                    </div>
+                                    <div class="cell shrink">
+                                        <button
+                                            class="event-form-delete-client-button button alert white-text"
+                                            id="eventFormDeleteClientButton"
+                                            type="button"
+                                            ng-click="updateEventFormClient()"
+                                        >
+                                            <i class="fal fa-times-circle"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div 
+                            class="event-form-selection-content dropdown-pane list-container" 
+                            id="eventFormClientContent"
+                            data-dropdown
+                            data-auto-focus="true" 
+                            data-close-on-click="true"
+                        >
+                            <h3 
+                                class="text-center"
+                                ng-if="!clients.length"
+                            >
+                                <b>Searching...</b>
+                            </h3>
+                            <div 
+                                class="event-form-selection-content-item"
+                                ng-if="clients.length"
+                            >
+                                <ul 
+                                    class="clients-list list"
+                                    id="clientsList"
+                                >
+                                    <li
+                                        class="clients-list-item list-item position-relative"
+                                        ng-repeat="client in filteredClients = (clients | filter: event.clientSearch) | 
+                                        limitTo: 10 track by $index"
+                                    >
+                                        <div class="grid-x grid-padding-x align-middle">
+                                            <div class="cell small-shrink medium-shrink large-shrink">
+                                                <div class="radio-container">
+                                                    <label class="radio">
+                                                        <input 
+                                                          type="radio"
+                                                          name="eventClientRadio"
+                                                          ng-model="event.clientId"
+                                                          ng-change="updateEventFormClient(client)"
+                                                        >
+                                                        <span class="radio-mark"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="cell small-auto medium-auto large-auto">
+                                                {{client.fullName}}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12" 
+                        ng-if="event.categoryType == 'group'"
+                    >
+                        <div 
+                            class="input-container"
+                            ng-class="{'ssc': !UI.groupsLoaded}"
+                        >
+                            <div 
+                                class="ssc-square"
+                                ng-if="!UI.groupsLoaded"
+                            ></div>
+                            <label>
+                                Group
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <selectize
+                                class="event-input form-input" 
+                                id="eventFormGroup" 
+                                name="eventFormGroup" 
+                                config="groupOptions" 
+                                options="groups" 
+                                ng-model="event.groupId"
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12" 
+                        ng-if="event.categoryType == 'user'"
+                    >
+                        <div 
+                            class="input-container"
+                            ng-class="{'ssc': !UI.usersLoaded}"
+                        >
+                            <div 
+                                class="ssc-square"
+                                ng-if="!UI.usersLoaded"
+                            ></div>
+                            <label>
+                                User
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </label>
+                            <selectize
+                                class="event-input form-input"
+                                id="targetUser"
+                                name="targetUser"
+                                config="userOptions"
+                                options="users"
+                                ng-model="event.targetUserId"
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="event-type-form-select-button-container select-container">
+                            <div class="grid-x align-middle">
+                                <div class="cell shrink text-right">
+                                    <button 
+                                        class="event-select-button select-button button"
+                                        type="button"
+                                        ng-click="event.recurring = !event.recurring; event.frequency = !event.frequency"
+                                        ng-class="{'selected': event.recurring}"
+                                    >
+                                        <div 
+                                            class="check-icon"
+                                            ng-if="event.recurring"
+                                        >
+                                            <i class="fal fa-check"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="cell auto">
+                                    <label>
+                                        Is this Recurring?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12"
+                        ng-if="event.recurring"
+                    >
+                        <div class="input-container">
+                            <legend>   
+                                Recurring Pattern
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </legend>
+                            <selectize
+                                class="event-recurrence-input form-input"
+                                id="eventRecurrenceInput"
+                                config="recurrenceOptions"
+                                options="recurrencePatterns"
+                                ng-model="event.frequency"
+                                required
+                            ></selectize>
+                        </div>
+                    </div>
+                    <div 
+                        class="cell small-12 medium-12 large-12"
+                        ng-if="event.frequency === 'custom'"
+                    >
+                        <div class="grid-x grid-margin-x">
+                            <div class="cell small-12 medium-6">
+                                <div class="input-container">
+                                    <label>
+                                        Interval in Days
+                                        <span class="alert-text">
+                                            *
+                                        </span>
+                                    </label>
+                                    <input 
+                                        class="event-input form-input"
+                                        type="number" 
+                                        min="1" 
+                                        ng-model="event.interval" 
+                                        placeholder="Interval (e.g., every 2 days)"
+                                        required 
+                                    />
+                                </div>
+                            </div>
+                            <div class="cell small-12 medium-6">
+                                <div class="input-container">
+                                    <label title="This is the date for when the recurring event ends">
+                                        Recurring End Date
+                                        <span class="golura-tooltip">
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                    </label>
+                                    <input 
+                                        class="form-input"
+                                        type="text"
+                                        name="customEndDate"
+                                        ng-model="event.recurrenceEndDate"
+                                        flatpickr
+                                        allow-past="false"
+                                        min-date-model="event.startDate"
+                                        placeholder="Select End Date"
+                                        required 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12 text-right">
+                        <button 
+                            class="event-button button warning white-text" 
+                            type="button" 
+                            ng-click="initEventForm()"
+                            ng-if="!UI.clientView"
+                        >
+                            <i class="fal fa-circle-arrow-left"></i> 
+                            Back
+                        </button>
+                        <button 
+                            type="button" 
+                            class="event-button button" 
+                            ng-click="updateStep(3)" 
+                            ng-disabled="!validateEventFormCategory(event)"
+                        >
+                            <i class="fal fa-check-circle"></i>  
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="UI.currentStep === 3">
+                <div class="grid-x grid-margin-x align-middle">
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <label title="Use the '@' character to search for dynamic variables">
+                                Title 
+                                <span>
+                                    *
+                                </span>
+                                <span class="golura-tooltip">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                            </label>
+                            <input
+                                class="event-input form-input tag-input"
+                                type="text"
+                                id="eventTitle"
+                                name="eventTitle"
+                                placeholder="Event's title"
+                                ng-model="event.title"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="input-container">
+                            <legend>   
+                                Priority
+                                <span class="alert-text">
+                                    *
+                                </span>
+                            </legend>
+                            <selectize
+                                class="event-priority-input form-input"
+                                id="priorityInput"
+                                config="priorityOptions"
+                                options="priorities"
+                                name="priority"
+                                ng-model="event.priorityId"
+                                ng-cloak
+                                required
+                            >
+                            </selectize>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div 
+                                class="cell small-12 medium-3 large-3"
+                                ng-repeat="reminder in event.reminderTypes track by $index"
+                            >
+                                <div class="event-reminder-type-form-select-button-container select-container">
+                                    <div class="grid-x align-middle">
+                                        <div class="cell shrink text-right">
+                                            <button 
+                                                class="event-reminder-type-form-select-button select-button button"
+                                                type="button"
+                                                ng-click="reminder.selected = !reminder.selected"
+                                                ng-class="{'selected': reminder.selected}"
+                                            >
+                                                <div 
+                                                    class="check-icon"
+                                                    ng-if="reminder.selected"
+                                                >
+                                                    <i class="fal fa-check"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="cell auto">
+                                            <label>
+                                                {{reminder.name}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div 
+                                class="cell small-12 medium-12 large-12"
+                                ng-if="!addresses.length && !event.client.ClientAddresses.length"
+                            >
+                                <span class="alert-text">
+                                    There are currently no available Addresses. Create one to add it.
+                                </span>
+                            </div>
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !addresses.length && !event.client.ClientAddresses.length}"
+                                >
+                                    <label>
+                                        Address
+                                    </label>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventAddress"
+                                        name="eventAddress"
+                                        config="addressOptions"
+                                        options="event.client.ClientAddresses"
+                                        ng-model="event.addressId"
+                                        ng-if="event.clientId"
+                                        ng-disabled="!event.client.ClientAddresses.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventAddress"
+                                        name="eventAddress"
+                                        config="addressOptions"
+                                        options="addresses"
+                                        ng-model="event.addressId"
+                                        ng-if="!event.clientId"
+                                        ng-disabled="!addresses.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <button 
+                                    type="button" 
+                                    class="event-button button" 
+                                    ng-click="UI.createAddress = !UI.createAddress"
+                                >
+                                    <i class="fal fa-layer-plus"></i> 
+                                    <span ng-if="!$root.UI.isMobile">
+                                        Create Address
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div 
+                            class="cell small-12 medium-12 large-12"
+                            ng-if="!phoneNumbers.length && !event.client.ClientPhoneNumbers.length"
+                        >
+                            <span class="alert-text">
+                                There are currently no available Phone Numbers. Create one to add it.
+                            </span>
+                        </div>
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !phoneNumbers.length && !event.client.ClientPhoneNumbers.length}"
+                                >
+                                    <label>
+                                        Phone Number
+                                    </label>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventPhoneNumber"
+                                        name="eventPhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="event.client.ClientPhoneNumbers"
+                                        ng-model="event.phoneNumberId"
+                                        ng-if="event.clientId"
+                                        ng-disabled="!event.client.ClientPhoneNumbers.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventPhoneNumber"
+                                        name="eventPhoneNumber"
+                                        config="phoneNumberOptions"
+                                        options="phoneNumbers"
+                                        ng-model="event.phoneNumberId"
+                                        ng-if="!event.clientId"
+                                        ng-disabled="!phoneNumbers.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <div class="cell shrink">
+                                    <button 
+                                        type="button" 
+                                        class="event-button button" 
+                                        ng-click="UI.createPhoneNumber = !UI.createPhoneNumber"
+                                    >
+                                        <i class="fal fa-layer-plus"></i> 
+                                        <span ng-if="!$root.UI.isMobile">
+                                            Create Phone Number
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-12 large-12">
+                        <div class="grid-x grid-margin-x align-middle">
+                            <div 
+                                class="cell small-12 medium-12 large-12"
+                                ng-if="!emails.length && !event.client.ClientEmails.length"
+                            >
+                                <span class="alert-text">
+                                    There are currently no available Emails. Create one to add it.
+                                </span>
+                            </div>
+                            <div class="cell auto">
+                                <div 
+                                    class="input-container"
+                                    ng-class="{'disabled': !emails.length && !event.client.ClientEmails.length}"
+                                >
+                                    <label>
+                                        Email
+                                    </label>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventEmail"
+                                        name="eventEmail"
+                                        config="emailOptions"
+                                        options="event.client.ClientEmails"
+                                        ng-model="event.emailId"
+                                        ng-if="event.clientId"
+                                        ng-disabled="!event.client.ClientEmails.length"
+                                    >
+                                    </selectize>
+                                    <selectize
+                                        class="event-input form-input"
+                                        id="eventEmail"
+                                        name="eventEmail"
+                                        config="emailOptions"
+                                        options="emails"
+                                        ng-model="event.emailId"
+                                        ng-if="!event.clientId"
+                                        ng-disabled="!emails.length"
+                                    >
+                                    </selectize>
+                                </div>
+                            </div>
+                            <div class="cell shrink">
+                                <button 
+                                    type="button" 
+                                    class="event-button button" 
+                                    ng-click="UI.createEmail = !UI.createEmail"
+                                >
+                                    <i class="fal fa-layer-plus"></i> 
+                                    <span ng-if="!$root.UI.isMobile">
+                                        Create Email
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cell small-12 medium-6 large-6">
+                    </div>
+                </div>
+                <div class="cell small-12 text-right">
+                    <button 
+                        class="event-button button warning white-text" 
+                        type="button" 
+                        ng-click="updateStep('back')"
+                    >
+                        <i class="fal fa-circle-arrow-left"></i> 
+                        Back
+                    </button>
+                    <button 
+                        class="button" 
+                        type="submit" 
+                        ng-disabled="UI.formSaving || 
+                        !event.title || 
+                        !event.eventTypeId || 
+                        !event.priorityId || 
+                        !event.startDate || 
+                        !event.endDate"
+                        ng-if="!event.EventType.map"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            <i class="fal fa-save"></i> Save
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                    <button 
+                        class="button" 
+                        type="button" 
+                        ng-disabled="UI.formSaving || 
+                        !event.title || 
+                        !event.eventTypeId || 
+                        !event.priorityId ||
+                        !event.addressId"
+                        ng-if="event.EventType.map"
+                        ng-click="updateStep(4)"
+                    >
+                        <span ng-if="!UI.formSaving">
+                            Continue <i class="fal fa-circle-arrow-right"></i>
+                        </span>
+                        <span ng-if="UI.formSaving">
+                            Please Wait...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

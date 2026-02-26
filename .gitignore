@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+bower_components/
+
+# Build output
+public/dist/
+
+# Environment & secrets
+.env
+*.pem
+*.key
+*.p12
+
+# Logs
+*.log
+logs/
+
+# Uploads
+uploads/
+
+# MeiliSearch data
+data.melli
+*.mdb
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+*.code-workspace
+*.codegpt
+.idea/
+.vscode/
+
+# Large media
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
